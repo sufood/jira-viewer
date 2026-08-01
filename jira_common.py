@@ -2,8 +2,22 @@
 """Shared helpers for the Jira ⇄ CSV toolkit: env, CSV I/O, ADF, Jira client."""
 
 import csv
+import json
 import os
 import re
+import time
+
+import requests
+
+# Use the OS trust store (macOS Keychain / Windows cert store) when available.
+# This makes corporate TLS-inspection proxies (Zscaler, Netskope, ...) work
+# without extra configuration:  pip install truststore
+try:
+    import truststore
+    truststore.inject_into_ssl()
+    _TRUSTSTORE = True
+except ImportError:
+    _TRUSTSTORE = False
 
 COLUMNS = [
     "#", "Division", "Opportunity", "AI-fit", "Key people", "Systems",
@@ -197,3 +211,156 @@ def build_labels(row):
     labels = [slug(row["Division"], "div-"), slug(row["AI-fit"], "ai-fit-")]
     labels += [slug(t, "theme-") for t in split_multi(row["Themes"])]
     return sorted(set(labels))
+
+
+class Jira:
+    def __init__(self, base_url: str, email: str, token: str):
+        self.base = base_url.rstrip("/")
+        self.session = requests.Session()
+        self.session.auth = (email, token)
+        self.session.headers.update({"Accept": "application/json"})
+
+    def _request(self, method: str, path: str, **kwargs) -> requests.Response:
+        url = f"{self.base}{path}"
+        for attempt in range(5):
+            resp = self.session.request(method, url, timeout=30, **kwargs)
+            if resp.status_code == 429:  # rate limited
+                wait = int(resp.headers.get("Retry-After", 2 ** attempt))
+                print(f"  rate limited, waiting {wait}s...")
+                time.sleep(wait)
+                continue
+            return resp
+        resp.raise_for_status()
+        return resp
+
+    def existing_summaries(self, project_key: str) -> set[str]:
+        """Summaries of existing issues (fallback duplicate check)."""
+        found: set[str] = set()
+        jql = f'project = "{project_key}"'
+        next_token = None
+        while True:
+            payload = {"jql": jql, "fields": ["summary"], "maxResults": 100}
+            if next_token:
+                payload["nextPageToken"] = next_token
+            resp = self._request(
+                "POST", "/rest/api/3/search/jql", json=payload,
+                headers={"Content-Type": "application/json"},
+            )
+            if resp.status_code != 200:
+                print(f"  warning: could not query existing issues "
+                      f"({resp.status_code}); summary fallback disabled")
+                return found
+            data = resp.json()
+            for issue in data.get("issues", []):
+                summary = issue["fields"].get("summary")
+                if summary:
+                    found.add(summary.strip())
+            next_token = data.get("nextPageToken")
+            if not next_token or data.get("isLast", True):
+                return found
+
+    def find_account_id(self, name: str) -> str | None:
+        """Return accountId only when exactly one active user matches."""
+        resp = self._request(
+            "GET", "/rest/api/3/user/search", params={"query": name}
+        )
+        if resp.status_code != 200:
+            return None
+        matches = [u for u in resp.json() if u.get("active")]
+        return matches[0]["accountId"] if len(matches) == 1 else None
+
+    def whoami(self) -> dict | None:
+        """Confirm credentials work; returns account info or None."""
+        resp = self._request("GET", "/rest/api/3/myself")
+        return resp.json() if resp.status_code == 200 else None
+
+    def can_create_issues(self, project_key: str) -> bool | None:
+        """True/False if the USER has Create Issues permission in the
+        project; None if the check itself failed. Note: this reflects user
+        permissions, not API-token scopes — a read-scoped token can still
+        report True here and then fail on create."""
+        resp = self._request(
+            "GET", "/rest/api/3/mypermissions",
+            params={"projectKey": project_key,
+                    "permissions": "CREATE_ISSUES"},
+        )
+        if resp.status_code != 200:
+            return None
+        perm = resp.json().get("permissions", {}).get("CREATE_ISSUES", {})
+        return perm.get("havePermission")
+
+    def check_project(self, project_key: str) -> dict | None:
+        """Return project info (incl. issue types) if visible, else None."""
+        resp = self._request(
+            "GET", f"/rest/api/3/project/{project_key}",
+            params={"expand": "issueTypes"},
+        )
+        return resp.json() if resp.status_code == 200 else None
+
+    def list_projects(self) -> list[dict]:
+        """Projects visible to this account (first 50)."""
+        resp = self._request(
+            "GET", "/rest/api/3/project/search",
+            params={"maxResults": 50, "orderBy": "key"},
+        )
+        if resp.status_code != 200:
+            return []
+        return resp.json().get("values", [])
+
+    def create_issue(self, payload: dict) -> requests.Response:
+        return self._request(
+            "POST", "/rest/api/3/issue", json=payload,
+            headers={"Content-Type": "application/json"},
+        )
+
+    def get_issue(self, key: str) -> dict | None:
+        """Fetch a just-created issue to confirm it exists. None on failure."""
+        resp = self._request(
+            "GET", f"/rest/api/3/issue/{key}",
+            params={"fields": "summary,labels,assignee,issuetype,project"},
+        )
+        return resp.json() if resp.status_code == 200 else None
+
+
+def append_log(csv_path: str, record: dict) -> None:
+    """Append one result row to <csv>.upload-log.csv (created on first use)."""
+    log_path = csv_path + ".upload-log.csv"
+    fieldnames = ["timestamp", "source_id", "result", "issue_id",
+                  "issue_key", "url", "verified", "error"]
+    new_file = not os.path.exists(log_path)
+    with open(log_path, "a", encoding="utf-8", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=fieldnames)
+        if new_file:
+            w.writeheader()
+        w.writerow(record)
+
+
+def connect_and_preflight(project_key, issue_type):
+    """Build a Jira client from env and run the 4 preflight checks.
+    Returns the connected Jira client. Raises SystemExit with an actionable
+    message on any failure."""
+    import sys
+    try:
+        jira = Jira(os.environ["JIRA_BASE_URL"], os.environ["JIRA_EMAIL"],
+                    os.environ["JIRA_API_TOKEN"])
+    except KeyError as e:
+        sys.exit(f"Missing environment variable: {e}")
+
+    me = jira.whoami()
+    if me is None:
+        sys.exit("ERROR: authentication failed (check JIRA_EMAIL / "
+                 "JIRA_API_TOKEN; scoped tokens need read+write:jira-work).")
+    print(f"Authenticated as: {me.get('displayName')}")
+
+    project = jira.check_project(project_key)
+    if project is None:
+        visible = ", ".join(p["key"] for p in jira.list_projects()) or "(none)"
+        sys.exit(f"ERROR: project {project_key!r} not visible. "
+                 f"Projects you can see: {visible}")
+    type_names = [t["name"] for t in project.get("issueTypes", [])]
+    if type_names and issue_type not in type_names:
+        sys.exit(f"ERROR: project has no {issue_type!r} issue type. "
+                 f"Available: {', '.join(type_names)}")
+    print(f"Target project: {project['key']} — {project['name']} "
+          f"(issue type {issue_type})")
+    return jira
