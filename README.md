@@ -65,6 +65,27 @@ python regenerate_html.py --headed           # watch it run
 python regenerate_html.py --csv X --html Y --out Z
 ```
 
+`regenerate_html.py` rebuilds the **entire** page from files, not just the stories tab:
+
+- **`settings.yaml`** drives the header (company, title, intro), the centre node
+  (name, tagline, and its Jira board `url`), the AI-fit legend (title + labels/colours),
+  and per-division colour/tagline/background overrides. Every section is optional — it's
+  an overlay, so anything you omit keeps the app's current value.
+- **Divisions** are derived automatically from the stories CSV: one per distinct
+  `Division`, with Systems/Themes = the deduped union across that division's stories, and
+  colour/tagline/background from `settings.yaml` (an auto-assigned palette colour for any
+  division you haven't overridden). Written to `divisions.csv` (generated, git-ignored).
+- **`initiatives.csv`** is a standalone editable file.
+
+Seed the editable files from the app's current content, then regenerate:
+
+```bash
+python export_tabs.py        # writes initiatives.csv + a fully-populated settings.yaml
+python regenerate_html.py    # stories CSV + initiatives.csv + settings.yaml -> standalone HTML
+```
+
+Setup for this path also needs YAML: `pip install requests playwright pyyaml`.
+
 ## seed-template.csv
 
 The 11-column header row, empty. Start a fresh batch by pasting full content with blank
@@ -82,6 +103,10 @@ python -m pytest tests/ -q
 |------|------|
 | `jira_common.py` | Shared: `.env` loader, CSV I/O (BOM + QUOTE_ALL), markdown⇄ADF, context-block round-trip, labels, Jira client + preflight |
 | `jira_sync.py` | CLI: `push` / `pull` |
-| `regenerate_html.py` | Playwright HTML regenerator |
-| `seed-template.csv` | Empty CSV template |
+| `regenerate_html.py` | Playwright regenerator: whole page from stories CSV + `initiatives.csv` + `settings.yaml` |
+| `settings_common.py` | Settings load, division derivation (Systems/Themes union + auto-colour), settings overlay |
+| `export_tabs.py` | Seed `initiatives.csv` + `settings.yaml` from the app's current content |
+| `settings.yaml` | Header / centre-node / legend / per-division overrides |
+| `initiatives.csv` | Standalone editable initiatives |
+| `seed-template.csv` | Empty stories-CSV template |
 | `.env.example` | Config template |
