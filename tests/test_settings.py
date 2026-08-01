@@ -1,0 +1,71 @@
+import settings_common as sc
+
+
+def _story(div, systems, themes):
+    return {"Division": div, "Systems": systems, "Themes": themes}
+
+
+def test_derive_divisions_roster_first_appearance_order():
+    rows = [_story("B", "s1", "t1"), _story("A", "s2", "t2"),
+            _story("B", "s3", "t1")]
+    divs, unmatched = sc.derive_divisions(rows, {})
+    assert [d["Division"] for d in divs] == ["B", "A"]      # first-appearance
+    assert unmatched == []
+
+
+def test_derive_divisions_unions_systems_themes_dedup():
+    rows = [_story("A", "Sys1; Sys2", "Th1"),
+            _story("A", "Sys2; Sys3", "Th1; Th2")]
+    divs, _ = sc.derive_divisions(rows, {})
+    d = divs[0]
+    assert d["Systems"] == "Sys1; Sys2; Sys3"              # deduped, order kept
+    assert d["Themes"] == "Th1; Th2"
+
+
+def test_derive_divisions_applies_overrides_and_auto_colour():
+    rows = [_story("A", "s", "t"), _story("B", "s", "t")]
+    settings = {"divisions": {"A": {"colour": "#abcdef",
+                                    "tagline": "TA", "background": "BG"}}}
+    divs, unmatched = sc.derive_divisions(rows, settings)
+    a = next(d for d in divs if d["Division"] == "A")
+    b = next(d for d in divs if d["Division"] == "B")
+    assert a["Colour"] == "#abcdef" and a["Tagline"] == "TA" and a["Background"] == "BG"
+    assert b["Colour"] == sc.PALETTE[1]                    # auto by roster index
+    assert b["Tagline"] == "" and b["Background"] == ""
+    assert unmatched == []
+
+
+def test_derive_divisions_warns_unmatched_settings_division():
+    rows = [_story("A", "s", "t")]
+    divs, unmatched = sc.derive_divisions(rows, {"divisions": {"Ghost": {}}})
+    assert [d["Division"] for d in divs] == ["A"]
+    assert unmatched == ["Ghost"]
+
+
+def test_load_settings_missing_returns_empty(tmp_path):
+    assert sc.load_settings(tmp_path / "nope.yaml") == {}
+
+
+def test_load_settings_partial(tmp_path):
+    p = tmp_path / "settings.yaml"
+    p.write_text('header:\n  company: "X"\n')
+    s = sc.load_settings(p)
+    assert s == {"header": {"company": "X"}}
+
+
+def test_merge_settings_overlays_only_present_keys():
+    d = {"header": {"company": "old", "title": "keep", "intro": "keepi"},
+         "hub": {"id": "hub", "name": "old", "tagline": "old", "url": "old"},
+         "fitRating": {"title": "old", "levels": [{"label": "L", "color": "#111"}]}}
+    settings = {"header": {"company": "NEW"},
+                "hub": {"url": "http://new"},
+                "legend": {"title": "Fit", "levels": [{"label": "Hi", "color": "#222"}]}}
+    out = sc.merge_settings_into_data(d, settings)
+    assert out["header"] == {"company": "NEW", "title": "keep", "intro": "keepi"}
+    assert out["hub"]["url"] == "http://new" and out["hub"]["id"] == "hub"
+    assert out["fitRating"] == {"title": "Fit", "levels": [{"label": "Hi", "color": "#222"}]}
+
+
+def test_merge_settings_empty_is_noop():
+    d = {"header": {"company": "c"}}
+    assert sc.merge_settings_into_data(d, {}) == {"header": {"company": "c"}}

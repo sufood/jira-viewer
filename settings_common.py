@@ -1,0 +1,99 @@
+#!/usr/bin/env python3
+"""Settings + division derivation for the whole-page-from-files regenerate.
+
+- load_settings: read settings.yaml (dependency-light; {} when absent).
+- derive_divisions: build the Divisions-CSV rows from the stories CSV, with
+  Systems/Themes unioned per division and colour/tagline/background from
+  settings (auto-colour otherwise).
+- merge_settings_into_data: overlay header/hub/legend onto the app data object.
+"""
+
+import os
+
+import yaml
+
+import jira_common as jc   # reuse split_multi (";"-split) — DRY
+
+# Auto-colour palette = the app's own 13 division colours, so new divisions
+# look native. Assigned deterministically by roster index (cycles if >13).
+PALETTE = ["#3f7c8c", "#c1743a", "#6b6ca3", "#4a8f6d", "#3b6ea5", "#b0567f",
+           "#a8484a", "#8a6d3b", "#2f8f8f", "#7a5aa8", "#b98a3c", "#6f8c3e",
+           "#bd5f6b"]
+
+# Exact Divisions-CSV header the app's Upload CSV expects.
+DIVISION_COLUMNS = ["Division", "Systems", "Themes", "Tagline", "Background",
+                    "Colour"]
+
+
+def load_settings(path="settings.yaml"):
+    """Parse settings.yaml into a dict; {} if the file doesn't exist."""
+    if not os.path.exists(path):
+        return {}
+    with open(path, encoding="utf-8") as f:
+        return yaml.safe_load(f) or {}
+
+
+def _union(seen, cell):
+    """Append the ';'-split values of `cell` to list `seen`, dedup, keep order."""
+    for v in jc.split_multi(cell):
+        if v not in seen:
+            seen.append(v)
+
+
+def derive_divisions(story_rows, settings):
+    """Return (division_rows, unmatched_setting_names).
+
+    Roster = distinct `Division` values in first-appearance order. Systems and
+    Themes are the deduped union across each division's stories. Colour/Tagline/
+    Background come from settings['divisions'][name]; colour auto-assigns from
+    PALETTE by roster index when not overridden.
+    """
+    order, systems, themes = [], {}, {}
+    for r in story_rows:
+        d = (r.get("Division") or "").strip()
+        if not d:
+            continue
+        if d not in systems:
+            order.append(d)
+            systems[d], themes[d] = [], []
+        _union(systems[d], r.get("Systems", ""))
+        _union(themes[d], r.get("Themes", ""))
+
+    overrides = settings.get("divisions") or {}
+    rows = []
+    for i, d in enumerate(order):
+        o = overrides.get(d) or {}
+        rows.append({
+            "Division": d,
+            "Systems": "; ".join(systems[d]),
+            "Themes": "; ".join(themes[d]),
+            "Tagline": o.get("tagline", ""),
+            "Background": o.get("background", ""),
+            "Colour": o.get("colour") or PALETTE[i % len(PALETTE)],
+        })
+    unmatched = [k for k in overrides if k not in systems]
+    return rows, unmatched
+
+
+def merge_settings_into_data(d, settings):
+    """Overlay settings onto the app data object `d`, in place. Only keys present
+    in settings are touched (never blanks out). settings['legend'] -> d['fitRating']."""
+    hdr = settings.get("header")
+    if hdr and isinstance(d.get("header"), dict):
+        for k in ("company", "title", "intro"):
+            if k in hdr:
+                d["header"][k] = hdr[k]
+    hub = settings.get("hub")
+    if hub and isinstance(d.get("hub"), dict):
+        for k in ("name", "tagline", "url"):
+            if k in hub:
+                d["hub"][k] = hub[k]
+    leg = settings.get("legend")
+    if leg:
+        fr = d.setdefault("fitRating", {})
+        if "title" in leg:
+            fr["title"] = leg["title"]
+        if "levels" in leg:
+            fr["levels"] = [{"label": l["label"], "color": l["color"]}
+                            for l in leg["levels"]]
+    return d
