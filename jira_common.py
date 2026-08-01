@@ -233,32 +233,6 @@ class Jira:
         resp.raise_for_status()
         return resp
 
-    def existing_summaries(self, project_key: str) -> set[str]:
-        """Summaries of existing issues (fallback duplicate check)."""
-        found: set[str] = set()
-        jql = f'project = "{project_key}"'
-        next_token = None
-        while True:
-            payload = {"jql": jql, "fields": ["summary"], "maxResults": 100}
-            if next_token:
-                payload["nextPageToken"] = next_token
-            resp = self._request(
-                "POST", "/rest/api/3/search/jql", json=payload,
-                headers={"Content-Type": "application/json"},
-            )
-            if resp.status_code != 200:
-                print(f"  warning: could not query existing issues "
-                      f"({resp.status_code}); summary fallback disabled")
-                return found
-            data = resp.json()
-            for issue in data.get("issues", []):
-                summary = issue["fields"].get("summary")
-                if summary:
-                    found.add(summary.strip())
-            next_token = data.get("nextPageToken")
-            if not next_token or data.get("isLast", True):
-                return found
-
     def find_account_id(self, name: str) -> str | None:
         """Return accountId only when exactly one active user matches."""
         resp = self._request(
@@ -314,10 +288,13 @@ class Jira:
         )
 
     def get_issue(self, key: str) -> dict | None:
-        """Fetch a just-created issue to confirm it exists. None on failure."""
+        """Fetch an issue. `description` is requested so `pull` can read the
+        body + context block back; without it the API omits the field entirely.
+        None on failure."""
         resp = self._request(
             "GET", f"/rest/api/3/issue/{key}",
-            params={"fields": "summary,labels,assignee,issuetype,project"},
+            params={"fields":
+                    "summary,description,labels,assignee,issuetype,project"},
         )
         return resp.json() if resp.status_code == 200 else None
 
@@ -335,10 +312,11 @@ def append_log(csv_path: str, record: dict) -> None:
         w.writerow(record)
 
 
-def connect_and_preflight(project_key, issue_type):
-    """Build a Jira client from env and run the 4 preflight checks.
-    Returns the connected Jira client. Raises SystemExit with an actionable
-    message on any failure."""
+def connect_and_preflight(project_key, issue_type, require_create=False):
+    """Build a Jira client from env and run preflight checks: auth → project
+    visible → issue type available, and (when require_create, i.e. for push)
+    → Create Issues permission. Returns the connected Jira client. Raises
+    SystemExit with an actionable message on any failure."""
     import sys
     try:
         jira = Jira(os.environ["JIRA_BASE_URL"], os.environ["JIRA_EMAIL"],
@@ -363,4 +341,16 @@ def connect_and_preflight(project_key, issue_type):
                  f"Available: {', '.join(type_names)}")
     print(f"Target project: {project['key']} — {project['name']} "
           f"(issue type {issue_type})")
+
+    if require_create:
+        can_create = jira.can_create_issues(project_key)
+        if can_create is False:
+            sys.exit(f"ERROR: your user lacks 'Create Issues' permission in "
+                     f"{project_key}. Ask the project admin to grant it "
+                     f"(Project settings → Permissions).")
+        if can_create is None:
+            print("  warning: could not verify Create Issues permission; "
+                  "continuing")
+        else:
+            print("Create Issues permission: yes")
     return jira

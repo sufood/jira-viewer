@@ -47,3 +47,29 @@ def test_push_writes_key_and_url_back(monkeypatch, tmp_path):
     row1 = next(r for r in saved if r["#"] == "1")
     assert row1["Jira Key"] == "ABC-1"
     assert row1["Jira URL"] == "https://x.atlassian.net/browse/ABC-1"
+
+
+def test_push_verify_confirms_created_issue(tmp_path):
+    rows = _make_rows()
+
+    class FakeResp:
+        status_code = 201
+        def json(self):
+            return {"key": "ABC-1", "id": "1001"}
+
+    class FakeJira:
+        base = "https://x.atlassian.net"
+        got = []
+        def create_issue(self, payload):
+            return FakeResp()
+        def get_issue(self, key):
+            self.got.append(key)
+            return {"fields": {"summary": "Alpha"}}   # matches Opportunity
+
+    fake = FakeJira()
+    csv_path = tmp_path / "d.csv"
+    jira_sync.jc.write_csv(csv_path, rows)
+    result = jira_sync.run_push(fake, csv_path, "PROJ", "Story",
+                                assign=False, verify=True, verbose=False)
+    assert result["created"] == 1
+    assert fake.got == ["ABC-1"]      # --verify actually fetched the issue back

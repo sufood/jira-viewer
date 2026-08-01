@@ -61,6 +61,10 @@ def run_push(jira, csv_path, project_key, issue_type, assign, verify, verbose):
             if acct:
                 payload["fields"]["assignee"] = {"accountId": acct}
 
+        if verbose:
+            print(f"  row {row['#']}: {payload['fields']['summary'][:70]}  "
+                  f"labels={payload['fields']['labels']}")
+
         resp = jira.create_issue(payload)
         ts = time.strftime("%Y-%m-%dT%H:%M:%S")
         if resp.status_code == 201:
@@ -71,11 +75,27 @@ def run_push(jira, csv_path, project_key, issue_type, assign, verify, verbose):
             row["Jira URL"] = url
             jc.write_csv(csv_path, rows)     # save after each create
             created += 1
-            print(f"  OK  row {row['#']} -> {key}")
+
+            verified = ""
+            if verify:
+                fetched = jira.get_issue(key)
+                if fetched and (fetched["fields"].get("summary")
+                                == payload["fields"]["summary"]):
+                    verified = "yes"
+                else:
+                    verified = "MISMATCH" if fetched else "NOT-FOUND"
+
+            line = f"  OK  row {row['#']} -> {key}"
+            if verified:
+                line += f"  verified={verified}"
+            print(line)
+            if verified in ("MISMATCH", "NOT-FOUND"):
+                print(f"      WARNING: post-create verification returned "
+                      f"{verified} for {key}")
             jc.append_log(str(csv_path), {
                 "timestamp": ts, "source_id": row["#"], "result": "created",
                 "issue_id": body["id"], "issue_key": key, "url": url,
-                "verified": "", "error": ""})
+                "verified": verified, "error": ""})
         else:
             err = resp.text[:300]
             failed.append((row["#"], resp.status_code, err))
@@ -113,16 +133,18 @@ def run_pull(jira, csv_path, dry_run, verbose):
             continue
 
         fields = issue["fields"]
-        doc = fields.get("description") or {"type": "doc", "version": 1,
-                                            "content": []}
-        ctx = jc.parse_context_block(doc)
-        new_vals = {
-            "Opportunity": fields.get("summary", row["Opportunity"]),
-            "Description": jc.adf_to_markdown(doc),
-        }
-        for k in jc.CONTEXT_KEYS:
-            if k in ctx:
-                new_vals[k] = ctx[k]
+        new_vals = {"Opportunity": fields.get("summary", row["Opportunity"])}
+        # Only touch Description/context when the API actually returned a
+        # description — never clobber the CSV body with an empty string just
+        # because the field was absent from the response.
+        if "description" in fields:
+            doc = fields.get("description") or {"type": "doc", "version": 1,
+                                                "content": []}
+            new_vals["Description"] = jc.adf_to_markdown(doc)
+            ctx = jc.parse_context_block(doc)
+            for k in jc.CONTEXT_KEYS:
+                if k in ctx:
+                    new_vals[k] = ctx[k]
 
         changes = {k: v for k, v in new_vals.items() if row.get(k, "") != v}
         if changes:
@@ -181,7 +203,8 @@ def main():
     if not os.environ.get("JIRA_PROJECT_KEY"):
         sys.exit('JIRA_PROJECT_KEY not set (env or .env).')
 
-    jira = jc.connect_and_preflight(project_key, issue_type)
+    jira = jc.connect_and_preflight(project_key, issue_type,
+                                    require_create=(args.cmd == "push"))
     if args.cmd == "push":
         res = run_push(jira, args.csv, project_key, issue_type,
                        assign=args.assign, verify=args.verify,

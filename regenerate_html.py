@@ -82,21 +82,26 @@ def regenerate(csv_path, html_path, out_path, headed):
         page.set_input_files(FILE_INPUT, str(csv_path))
         page.wait_for_timeout(2000)          # let the app parse + re-render
 
-        # Trigger the app's own serializer and capture the download.
+        # Trigger the app's own serializer and capture the download to a
+        # temp file first, so a truncated download never clobbers a good --out.
+        part = out_path.with_suffix(out_path.suffix + ".part")
         try:
             with page.expect_download(timeout=30_000) as dl_info:
                 page.get_by_role("button", name=SAVE_BUTTON).click()
-            dl_info.value.save_as(str(out_path))
+            dl_info.value.save_as(str(part))
         except PWTimeout:
             page.screenshot(path=str(out_path.with_suffix(".save-error.png")))
             browser.close()
             sys.exit("ERROR: no download after clicking Save (see .save-error.png).")
         browser.close()
 
-    size = out_path.stat().st_size if out_path.exists() else 0
+    size = part.stat().st_size if part.exists() else 0
     if size < 100_000:
-        sys.exit(f"ERROR: output {out_path} is only {size} bytes — "
-                 "regeneration likely failed.")
+        if part.exists():
+            part.unlink()
+        sys.exit(f"ERROR: download was only {size} bytes — regeneration "
+                 f"likely failed; left {out_path.name} unchanged.")
+    part.replace(out_path)               # atomic promote only after validation
     print(f"Regenerated {out_path} ({size:,} bytes)")
 
 
