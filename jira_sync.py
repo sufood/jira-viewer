@@ -89,3 +89,52 @@ def run_push(jira, csv_path, project_key, issue_type, assign, verify, verbose):
           f"inconsistent={len(inconsistent)}")
     return {"created": created, "failed": len(failed),
             "inconsistent": len(inconsistent)}
+
+
+def _issue_key(row):
+    key = row.get("Jira Key", "").strip()
+    if key:
+        return key
+    url = row.get("Jira URL", "").strip()
+    return url.rstrip("/").split("/")[-1] if url else ""
+
+
+def run_pull(jira, csv_path, dry_run, verbose):
+    rows = jc.read_csv(csv_path)
+    updated, failed = 0, []
+    for row in rows:
+        if not row.get("Jira URL", "").strip():
+            continue                              # nothing linked to pull
+        key = _issue_key(row)
+        issue = jira.get_issue(key)
+        if not issue:
+            failed.append(key)
+            print(f"  FAIL row {row['#']}: could not fetch {key}")
+            continue
+
+        fields = issue["fields"]
+        doc = fields.get("description") or {"type": "doc", "version": 1,
+                                            "content": []}
+        ctx = jc.parse_context_block(doc)
+        new_vals = {
+            "Opportunity": fields.get("summary", row["Opportunity"]),
+            "Description": jc.adf_to_markdown(doc),
+        }
+        for k in jc.CONTEXT_KEYS:
+            if k in ctx:
+                new_vals[k] = ctx[k]
+
+        changes = {k: v for k, v in new_vals.items() if row.get(k, "") != v}
+        if changes:
+            updated += 1
+            if verbose or dry_run:
+                for k, v in changes.items():
+                    print(f"  row {row['#']} {k}: {row.get(k,'')!r} -> {v!r}")
+            if not dry_run:
+                row.update(new_vals)
+
+    if not dry_run:
+        jc.write_csv(csv_path, rows)
+    print(f"\nDone. updated={updated} failed={len(failed)}"
+          f"{' (dry-run, no write)' if dry_run else ''}")
+    return {"updated": updated, "failed": len(failed)}
