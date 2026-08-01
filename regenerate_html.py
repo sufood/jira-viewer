@@ -59,13 +59,15 @@ def regenerate(csv_path, html_path, out_path, headed):
             sys.exit("ERROR: app never rendered its tabs (see .load-error.png). "
                      "The HTML may not be the expected app bundle.")
 
-        # Open the Data tab. The SPA can swallow the first click during its
-        # initial render, so retry until the sub-tabs actually mount.
+        # The tabs render before React finishes attaching click handlers, so a
+        # click fired too early is silently dropped. Give hydration a moment,
+        # then retry the Data click until the sub-tabs actually mount.
+        page.wait_for_timeout(1500)
         substab = page.get_by_role("button", name=SUBTAB_DIVISION_STORIES)
-        for _ in range(5):
+        for _ in range(10):
             page.get_by_role("button", name=DATA_TAB).click()
             try:
-                substab.wait_for(state="visible", timeout=4000)
+                substab.wait_for(state="visible", timeout=6000)
                 break
             except PWTimeout:
                 continue
