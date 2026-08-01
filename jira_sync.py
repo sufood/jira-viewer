@@ -138,3 +138,58 @@ def run_pull(jira, csv_path, dry_run, verbose):
     print(f"\nDone. updated={updated} failed={len(failed)}"
           f"{' (dry-run, no write)' if dry_run else ''}")
     return {"updated": updated, "failed": len(failed)}
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    sub = parser.add_subparsers(dest="cmd", required=True)
+
+    p_push = sub.add_parser("push", help="create Jira issues for blank rows")
+    p_pull = sub.add_parser("pull", help="refresh columns from linked issues")
+    for p in (p_push, p_pull):
+        p.add_argument("--csv", default=DEFAULT_CSV)
+        p.add_argument("--dry-run", action="store_true")
+        p.add_argument("-v", "--verbose", action="store_true")
+        p.add_argument("--ca-bundle", metavar="PATH")
+    p_push.add_argument("--assign", action="store_true",
+                        help="set first Key person as assignee when unambiguous")
+    p_push.add_argument("--verify", action="store_true",
+                        help="GET each created issue back to confirm it exists")
+    args = parser.parse_args()
+
+    jc.load_dotenv(".env")
+    if args.ca_bundle:
+        os.environ["REQUESTS_CA_BUNDLE"] = args.ca_bundle
+
+    project_key = os.environ.get("JIRA_PROJECT_KEY", "PROJ")
+    issue_type = os.environ.get("JIRA_ISSUE_TYPE", "Story")
+
+    if args.dry_run and args.cmd == "push":
+        rows = jc.read_csv(args.csv)
+        eligible, linked, inconsistent = classify_push(rows)
+        print(f"DRY-RUN push: {len(eligible)} would be created, "
+              f"{len(linked)} linked, {len(inconsistent)} inconsistent")
+        for r in eligible:
+            payload = {"summary": r["Opportunity"][:255],
+                       "labels": jc.build_labels(r)}
+            print(f"  row {r['#']}: {payload['summary']}  "
+                  f"labels={payload['labels']}")
+        for r in inconsistent:
+            print(f"  WARNING row {r['#']}: inconsistent Key/URL; not pushed")
+        return 0
+
+    if not os.environ.get("JIRA_PROJECT_KEY"):
+        sys.exit('JIRA_PROJECT_KEY not set (env or .env).')
+
+    jira = jc.connect_and_preflight(project_key, issue_type)
+    if args.cmd == "push":
+        res = run_push(jira, args.csv, project_key, issue_type,
+                       assign=args.assign, verify=args.verify,
+                       verbose=args.verbose)
+        return 1 if res["failed"] else 0
+    res = run_pull(jira, args.csv, dry_run=args.dry_run, verbose=args.verbose)
+    return 1 if res["failed"] else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
