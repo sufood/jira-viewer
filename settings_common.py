@@ -75,6 +75,46 @@ def derive_divisions(story_rows, settings):
     return rows, unmatched
 
 
+# Current app defaults (from the bundle's migrate() seed) — the starting point
+# a user edits. Values chosen to match what the app ships with today.
+_DEFAULT_INTRO = ("Thirteen enterprise workshops · 25 Sprint 1 initiatives. "
+                  "Switch lenses above. In this view, click any division to fan "
+                  "out its cards — problem areas, AI-fit, the people engaged, "
+                  "gaps and next steps.")
+
+
+def build_starter_settings(division_rows):
+    """Assemble a fully-populated settings dict from the app's current defaults
+    plus per-division overrides taken from an exported Divisions CSV."""
+    return {
+        "header": {
+            "company": "Insignia Financial",
+            "title": "AI Strategy Value Realisation",
+            "intro": _DEFAULT_INTRO,
+        },
+        "hub": {
+            "name": "AI Strategy",
+            "tagline": "Enterprise-wide AI strategy programme — March 2026",
+            "url": "https://ifl.atlassian.net/jira/software/c/projects/AIENG/boards/4552",
+        },
+        "legend": {
+            "title": "AI-fit rating",
+            "levels": [
+                {"label": "High", "color": "#e0674c"},
+                {"label": "Medium-High", "color": "#e3a24b"},
+                {"label": "Medium", "color": "#5aa9a0"},
+                {"label": "Medium-Low", "color": "#7d8ca3"},
+            ],
+        },
+        "divisions": {
+            r["Division"]: {"colour": r.get("Colour", ""),
+                            "tagline": r.get("Tagline", ""),
+                            "background": r.get("Background", "")}
+            for r in division_rows
+        },
+    }
+
+
 def merge_settings_into_data(d, settings):
     """Overlay settings onto the app data object `d`, in place. Only keys present
     in settings are touched (never blanks out). settings['legend'] -> d['fitRating']."""

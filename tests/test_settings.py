@@ -69,3 +69,14 @@ def test_merge_settings_overlays_only_present_keys():
 def test_merge_settings_empty_is_noop():
     d = {"header": {"company": "c"}}
     assert sc.merge_settings_into_data(d, {}) == {"header": {"company": "c"}}
+
+
+def test_build_starter_settings_from_division_rows():
+    div_rows = [{"Division": "A", "Systems": "s", "Themes": "t",
+                 "Tagline": "TA", "Background": "BA", "Colour": "#111"}]
+    s = sc.build_starter_settings(div_rows)
+    assert s["header"]["company"] == "Insignia Financial"
+    assert s["hub"]["url"].startswith("https://ifl.atlassian.net/")
+    assert s["legend"]["levels"][0] == {"label": "High", "color": "#e0674c"}
+    assert s["divisions"]["A"] == {"colour": "#111", "tagline": "TA",
+                                   "background": "BA"}
