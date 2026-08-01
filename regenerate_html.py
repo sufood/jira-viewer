@@ -85,6 +85,8 @@ def regenerate(csv_path, html_path, out_path, headed,
                      "(see .tab-error.png).")
 
         # Derive divisions.csv from the stories CSV + settings (A2/A3).
+        if not pathlib.Path(settings_path).exists():
+            print(f"  notice: {settings_path} missing; settings overlay skipped")
         settings = sc.load_settings(settings_path)
         div_rows, unmatched = sc.derive_divisions(jc.read_csv(str(csv_path)),
                                                   settings)
