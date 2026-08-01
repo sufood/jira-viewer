@@ -1,0 +1,6 @@
+.env
+*.upload-log.csv
+*.upload-state.json
+__pycache__/
+.pytest_cache/
+*.pyc
