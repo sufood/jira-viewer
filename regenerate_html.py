@@ -17,6 +17,10 @@ import argparse
 import pathlib
 import re
 import sys
+import json
+
+import jira_common as jc
+import settings_common as sc
 
 from playwright.sync_api import TimeoutError as PWTimeout
 from playwright.sync_api import sync_playwright
@@ -36,7 +40,10 @@ FILE_INPUT = 'input[type="file"]'
 SAVE_BUTTON = re.compile(r"Download standalone HTML")
 
 
-def regenerate(csv_path, html_path, out_path, headed):
+def regenerate(csv_path, html_path, out_path, headed,
+               initiatives_path="initiatives.csv",
+               settings_path="settings.yaml",
+               divisions_out="divisions.csv"):
     csv_path = pathlib.Path(csv_path).resolve()
     html_path = pathlib.Path(html_path).resolve()
     out_path = pathlib.Path(out_path).resolve()
@@ -77,12 +84,46 @@ def regenerate(csv_path, html_path, out_path, headed):
             sys.exit("ERROR: Data tab never revealed its sub-tabs "
                      "(see .tab-error.png).")
 
-        substab.click()
-        page.wait_for_timeout(800)           # let the sub-tab's toolbar render
+        # Derive divisions.csv from the stories CSV + settings (A2/A3).
+        settings = sc.load_settings(settings_path)
+        div_rows, unmatched = sc.derive_divisions(jc.read_csv(str(csv_path)),
+                                                  settings)
+        for name in unmatched:
+            print(f"  notice: settings division {name!r} has no stories; ignored")
+        jc.write_csv(divisions_out, div_rows, fieldnames=sc.DIVISION_COLUMNS)
 
-        # Load the CSV through the app's hidden import input (Upload CSV).
-        page.set_input_files(FILE_INPUT, str(csv_path))
-        page.wait_for_timeout(2000)          # let the app parse + re-render
+        # Import the three tabs via the app's own Upload CSV. Order matters:
+        # stories -> divisions (division metadata authoritative) -> initiatives.
+        imports = [("Division stories ·", str(csv_path)),
+                   ("Divisions ·", str(pathlib.Path(divisions_out).resolve())),
+                   ("Initiatives ·", initiatives_path)]
+        for subtab, path in imports:
+            if not pathlib.Path(path).exists():
+                print(f"  notice: {path} missing; skipping "
+                      f"{subtab.strip(' ·')} import")
+                continue
+            page.get_by_role("button", name=re.compile(re.escape(subtab))).click()
+            page.wait_for_timeout(600)
+            page.set_input_files(FILE_INPUT, str(pathlib.Path(path).resolve()))
+            page.wait_for_timeout(1800)
+
+        # Overlay settings (header/hub/legend) into the app's data object, which
+        # has no CSV import path, then reload so the app boots the merged state.
+        if settings:
+            raw = page.evaluate(
+                "() => localStorage.getItem('insignia_ai_strategy_map_v2')")
+            if raw:
+                data = sc.merge_settings_into_data(json.loads(raw), settings)
+                page.evaluate(
+                    "(v) => localStorage.setItem("
+                    "'insignia_ai_strategy_map_v2', v)",
+                    json.dumps(data, ensure_ascii=False))
+                page.reload()
+                page.get_by_role("button", name=DATA_TAB).wait_for(timeout=30_000)
+                page.wait_for_timeout(1000)
+            else:
+                print("  notice: no app data in localStorage after import; "
+                      "settings overlay skipped")
 
         # Trigger the app's own serializer and capture the download to a
         # temp file first, so a truncated download never clobbers a good --out.
@@ -114,8 +155,13 @@ def main():
     ap.add_argument("--html", default=DEFAULT_HTML)
     ap.add_argument("--out", default=DEFAULT_OUT)
     ap.add_argument("--headed", action="store_true")
+    ap.add_argument("--initiatives", default="initiatives.csv")
+    ap.add_argument("--settings", default="settings.yaml")
+    ap.add_argument("--divisions-out", default="divisions.csv")
     args = ap.parse_args()
-    regenerate(args.csv, args.html, args.out, args.headed)
+    regenerate(args.csv, args.html, args.out, args.headed,
+               initiatives_path=args.initiatives, settings_path=args.settings,
+               divisions_out=args.divisions_out)
 
 
 if __name__ == "__main__":

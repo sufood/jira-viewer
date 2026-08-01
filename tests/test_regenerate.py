@@ -48,8 +48,19 @@ def test_regenerate_reflects_csv(tmp_path):
                 "Themes": "T", "Summary": "s", "Description": "body"})
     jc.write_csv(src_csv, [row])
 
+    import yaml
+    settings_p = tmp_path / "settings.yaml"
+    company = "ZZCOMPANY_regen"
+    yaml.safe_dump({"header": {"company": company}}, open(settings_p, "w"))
+    init_p = tmp_path / "initiatives.csv"
+    jc.write_csv(init_p, [], fieldnames=["#", "Initiative", "Capability",
+        "Effort", "Value", "Quadrant", "Divisions impacted"])
+
     out = tmp_path / "out.html"
-    regenerate_html.regenerate(str(src_csv), str(HTML), str(out), headed=False)
+    regenerate_html.regenerate(str(src_csv), str(HTML), str(out), headed=False,
+                               initiatives_path=str(init_p),
+                               settings_path=str(settings_p),
+                               divisions_out=str(tmp_path / "divisions.csv"))
     assert out.exists() and out.stat().st_size > 100_000
 
     # Confirm the imported sentinel round-tripped into the regenerated app.
@@ -72,5 +83,10 @@ def test_regenerate_reflects_csv(tmp_path):
         present = pg.evaluate(
             "(s) => [...document.querySelectorAll('input,textarea,td,div')]"
             ".some(e => (e.value||e.textContent||'').includes(s))", sentinel)
+        # textContent (not innerText) — the header applies CSS text-transform:
+        # uppercase to the company name, which innerText would bake in and
+        # break an exact-string match against the settings value.
+        body = pg.evaluate("() => document.body.textContent")
+        assert company in body, "settings header.company not in regenerated HTML"
         b.close()
     assert present, "sentinel from CSV not found in regenerated HTML"
