@@ -132,3 +132,68 @@ def adf_to_markdown(doc):
             break
     blocks = [_adf_block_to_md(n) for n in content[:cut]]
     return "\n\n".join(b for b in blocks if b)
+
+
+def slug(text, prefix=""):
+    """Jira labels cannot contain spaces; make a safe slug."""
+    s = text.lower()
+    s = re.sub(r"[^a-z0-9]+", "-", s).strip("-")
+    return f"{prefix}{s}"
+
+
+def split_multi(value):
+    """Split '; '-delimited multi-value cells."""
+    return [p.strip() for p in value.split(";") if p.strip()]
+
+
+CONTEXT_KEYS = ["Division", "AI-fit", "Key people", "Systems", "Themes", "Summary"]
+
+
+def build_context_block(row):
+    """Machine-readable, exact-value carrier appended to every description.
+    Returns [rule, bulletList]."""
+    lines = [f"{k}: {row.get(k, '')}" for k in CONTEXT_KEYS]
+    return [
+        {"type": "rule"},
+        {"type": "bulletList", "content": [
+            {"type": "listItem", "content": [adf_paragraph(line)]}
+            for line in lines]},
+    ]
+
+
+def parse_context_block(doc):
+    """Read exact metadata values back from the trailing context bulletList.
+    Returns {} when no context block is present."""
+    content = doc.get("content", [])
+    rule_idx = None
+    for i in range(len(content) - 1, -1, -1):
+        if content[i].get("type") == "rule":
+            rule_idx = i
+            break
+    if rule_idx is None:
+        return {}
+    result = {}
+    for node in content[rule_idx + 1:]:
+        if node.get("type") != "bulletList":
+            continue
+        for item in node.get("content", []):
+            for para in item.get("content", []):
+                text = _adf_inline_to_md(para.get("content", []))
+                if ": " in text:
+                    key, _, value = text.partition(": ")
+                    if key in CONTEXT_KEYS:
+                        result[key] = value
+    return result
+
+
+def build_description(row):
+    """Description markdown body + context block, as one ADF doc."""
+    doc = markdown_to_adf(row["Description"])
+    doc["content"].extend(build_context_block(row))
+    return doc
+
+
+def build_labels(row):
+    labels = [slug(row["Division"], "div-"), slug(row["AI-fit"], "ai-fit-")]
+    labels += [slug(t, "theme-") for t in split_multi(row["Themes"])]
+    return sorted(set(labels))
