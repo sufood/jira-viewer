@@ -106,6 +106,15 @@ def test_apply_people_is_authoritative_empties_absent_department():
     assert b["people"] == []                       # not in file -> emptied
 
 
+def test_apply_people_empty_rows_empties_all():
+    # Authoritative: a present-but-empty people.csv clears everyone.
+    d = {"departments": [{"name": "A", "people": [{"name": "x"}]},
+                         {"name": "B", "people": [{"name": "y"}]}]}
+    out, unmatched = sc.apply_people(d, [])
+    assert all(dep["people"] == [] for dep in out["departments"])
+    assert unmatched == []
+
+
 def test_apply_people_reports_unmatched_division():
     d = {"departments": [{"name": "A", "people": []}]}
     _, unmatched = sc.apply_people(d, [_person("Ghost", "X")])

@@ -117,14 +117,14 @@ def regenerate(csv_path, html_path, out_path, headed,
                        if pathlib.Path(people_path).exists() else None)
         if people_rows is None:
             print(f"  notice: {people_path} missing; division people left as-is")
-        if settings or people_rows:
+        if settings or people_rows is not None:
             raw = page.evaluate(
                 "() => localStorage.getItem('insignia_ai_strategy_map_v2')")
             if raw:
                 data = json.loads(raw)
                 if settings:
                     sc.merge_settings_into_data(data, settings)
-                if people_rows:
+                if people_rows is not None:   # [] is authoritative: clears people
                     _, unmatched = sc.apply_people(data, people_rows)
                     for name in unmatched:
                         print(f"  notice: people.csv division {name!r} "

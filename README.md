@@ -81,8 +81,8 @@ python regenerate_html.py --csv X --html Y --out Z
 Seed the editable files from the app's current content, then regenerate:
 
 ```bash
-python export_tabs.py        # writes initiatives.csv + a fully-populated settings.yaml
-python regenerate_html.py    # stories CSV + initiatives.csv + settings.yaml -> standalone HTML
+python export_tabs.py        # writes initiatives.csv, settings.yaml, people.csv
+python regenerate_html.py    # stories CSV + initiatives.csv + settings.yaml + people.csv -> standalone HTML
 ```
 
 Setup for this path also needs YAML: `pip install requests playwright pyyaml`.
@@ -104,9 +104,9 @@ python -m pytest tests/ -q
 |------|------|
 | `jira_common.py` | Shared: `.env` loader, CSV I/O (BOM + QUOTE_ALL), markdown⇄ADF, context-block round-trip, labels, Jira client + preflight |
 | `jira_sync.py` | CLI: `push` / `pull` |
-| `regenerate_html.py` | Playwright regenerator: whole page from stories CSV + `initiatives.csv` + `settings.yaml` |
-| `settings_common.py` | Settings load, division derivation (Systems/Themes union + auto-colour), settings overlay |
-| `export_tabs.py` | Seed `initiatives.csv` + `settings.yaml` from the app's current content |
+| `regenerate_html.py` | Playwright regenerator: whole page from stories CSV + `initiatives.csv` + `settings.yaml` + `people.csv` |
+| `settings_common.py` | Settings load, division derivation (Systems/Themes union + auto-colour), settings + people overlay |
+| `export_tabs.py` | Seed `initiatives.csv` + `settings.yaml` + `people.csv` from the app's current content |
 | `settings.yaml` | Header / centre-node / legend / per-division overrides |
 | `initiatives.csv` | Standalone editable initiatives |
 | `people.csv` | Division key people (name, role, relevance) |

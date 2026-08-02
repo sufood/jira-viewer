@@ -6,6 +6,7 @@
   Systems/Themes unioned per division and colour/tagline/background from
   settings (auto-colour otherwise).
 - merge_settings_into_data: overlay header/hub/legend onto the app data object.
+- apply_people: overlay division key people (from people.csv) onto departments.
 """
 
 import os

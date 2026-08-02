@@ -78,8 +78,14 @@ def main():
         yaml.safe_dump(sc.build_starter_settings(div_rows), f,
                        sort_keys=False, allow_unicode=True, width=100)
 
+    # Don't clobber a hand-edited people.csv with an empty file if the forced
+    # save didn't land (no app data read back) — abort loudly instead.
+    if not raw:
+        sys.exit("ERROR: could not read app data after import; people.csv NOT "
+                 "written (left any existing file untouched). Re-run, or use "
+                 "--headed to watch.")
     people_rows = []
-    for dep in (json.loads(raw).get("departments", []) if raw else []):
+    for dep in json.loads(raw).get("departments", []):
         for p in dep.get("people", []):
             people_rows.append({"Division": dep.get("name", ""),
                                 "Name": p.get("name", ""),
