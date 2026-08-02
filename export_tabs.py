@@ -10,6 +10,7 @@ its own divisions.csv from the stories CSV — this is just for seeding settings
 """
 
 import argparse
+import json
 import pathlib
 import re
 import sys
@@ -58,13 +59,34 @@ def main():
                 continue
         _export_tab(page, "Initiatives ·", "initiatives.csv")
         _export_tab(page, "Divisions ·", "divisions-current.csv")
+
+        # People have no Export-CSV tab. Force a save by re-importing the app's
+        # own divisions export (identity — doesn't touch people), then read
+        # departments[].people out of localStorage.
+        page.get_by_role("button", name=re.compile("Divisions ·")).click()
+        page.wait_for_timeout(500)
+        page.set_input_files(
+            'input[type="file"]',
+            str(pathlib.Path("divisions-current.csv").resolve()))
+        page.wait_for_timeout(1800)
+        raw = page.evaluate(
+            "() => localStorage.getItem('insignia_ai_strategy_map_v2')")
         browser.close()
 
     div_rows = jc.read_csv("divisions-current.csv")
     with open("settings.yaml", "w", encoding="utf-8") as f:
         yaml.safe_dump(sc.build_starter_settings(div_rows), f,
                        sort_keys=False, allow_unicode=True, width=100)
-    print("Wrote initiatives.csv, divisions-current.csv, settings.yaml")
+
+    people_rows = []
+    for dep in (json.loads(raw).get("departments", []) if raw else []):
+        for p in dep.get("people", []):
+            people_rows.append({"Division": dep.get("name", ""),
+                                "Name": p.get("name", ""),
+                                "Role": p.get("role", ""),
+                                "Relevance": p.get("relevance", "")})
+    jc.write_csv("people.csv", people_rows, fieldnames=sc.PEOPLE_COLUMNS)
+    print("Wrote initiatives.csv, divisions-current.csv, settings.yaml, people.csv")
 
 
 if __name__ == "__main__":
