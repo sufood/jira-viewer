@@ -56,11 +56,18 @@ def test_regenerate_reflects_csv(tmp_path):
     jc.write_csv(init_p, [], fieldnames=["#", "Initiative", "Capability",
         "Effort", "Value", "Quadrant", "Divisions impacted"])
 
+    people_p = tmp_path / "people.csv"
+    person = "ZZPERSON_regen"
+    jc.write_csv(people_p, [{"Division": "D", "Name": person,
+                             "Role": "Tester", "Relevance": "sentinel"}],
+                 fieldnames=["Division", "Name", "Role", "Relevance"])
+
     out = tmp_path / "out.html"
     regenerate_html.regenerate(str(src_csv), str(HTML), str(out), headed=False,
                                initiatives_path=str(init_p),
                                settings_path=str(settings_p),
-                               divisions_out=str(tmp_path / "divisions.csv"))
+                               divisions_out=str(tmp_path / "divisions.csv"),
+                               people_path=str(people_p))
     assert out.exists() and out.stat().st_size > 100_000
 
     # Confirm the imported sentinel round-tripped into the regenerated app.
@@ -88,5 +95,24 @@ def test_regenerate_reflects_csv(tmp_path):
         # break an exact-string match against the settings value.
         body = pg.evaluate("() => document.body.textContent")
         assert company in body, "settings header.company not in regenerated HTML"
+
+        # People live in editable <input> fields inside a division's detail
+        # row (Data > Divisions > "Edit details"), not as static text, so they
+        # don't show up in body.textContent — navigate there and expand the
+        # "D" division to confirm people.csv actually round-tripped.
+        pg.get_by_role("button", name=re.compile(r"^Data$")).click()
+        divisions_subtab = pg.get_by_role("button", name=re.compile(r"Divisions ·"))
+        divisions_subtab.wait_for(state="visible", timeout=4000)
+        divisions_subtab.click()
+        pg.wait_for_timeout(800)
+        pg.evaluate(
+            "() => document.querySelector('input[value=\"D\"]')"
+            ".closest('div[style*=\"grid-template-columns\"]')"
+            ".querySelector('button[title=\"Edit details\"]').click()")
+        pg.wait_for_timeout(500)
+        person_present = pg.evaluate(
+            "(s) => [...document.querySelectorAll('input,textarea')]"
+            ".some(e => (e.value||'').includes(s))", person)
+        assert person_present, "people.csv person not in regenerated HTML"
         b.close()
     assert present, "sentinel from CSV not found in regenerated HTML"

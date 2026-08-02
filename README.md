@@ -76,6 +76,7 @@ python regenerate_html.py --csv X --html Y --out Z
   colour/tagline/background from `settings.yaml` (an auto-assigned palette colour for any
   division you haven't overridden). Written to `divisions.csv` (generated, git-ignored).
 - **`initiatives.csv`** is a standalone editable file.
+- **`people.csv`** (`Division, Name, Role, Relevance`) — division key people and their descriptions. Fully authoritative when present: each division's people are set from the file (a division with no rows shows none); a missing file leaves existing people untouched.
 
 Seed the editable files from the app's current content, then regenerate:
 
@@ -108,5 +109,6 @@ python -m pytest tests/ -q
 | `export_tabs.py` | Seed `initiatives.csv` + `settings.yaml` from the app's current content |
 | `settings.yaml` | Header / centre-node / legend / per-division overrides |
 | `initiatives.csv` | Standalone editable initiatives |
+| `people.csv` | Division key people (name, role, relevance) |
 | `seed-template.csv` | Empty stories-CSV template |
 | `.env.example` | Config template |

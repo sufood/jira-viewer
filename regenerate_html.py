@@ -43,7 +43,8 @@ SAVE_BUTTON = re.compile(r"Download standalone HTML")
 def regenerate(csv_path, html_path, out_path, headed,
                initiatives_path="initiatives.csv",
                settings_path="settings.yaml",
-               divisions_out="divisions.csv"):
+               divisions_out="divisions.csv",
+               people_path="people.csv"):
     csv_path = pathlib.Path(csv_path).resolve()
     html_path = pathlib.Path(html_path).resolve()
     out_path = pathlib.Path(out_path).resolve()
@@ -109,13 +110,25 @@ def regenerate(csv_path, html_path, out_path, headed,
             page.set_input_files(FILE_INPUT, str(pathlib.Path(path).resolve()))
             page.wait_for_timeout(1800)
 
-        # Overlay settings (header/hub/legend) into the app's data object, which
-        # has no CSV import path, then reload so the app boots the merged state.
-        if settings:
+        # Overlay settings (header/hub/legend) and people onto the app's data
+        # object — neither has a CSV import path — then reload so the app boots
+        # the merged state. A missing people.csv leaves existing people intact.
+        people_rows = (jc.read_csv(people_path)
+                       if pathlib.Path(people_path).exists() else None)
+        if people_rows is None:
+            print(f"  notice: {people_path} missing; division people left as-is")
+        if settings or people_rows:
             raw = page.evaluate(
                 "() => localStorage.getItem('insignia_ai_strategy_map_v2')")
             if raw:
-                data = sc.merge_settings_into_data(json.loads(raw), settings)
+                data = json.loads(raw)
+                if settings:
+                    sc.merge_settings_into_data(data, settings)
+                if people_rows:
+                    _, unmatched = sc.apply_people(data, people_rows)
+                    for name in unmatched:
+                        print(f"  notice: people.csv division {name!r} "
+                              f"matches no division; ignored")
                 page.evaluate(
                     "(v) => localStorage.setItem("
                     "'insignia_ai_strategy_map_v2', v)",
@@ -125,7 +138,7 @@ def regenerate(csv_path, html_path, out_path, headed,
                 page.wait_for_timeout(1000)
             else:
                 print("  notice: no app data in localStorage after import; "
-                      "settings overlay skipped")
+                      "settings/people overlay skipped")
 
         # Trigger the app's own serializer and capture the download to a
         # temp file first, so a truncated download never clobbers a good --out.
@@ -160,10 +173,11 @@ def main():
     ap.add_argument("--initiatives", default="initiatives.csv")
     ap.add_argument("--settings", default="settings.yaml")
     ap.add_argument("--divisions-out", default="divisions.csv")
+    ap.add_argument("--people", default="people.csv")
     args = ap.parse_args()
     regenerate(args.csv, args.html, args.out, args.headed,
                initiatives_path=args.initiatives, settings_path=args.settings,
-               divisions_out=args.divisions_out)
+               divisions_out=args.divisions_out, people_path=args.people)
 
 
 if __name__ == "__main__":
