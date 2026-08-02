@@ -80,3 +80,41 @@ def test_build_starter_settings_from_division_rows():
     assert s["legend"]["levels"][0] == {"label": "High", "color": "#e0674c"}
     assert s["divisions"]["A"] == {"colour": "#111", "tagline": "TA",
                                    "background": "BA"}
+
+
+def _person(div, name, role="r", rel="x"):
+    return {"Division": div, "Name": name, "Role": role, "Relevance": rel}
+
+
+def test_apply_people_sets_people_per_department():
+    d = {"departments": [{"name": "A", "people": [{"name": "old"}]},
+                         {"name": "B", "people": []}]}
+    rows = [_person("A", "Ann", "Lead", "does X"),
+            _person("A", "Bob"), _person("B", "Cara")]
+    out, unmatched = sc.apply_people(d, rows)
+    a = next(x for x in out["departments"] if x["name"] == "A")
+    assert a["people"] == [{"name": "Ann", "role": "Lead", "relevance": "does X"},
+                           {"name": "Bob", "role": "r", "relevance": "x"}]
+    assert unmatched == []
+
+
+def test_apply_people_is_authoritative_empties_absent_department():
+    d = {"departments": [{"name": "A", "people": [{"name": "keep?"}]},
+                         {"name": "B", "people": [{"name": "gone"}]}]}
+    out, _ = sc.apply_people(d, [_person("A", "Ann")])
+    b = next(x for x in out["departments"] if x["name"] == "B")
+    assert b["people"] == []                       # not in file -> emptied
+
+
+def test_apply_people_reports_unmatched_division():
+    d = {"departments": [{"name": "A", "people": []}]}
+    _, unmatched = sc.apply_people(d, [_person("Ghost", "X")])
+    assert unmatched == ["Ghost"]
+
+
+def test_apply_people_skips_blank_division_or_name():
+    d = {"departments": [{"name": "A", "people": [{"name": "old"}]}]}
+    rows = [_person("", "NoDiv"), _person("A", ""), _person("A", "RealPerson")]
+    out, _ = sc.apply_people(d, rows)
+    a = out["departments"][0]
+    assert [p["name"] for p in a["people"]] == ["RealPerson"]

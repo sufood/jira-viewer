@@ -137,3 +137,30 @@ def merge_settings_into_data(d, settings):
             fr["levels"] = [{"label": l["label"], "color": l["color"]}
                             for l in leg["levels"]]
     return d
+
+
+PEOPLE_COLUMNS = ["Division", "Name", "Role", "Relevance"]
+
+
+def apply_people(d, people_rows):
+    """Fully authoritative: set every department's `people` from people_rows,
+    grouped by Division (row order preserved). A department with no rows gets an
+    empty list. Blank Division/Name rows are skipped. Returns (d, unmatched),
+    where unmatched lists Division values with no matching department. Mutates d."""
+    by_div = {}
+    for r in people_rows:
+        div = (r.get("Division") or "").strip()
+        name = (r.get("Name") or "").strip()
+        if not div or not name:
+            continue
+        by_div.setdefault(div, []).append({
+            "name": name,
+            "role": (r.get("Role") or "").strip(),
+            "relevance": (r.get("Relevance") or "").strip(),
+        })
+    deps = d.get("departments") or []
+    dep_names = {dep.get("name") for dep in deps}
+    for dep in deps:
+        dep["people"] = by_div.get(dep.get("name"), [])
+    unmatched = [k for k in by_div if k not in dep_names]
+    return d, unmatched
