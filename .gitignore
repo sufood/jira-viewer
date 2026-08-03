@@ -5,6 +5,7 @@ __pycache__/
 .pytest_cache/
 *.pyc
 Insignia AI Strategy Map - regenerated.html
+Insignia AI Strategy Map - locked.html
 *.load-error.png
 *.save-error.png
 *.tab-error.png
