@@ -97,22 +97,34 @@ def test_regenerate_reflects_csv(tmp_path):
         assert company in body, "settings header.company not in regenerated HTML"
 
         # People live in editable <input> fields inside a division's detail
-        # row (Data > Divisions > "Edit details"), not as static text, so they
-        # don't show up in body.textContent — navigate there and expand the
-        # "D" division to confirm people.csv actually round-tripped.
-        pg.get_by_role("button", name=re.compile(r"^Data$")).click()
-        divisions_subtab = pg.get_by_role("button", name=re.compile(r"Divisions ·"))
-        divisions_subtab.wait_for(state="visible", timeout=4000)
-        divisions_subtab.click()
-        pg.wait_for_timeout(800)
-        pg.evaluate(
-            "() => document.querySelector('input[value=\"D\"]')"
-            ".closest('div[style*=\"grid-template-columns\"]')"
-            ".querySelector('button[title=\"Edit details\"]').click()")
-        pg.wait_for_timeout(500)
+        # row (Data > Divisions > "Edit details") in the *unlocked* app —
+        # but the shipped output is now the LOCKED bundle, which hides the
+        # "Edit details" pencil and flattens inputs, so that navigation path
+        # no longer works. The app only writes to localStorage on the first
+        # edit (see persist()/loadData() in the bundle); a freshly opened
+        # download instead boots straight from the embedded
+        # window.WORKSHOP_DATA snapshot, so read the person from there
+        # instead — a check that's meaningful either way and doesn't depend
+        # on mutation UI being present.
         person_present = pg.evaluate(
-            "(s) => [...document.querySelectorAll('input,textarea')]"
-            ".some(e => (e.value||'').includes(s))", person)
+            "(s) => JSON.stringify(window.WORKSHOP_DATA.departments)"
+            ".includes(s)", person)
         assert person_present, "people.csv person not in regenerated HTML"
+
+        # The shipped output is the LOCKED bundle: no upload/edit/add/delete
+        # controls, but Export CSV must still work.
+        locked = pg.evaluate("""() => {
+          const vis = el => el.offsetParent !== null && !el.hasAttribute('data-lock-hide');
+          const btn = t => [...document.querySelectorAll('button')].filter(b=>t(b)&&vis(b)).length;
+          return {
+            upload: [...document.querySelectorAll('label')].filter(l=>/Upload CSV/i.test(l.textContent)&&vis(l)).length,
+            pencils: btn(b=>b.getAttribute('title')==='Edit details'),
+            adds: btn(b=>/^\\+\\s*Add/.test((b.textContent||'').trim())),
+            dels: btn(b=>(b.textContent||'').trim()==='\\u00d7'),
+            exportPresent: [...document.querySelectorAll('button,a')].some(e=>/Export CSV/i.test(e.textContent||'')),
+          };
+        }""")
+        assert locked["upload"]==0 and locked["pencils"]==0 and locked["adds"]==0 and locked["dels"]==0
+        assert locked["exportPresent"] is True
         b.close()
     assert present, "sentinel from CSV not found in regenerated HTML"
