@@ -57,6 +57,8 @@ def _collect_lock_counts(page):
         pencils: btn(b => b.getAttribute('title') === 'Edit details'),
         adds: btn(b => (b.textContent || '').trim().indexOf('+ Add') === 0),
         dels: btn(b => (b.textContent || '').trim() === '\\u00d7'),
+        downloadStandalone: btn(b =>
+          (b.textContent || '').indexOf('Download standalone') !== -1),
         liveInputs: [...document.querySelectorAll('input:not([type=file]),textarea')]
           .filter(i => vis(i) && !i.classList.contains('__lock-static')).length,
         exportPresent: [...document.querySelectorAll('button,a')]
@@ -136,6 +138,7 @@ def test_locked_bundle_has_no_mutation_controls_after_download(tmp_path):
     assert counts["pencils"] == 0
     assert counts["adds"] == 0
     assert counts["dels"] == 0
+    assert counts["downloadStandalone"] == 0  # no re-download-to-broken-file button
     assert counts["liveInputs"] == 0        # all data inputs flattened to static
     assert counts["exportPresent"] is True
     assert counts["renders"] is True

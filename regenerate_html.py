@@ -13,8 +13,8 @@ This is a TWO-STAGE build so the shipped output is the locked, view-only app:
   resulting data object in Python (the same merges as before). This stage
   never downloads — its output is just the in-memory data dict.
 
-  Stage 2 (ship): open the LOCKED bundle (built once from the editable
-  bundle via lock_app.build_locked, then reused), inject the Stage-1 data
+  Stage 2 (ship): open the LOCKED bundle (rebuilt every run from the current
+  editable bundle via lock_app.build_locked), inject the Stage-1 data
   object into its localStorage, reload, and click "Download standalone
   HTML". Because the lock guard only takes effect in a *downloaded*
   artifact rebuilt from __PRISTINE_HTML, the download from the locked
@@ -227,13 +227,12 @@ def regenerate(csv_path, html_path, out_path, headed,
                        initiatives_path, settings_path, divisions_out,
                        people_path)
 
-    # Build the locked bundle once, then reuse it on every subsequent run.
-    if not locked_html_path.exists():
-        print(f"  notice: {locked_html_path} missing; building it from "
-              f"{html_path}")
-        locked_html_path.write_text(
-            lock_app.build_locked(html_path.read_text(encoding="utf-8")),
-            encoding="utf-8")
+    # Always (re)build the locked bundle from the current source, so a stale
+    # on-disk artifact can never be shipped if the source app changes. It's a
+    # cheap, deterministic, git-ignored derivative.
+    locked_html_path.write_text(
+        lock_app.build_locked(html_path.read_text(encoding="utf-8")),
+        encoding="utf-8")
 
     # Stage 2: ship — inject the data into the locked bundle and download.
     _ship(data, locked_html_path, out_path, headed)

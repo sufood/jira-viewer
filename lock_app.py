@@ -66,6 +66,7 @@ LOCK_GUARD = (
     "  document.querySelectorAll('button').forEach(function(b){"
     "    var t=(b.textContent||'').trim();"
     "    if(t==='↺ Reset'||t.indexOf('+ Add')===0||t==='×'"
+    "       ||t.indexOf('Download standalone')!==-1"
     "       ||b.getAttribute('title')==='Edit details') hide(b);});"
     "  document.querySelectorAll('input:not([type=file]),textarea').forEach("
     "    function(i){i.classList.add('__lock-static');i.setAttribute('readonly','');"
