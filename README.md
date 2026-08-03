@@ -87,6 +87,28 @@ python regenerate_html.py    # stories CSV + initiatives.csv + settings.yaml + p
 
 Setup for this path also needs YAML: `pip install requests playwright pyyaml`.
 
+### The output is locked (view-only)
+
+The shipped file is a **locked, view-only page**: the Data tabs have **no upload, edit,
+add, or delete** controls (data can only change by re-running `regenerate`), while an
+**Export CSV** download is kept for viewers. Details:
+
+- The lock is baked into the app's own source by `lock_app.py`, which produces a
+  **locked bundle** (`Insignia AI Strategy Map - locked.html`, generated + git-ignored).
+  `regenerate` builds it automatically if missing.
+- `regenerate` is **two-stage**: it builds the exact internal data by importing the CSVs
+  into the editable source (headless), then injects that data into the locked bundle and
+  downloads — so nothing is lost (per-division `gaps`/`nextSteps` and catalogues that
+  aren't in any CSV ride along).
+- The editable source file (`Insignia AI Strategy Map - Jira linked.html`) is retained as
+  an **internal build tool only** — it's never the thing you distribute; the locked output
+  is.
+
+```bash
+python lock_app.py           # (optional) build the locked bundle explicitly
+python regenerate_html.py    # builds it if missing, then ships the locked output
+```
+
 ## seed-template.csv
 
 The 11-column header row, empty. Start a fresh batch by pasting full content with blank
@@ -106,6 +128,8 @@ python -m pytest tests/ -q
 | `jira_sync.py` | CLI: `push` / `pull` |
 | `regenerate_html.py` | Playwright regenerator: whole page from stories CSV + `initiatives.csv` + `settings.yaml` + `people.csv` |
 | `settings_common.py` | Settings load, division derivation (Systems/Themes union + auto-colour), settings + people overlay |
+| `bundle_common.py` | Decode/edit/re-encode the app's single-file bundle resources |
+| `lock_app.py` | Bake the view-only lock guard into the app source → locked bundle |
 | `export_tabs.py` | Seed `initiatives.csv` + `settings.yaml` + `people.csv` from the app's current content |
 | `settings.yaml` | Header / centre-node / legend / per-division overrides |
 | `initiatives.csv` | Standalone editable initiatives |
