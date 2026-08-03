@@ -8,10 +8,20 @@ Whether a row's `Jira Key` / `Jira URL` columns are filled decides what each scr
 
 ## Setup
 
+For the Jira sync scripts (`jira_sync.py push` / `pull`) you only need `requests`:
+
 ```bash
-pip install requests playwright
-python -m playwright install chromium      # for regenerate_html.py only
+pip install requests
 cp .env.example .env                        # then fill in JIRA_* values
+# optional, for corporate TLS-inspecting proxies (Zscaler/Netskope etc.):
+pip install truststore                       # auto-detected; or use --ca-bundle
+```
+
+The HTML regeneration path additionally needs a browser (and YAML):
+
+```bash
+pip install playwright pyyaml
+python -m playwright install chromium
 ```
 
 `.env` (gitignored) holds your Jira Cloud credentials:
@@ -53,6 +63,8 @@ python jira_sync.py pull --dry-run           # show per-cell diff, no write
 python jira_sync.py pull                      # apply
 ```
 
+Also accepts `--csv PATH`, `-v/--verbose`, and `--ca-bundle PATH` (corporate TLS proxy).
+
 ## regenerate — rebuild the standalone HTML from the CSV
 
 Drives the app's own CSV import + "Download standalone HTML" in headless Chromium
@@ -85,7 +97,8 @@ python export_tabs.py        # writes initiatives.csv, settings.yaml, people.csv
 python regenerate_html.py    # stories CSV + initiatives.csv + settings.yaml + people.csv -> standalone HTML
 ```
 
-Setup for this path also needs YAML: `pip install requests playwright pyyaml`.
+This path needs the browser + YAML dependencies from [Setup](#setup)
+(`playwright` + `chromium` + `pyyaml`), in addition to `requests`.
 
 ### The output is locked (view-only)
 
