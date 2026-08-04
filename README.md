@@ -2,6 +2,8 @@
 
 The CSV `insignia-division-stories-jira-linked.csv` is the single source of truth.
 Whether a row's `Jira Key` / `Jira URL` columns are filled decides what each script does.
+It is the **default CSV** for `jira_sync.py push` / `pull` (and `regenerate_html.py`) when
+`--csv` is not given.
 
 **Columns:** `#, Division, Opportunity, AI-fit, Key people, Systems, Themes, Summary, Description, Jira Key, Jira URL`
 (UTF-8 with BOM, every field quoted; `Opportunity` is the Jira issue title.)
