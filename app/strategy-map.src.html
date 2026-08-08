@@ -2114,9 +2114,18 @@ class Component extends DCLogic {
   buildCardList(dep) {
     const list = [];
     list.push({ kind: "people", kicker: "Background & people", title: "The group & who's engaged", accent: dep.color, showCount: true, count: dep.people.length + " people engaged" });
-    dep.opportunities.forEach((o) => list.push({ kind: "opp", kicker: o.fit + " AI-fit", title: o.title, accent: this.fitColor(o.fit),
-      showBadge: false, badge: "", showTldr: !!o.summary, tldr: o.summary || "",
-      showPeople: !!(o.people && o.people.length), people: (o.people || []).join(" \u00b7 "), showDetails: true, opp: o }));
+    // WSJF scores from the shared derivation, keyed by the opportunity object,
+    // so a division's cards fan out in WSJF priority order with a score badge.
+    const byOpp = new Map();
+    this.deriveScores().list.forEach((r) => { if (r.opp) byOpp.set(r.opp, r); });
+    const opps = dep.opportunities.slice().sort((a, b) => (byOpp.get(b) ? byOpp.get(b).wsjf : 0) - (byOpp.get(a) ? byOpp.get(a).wsjf : 0));
+    opps.forEach((o) => {
+      const w = byOpp.get(o);
+      list.push({ kind: "opp", kicker: o.fit + " AI-fit", title: o.title, accent: this.fitColor(o.fit),
+        showBadge: !!w, badge: w ? ("WSJF " + w.wsjf.toFixed(1) + " \u00b7 #" + w.rank) : "",
+        showTldr: !!o.summary, tldr: o.summary || "",
+        showPeople: !!(o.people && o.people.length), people: (o.people || []).join(" \u00b7 "), showDetails: true, opp: o });
+    });
     list.push({ kind: "gaps", kicker: "Watch-outs", title: "Gaps & what's missing", accent: "#7d8ca3", showCount: true, count: dep.gaps.length + " open items" });
     list.push({ kind: "steps", kicker: "Momentum", title: "Quick next steps", accent: "#5aa9a0", showCount: true, count: dep.nextSteps.length + " actions" });
     return list;
