@@ -413,6 +413,11 @@
       <button sc-camel-on-click="{{ modeData }}" style="cursor: pointer; font-family: inherit; border: none; padding: 7px 17px; border-radius: 22px; font-size: 12.5px; font-weight: 600; letter-spacing: 0.01em; transition: all 0.15s; background: {{ dataBtnBg }}; color: {{ dataBtnColor }};">Data</button>
     </div>
     <div style="text-align: center; margin-top: 9px; font-size: 11.5px; color: #8fa2b8; letter-spacing: 0.02em;">{{ modeCaption }}</div>
+    <sc-if value="{{ showHeatToggle }}" hint-placeholder-val="{{ false }}">
+      <div style="text-align: center; margin-top: 9px;">
+        <button sc-camel-on-click="{{ toggleHeat }}" style="{{ heatBtnStyle }}">◆ Priority heat</button>
+      </div>
+    </sc-if>
   </div>
 
   <!-- Header -->
@@ -1538,7 +1543,7 @@ class Component extends DCLogic {
     dataTab: "init", dataSort: { key: "num", dir: "asc" }, expandedDiv: null, expandedInit: null,
     // WSJF Priority tab: view + model params (what-if). Overrides/sizes/must are
     // browser-local overlays; weights/capacity/off are the what-if knobs.
-    priorityView: "exec", wsjfSel: null, capFilter: null, priorityDivision: null,
+    priorityView: "exec", wsjfSel: null, capFilter: null, priorityDivision: null, heatOverlay: false,
     overrides: {}, sizes: {}, must: {}, weights: null,
     off: { rev: true, out: true, avoid: true }, capacity: 18,
     apiKey: "", apiEndpoint: "", mw: 0, mh: 0,
@@ -1595,7 +1600,21 @@ class Component extends DCLogic {
     this.tick = this.tick.bind(this);
     this._raf = requestAnimationFrame(this.tick);
   }
+  // Per-division heat colour by its share of the top-25 WSJF stories, for the
+  // map's priority-heat overlay. Cached so the rAF draw loop stays cheap.
+  computeHeatColors() {
+    const list = this.deriveScores().list;
+    const cnt = {};
+    list.slice(0, 25).forEach((r) => { cnt[r.division] = (cnt[r.division] || 0) + 1; });
+    const max = Math.max(1, ...Object.values(cnt));
+    const map = {};
+    Object.keys(cnt).forEach((d) => { map[d] = WSJF.HEAT[Math.min(4, Math.round((cnt[d] / max) * 4))]; });
+    return { map, cold: WSJF.HEAT[0] };
+  }
   componentDidUpdate() {
+    // Recompute heat colours on real state changes (e.g. what-if weights) so the
+    // overlay stays live-linked, but not per animation frame.
+    if (this.state.heatOverlay) this._heatColors = this.computeHeatColors();
     // The graph loop re-renders often; only re-fit when the card copy or the
     // viewport actually changed (each pass forces synchronous layout).
     const cards = this.state.cards || [];
@@ -1882,11 +1901,19 @@ class Component extends DCLogic {
         }
       }
     }
+    const heat = this.state.heatOverlay ? (this._heatColors || (this._heatColors = this.computeHeatColors())) : null;
     this.drawNode(hub, 1, false);
     this.nodes.forEach((n) => {
       if (n.type !== "dept") return;
       const dim = hf && !this.matches(n, hf);
-      this.drawNode(n, dim ? 0.28 : 1, false);
+      if (heat) {
+        const orig = n.color;
+        n.color = (n.dep && heat.map[n.dep.name]) || heat.cold;
+        this.drawNode(n, dim ? 0.28 : 1, false);
+        n.color = orig;
+      } else {
+        this.drawNode(n, dim ? 0.28 : 1, false);
+      }
     });
   }
 
@@ -3395,6 +3422,13 @@ class Component extends DCLogic {
     return {
       ...this.priorityProps(),
       viewInPriority: () => this.setState({ mode: "priority", priorityDivision: this.state.selectedName, selected: false, cards: [] }),
+      showHeatToggle: s.mode === "divisions" && !s.selected,
+      toggleHeat: () => this.setState({ heatOverlay: !this.state.heatOverlay }),
+      heatBtnStyle: { cursor: "pointer", fontFamily: "inherit", fontSize: "11px", fontWeight: 600, letterSpacing: "0.02em",
+        padding: "5px 13px", borderRadius: "18px", transition: "all 0.15s",
+        border: "1px solid " + (s.heatOverlay ? "#ffb020" : "rgba(255,255,255,0.18)"),
+        background: s.heatOverlay ? "rgba(255,176,32,0.16)" : "rgba(255,255,255,0.05)",
+        color: s.heatOverlay ? "#ffce7a" : "#9db0c6" },
       rootRef: this.rootRef, canvasRef: this.canvasRef,
       mode: s.mode, modeCaption: caption,
       toggleOpacity: s.selected ? 0 : 1, togglePointer: s.selected ? "none" : "auto",
