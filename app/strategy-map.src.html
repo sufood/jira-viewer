@@ -556,8 +556,78 @@
             </div>
           </div>
         </sc-if>
+        <sc-if value="{{ isTable }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute; inset:0; display:flex; flex-direction:column;">
+            <div style="display:flex; align-items:center; gap:14px; padding:16px 22px 12px 22px;">
+              <span style="font-size:12px; font-weight:600;">Data &amp; scoring</span>
+              <span style="font-size:11px; color:#6f7783;">Every cell is editable. Edits are stored in your browser and override the auto-score.</span>
+              <div style="flex:1"></div>
+              <span style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#8b929e;">{{ overrideCount }}</span>
+              <button sc-camel-on-click="{{ onResetAll }}" style="background:#151a21; border:1px solid #2a3038; color:#c3c9d3; font-family:'IBM Plex Mono',monospace; font-size:10px; padding:5px 10px; border-radius:4px; cursor:pointer; letter-spacing:0.04em;" style-hover="border-color:#ffb020; color:#ffb020;">RESET ALL</button>
+              <button sc-camel-on-click="{{ onExport }}" style="background:#ffb020; border:1px solid #ffb020; color:#0b0d10; font-family:'IBM Plex Mono',monospace; font-size:10px; font-weight:600; padding:5px 10px; border-radius:4px; cursor:pointer; letter-spacing:0.04em;" style-hover="background:#ffc95c;">EXPORT CSV</button>
+            </div>
+            <div style="flex:1; min-height:0; overflow:auto; padding:0 22px 24px 22px;">
+              <sc-raw-table style="width:100%; border-collapse:separate; border-spacing:0; font-size:11px;">
+                <sc-raw-thead>
+                  <sc-raw-tr>
+                    <sc-raw-th style="position:sticky; top:0; z-index:2; background:#0b0d10; text-align:left; padding:6px 8px 8px 0; font-weight:600; color:#8b929e; font-family:'IBM Plex Mono',monospace; font-size:9.5px; letter-spacing:0.06em; border-bottom:1px solid #232a34;">STORY</sc-raw-th>
+                    <sc-for list="{{ tableHeads }}" as="h" hint-placeholder-count="9">
+                      <sc-raw-th title="{{ h.title }}" style="{{ h.style }}">{{ h.label }}</sc-raw-th>
+                    </sc-for>
+                    <sc-raw-th style="position:sticky; top:0; z-index:2; background:#0b0d10; padding:6px 8px 8px 8px; color:#8b929e; font-family:'IBM Plex Mono',monospace; font-size:9.5px; letter-spacing:0.06em; border-bottom:1px solid #232a34; text-align:left; width:132px;" title="Job Size — T-shirt size, the WSJF denominator">JOB SIZE</sc-raw-th>
+                    <sc-raw-th style="position:sticky; top:0; z-index:2; background:#0b0d10; padding:6px 8px 8px 8px; color:#8b929e; font-family:'IBM Plex Mono',monospace; font-size:9.5px; letter-spacing:0.06em; border-bottom:1px solid #232a34; text-align:left;" title="Must-do — regulatory or mandatory work, floated above WSJF order">MUST</sc-raw-th>
+                    <sc-raw-th style="position:sticky; top:0; z-index:2; background:#0b0d10; padding:6px 8px 8px 8px; color:#8b929e; font-family:'IBM Plex Mono',monospace; font-size:9.5px; letter-spacing:0.06em; border-bottom:1px solid #232a34; text-align:right;" title="Confidence — evidence quality plus hard numbers in the description">CONF</sc-raw-th>
+                    <sc-raw-th style="position:sticky; top:0; z-index:2; background:#0b0d10; padding:6px 8px 8px 8px; color:#8b929e; font-family:'IBM Plex Mono',monospace; font-size:9.5px; letter-spacing:0.06em; border-bottom:1px solid #232a34; text-align:right;" title="Cost of Delay — weighted sum of the active categories">CoD</sc-raw-th>
+                    <sc-raw-th style="position:sticky; top:0; z-index:2; background:#0b0d10; padding:6px 0 8px 8px; color:#ffb020; font-family:'IBM Plex Mono',monospace; font-size:9.5px; letter-spacing:0.06em; border-bottom:1px solid #232a34; text-align:right;" title="Weighted Shortest Job First — Cost of Delay divided by Job Size">WSJF</sc-raw-th>
+                  </sc-raw-tr>
+                </sc-raw-thead>
+                <sc-raw-tbody>
+                  <sc-for list="{{ tableRows }}" as="r" hint-placeholder-count="12">
+                    <sc-raw-tr style="{{ r.rowStyle }}">
+                      <sc-raw-td style="padding:0; border-bottom:1px solid #151a21; max-width:190px;">
+                        <button sc-camel-on-click="{{ r.onClick }}" style="display:flex; flex-direction:column; align-items:flex-start; gap:1px; background:transparent; border:none; color:inherit; text-align:left; padding:6px 10px 6px 0; cursor:pointer; width:100%;" style-hover="color:#ffb020;">
+                          <span style="font-size:11.5px; color:#dfe3e9; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:180px;">{{ r.name }}</span>
+                          <span style="font-family:'IBM Plex Mono',monospace; font-size:9.5px; color:#5c636e;">{{ r.sub }}</span>
+                        </button>
+                      </sc-raw-td>
+                      <sc-for list="{{ r.cells }}" as="c" hint-placeholder-count="9">
+                        <sc-raw-td style="{{ c.tdStyle }}">
+                          <input type="number" min="1" max="5" step="1" value="{{ c.score }}" sc-camel-on-change="{{ c.onChange }}" title="{{ c.title }}" style="{{ c.inputStyle }}">
+                        </sc-raw-td>
+                      </sc-for>
+                      <sc-raw-td style="padding:4px 8px; border-bottom:1px solid #151a21;">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                          <span style="{{ r.sizeBadge }}">{{ r.sizeLabel }}</span>
+                          <input type="range" min="0" max="4" step="1" value="{{ r.sizeIdx }}" sc-camel-on-change="{{ r.onSize }}" title="{{ r.sizeTitle }}" style="flex:1; min-width:0; height:16px;">
+                        </div>
+                      </sc-raw-td>
+                      <sc-raw-td style="padding:4px 8px; border-bottom:1px solid #151a21;">
+                        <button sc-camel-on-click="{{ r.onMust }}" style="{{ r.mustStyle }}" style-hover="border-color:#ff7a7a;">{{ r.mustLabel }}</button>
+                      </sc-raw-td>
+                      <sc-raw-td style="padding:4px 8px; border-bottom:1px solid #151a21; text-align:right;"><span style="{{ r.confStyle }}">{{ r.conf }}</span></sc-raw-td>
+                      <sc-raw-td style="padding:4px 8px; border-bottom:1px solid #151a21; text-align:right; font-family:'IBM Plex Mono',monospace; font-size:11px; color:#8b929e;">{{ r.cod }}</sc-raw-td>
+                      <sc-raw-td style="padding:4px 0 4px 8px; border-bottom:1px solid #151a21; text-align:right; font-family:'IBM Plex Mono',monospace; font-size:12px; font-weight:600; color:#ffb020;">{{ r.wsjf }}</sc-raw-td>
+                    </sc-raw-tr>
+                  </sc-for>
+                </sc-raw-tbody>
+              </sc-raw-table>
+            </div>
+          </div>
+        </sc-if>
         <sc-if value="{{ isSetup }}" hint-placeholder-val="{{ false }}">
-          <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#6f7783; font-size:12px;">More views coming — Table, Matrix, Bubble, Heat, Stair, Setup.</div>
+          <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#6f7783; font-size:12px;">More views coming — Matrix, Bubble, Heat, Stair, Setup.</div>
+        </sc-if>
+        <sc-if value="{{ isMatrix }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#6f7783; font-size:12px;">Matrix view coming next.</div>
+        </sc-if>
+        <sc-if value="{{ isBubble }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#6f7783; font-size:12px;">Bubble view coming next.</div>
+        </sc-if>
+        <sc-if value="{{ isHeat }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#6f7783; font-size:12px;">Heat view coming next.</div>
+        </sc-if>
+        <sc-if value="{{ isStair }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#6f7783; font-size:12px;">Stair view coming next.</div>
         </sc-if>
       </div>
     </div>
@@ -2755,9 +2825,65 @@ class Component extends DCLogic {
         color: W[c.k] !== c.w ? "#ffb020" : "#5c636e" },
     }));
     const listH = (Math.min(25, shown.length) * EROW + 14) + "px";
+    // ---- Table view (editable scoring grid) ----
+    const tableHeads = WSJF.CATS.map((c) => ({
+      label: c.short,
+      title: c.label + " · weight " + W[c.k].toFixed(1) + (S.off[c.k] ? " · excluded from Cost of Delay" : ""),
+      style: { position: "sticky", top: 0, zIndex: 2, background: "#0b0d10", padding: "6px 2px 8px 2px",
+        color: S.off[c.k] ? "#454c57" : "#8b929e", fontFamily: "'IBM Plex Mono',monospace",
+        fontSize: "9.5px", letterSpacing: "0.05em", borderBottom: "1px solid #232a34", textAlign: "center", width: "40px" },
+    }));
+    const tableRows = list.map((r) => ({
+      name: r.opportunity,
+      sub: r.id + " · " + r.division + (r.thin ? " · thin evidence" : ""),
+      onClick: () => this.setState({ wsjfSel: r.id }),
+      rowStyle: { background: r.edited ? "rgba(255,176,32,0.035)" : "transparent" },
+      cells: WSJF.CATS.map((c) => ({
+        score: r.sc[c.k],
+        title: c.label + " — " + (r.ov[c.k] != null ? "manual override" : r.why[c.k]),
+        onChange: (e) => this.setScore(r.id, c.k, e.target.value),
+        tdStyle: { padding: "3px 2px", borderBottom: "1px solid #151a21", textAlign: "center", opacity: S.off[c.k] ? 0.35 : 1 },
+        inputStyle: { width: "32px", background: r.ov[c.k] != null ? "#241d0c" : "#12161c",
+          border: "1px solid " + (r.ov[c.k] != null ? "#ffb020" : "#232a34"), borderRadius: "3px",
+          color: r.ov[c.k] != null ? "#ffb020" : "#c3c9d3", fontFamily: "'IBM Plex Mono',monospace",
+          fontSize: "11px", textAlign: "center", padding: "3px 0", outline: "none" },
+      })),
+      sizeIdx: r.sizeIdx, sizePts: r.pts, sizeLabel: WSJF.SIZES[r.sizeIdx].label,
+      sizeTitle: WSJF.SIZES[r.sizeIdx].label + " — " + r.pts + " story points",
+      sizeBadge: { display: "inline-flex", alignItems: "center", justifyContent: "center", width: "26px",
+        height: "18px", borderRadius: "3px", fontFamily: "'IBM Plex Mono',monospace", fontSize: "9.5px",
+        fontWeight: 600, background: S.sizes[r.id] != null ? "#241d0c" : "#171c23",
+        color: S.sizes[r.id] != null ? "#ffb020" : "#8b929e",
+        border: "1px solid " + (S.sizes[r.id] != null ? "#ffb020" : "#242b35") },
+      onSize: (e) => this.setSize(r.id, e.target.value),
+      mustLabel: r.must ? "MUST" : "no",
+      onMust: (e) => { e.stopPropagation(); this.toggleMust(r.id); },
+      mustStyle: { fontFamily: "'IBM Plex Mono',monospace", fontSize: "9px", letterSpacing: "0.05em",
+        padding: "3px 6px", borderRadius: "3px", cursor: "pointer", width: "42px",
+        background: r.must ? "rgba(255,86,86,0.14)" : "#12161c",
+        border: "1px solid " + (r.must ? "#7a3535" : "#232a34"),
+        color: r.must ? "#ff7a7a" : "#4a525e" },
+      conf: r.confidence + "%",
+      confStyle: { fontFamily: "'IBM Plex Mono',monospace", fontSize: "10px",
+        color: r.confidence < 40 ? "#ffb020" : "#8b929e" },
+      cod: r.cod.toFixed(1), wsjf: r.wsjf.toFixed(1),
+    }));
+    const editedN = list.filter((r) => r.edited).length;
+    const onExport = () => {
+      const head = ["Jira Key", "Opportunity", "Division", ...WSJF.CATS.map((c) => c.label),
+        "Job Size", "Points", "Cost of Delay", "WSJF", "Rank", "Jira URL"];
+      const esc = (v) => '"' + String(v).replace(/"/g, '""') + '"';
+      const body = list.map((r) => [r.id, r.opportunity, r.division, ...WSJF.CATS.map((c) => r.sc[c.k]),
+        WSJF.SIZES[r.sizeIdx].label, r.pts, r.cod.toFixed(2), r.wsjf.toFixed(2), r.rank, r.url].map(esc).join(","));
+      const blob = new Blob([[head.map(esc).join(","), ...body].join("\n")], { type: "text/csv" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob); a.download = "wsjf-ranked.csv"; a.click();
+    };
     return Object.assign({
       showPriority: true, priTabs,
       execRows, mixRows, kpis, capChips, sliders, listH,
+      tableHeads, tableRows, overrideCount: editedN + " edited",
+      onResetAll: this.resetAll, onExport,
       ruleTop: (10 * EROW + 5) + "px",
       onResetWeights: this.resetWeights,
       execNote: (S.capFilter ? S.capFilter + " only · " : "") + shown.length + " stories ranked",
