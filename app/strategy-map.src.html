@@ -615,7 +615,71 @@
           </div>
         </sc-if>
         <sc-if value="{{ isSetup }}" hint-placeholder-val="{{ false }}">
-          <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#6f7783; font-size:12px;">More views coming — Matrix, Bubble, Heat, Stair, Setup.</div>
+          <div style="position:absolute; inset:0; overflow:auto; padding:18px 22px 30px 22px;">
+            <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(330px,1fr)); gap:14px; max-width:1180px;">
+              <section style="background:#101319; border:1px solid #1e232b; border-radius:6px; padding:16px;">
+                <div style="font-size:12px; font-weight:600; margin-bottom:4px;">1 · Backlog source</div>
+                <div style="font-size:11px; color:#6f7783; line-height:1.5; margin-bottom:12px;">Drop a Jira CSV export. Parsed in the browser; it replaces the shared stories store used by every tab.</div>
+                <label style="{{ dropStyle }}">
+                  <input type="file" accept=".csv,text/csv" sc-camel-on-change="{{ onFile }}" style="display:none;">
+                  <span style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:#8b929e; letter-spacing:0.04em;">CHOOSE CSV</span>
+                  <span style="font-size:11px; color:#5c636e;">Jira export · replaces the shared store</span>
+                </label>
+                <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#8b929e; margin-top:10px;">{{ sourceLine }}</div>
+              </section>
+              <section style="background:#101319; border:1px solid #1e232b; border-radius:6px; padding:16px;">
+                <div style="font-size:12px; font-weight:600; margin-bottom:4px;">2 · Judge API</div>
+                <div style="font-size:11px; color:#6f7783; line-height:1.5; margin-bottom:12px;">Optional. Without a key every story is scored by the in-browser heuristic. Held in session storage only — never persisted to disk.</div>
+                <div style="display:flex; flex-direction:column; gap:8px;">
+                  <label style="display:flex; flex-direction:column; gap:4px;">
+                    <span style="font-family:'IBM Plex Mono',monospace; font-size:9px; color:#5c636e; letter-spacing:0.08em;">API ENDPOINT</span>
+                    <input type="url" placeholder="https://api.unify.ai/v0/chat/completions" value="{{ apiEndpoint }}" sc-camel-on-change="{{ onEndpoint }}" style="width:100%; background:#0b0d10; border:1px solid #2a3038; border-radius:4px; color:#e6e8ec; font-family:'IBM Plex Mono',monospace; font-size:11px; padding:8px 10px; outline:none;">
+                  </label>
+                  <label style="display:flex; flex-direction:column; gap:4px;">
+                    <span style="font-family:'IBM Plex Mono',monospace; font-size:9px; color:#5c636e; letter-spacing:0.08em;">API KEY</span>
+                    <input type="password" placeholder="uni_..." value="{{ apiKey }}" sc-camel-on-change="{{ onKey }}" style="width:100%; background:#0b0d10; border:1px solid #2a3038; border-radius:4px; color:#e6e8ec; font-family:'IBM Plex Mono',monospace; font-size:11px; padding:8px 10px; outline:none;">
+                  </label>
+                </div>
+                <div style="display:flex; align-items:center; gap:10px; margin-top:10px;">
+                  <button sc-camel-on-click="{{ onJudge }}" style="{{ judgeBtnStyle }}">{{ judgeLabel }}</button>
+                  <span style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#5c636e;">{{ judgeNote }}</span>
+                </div>
+              </section>
+              <section style="background:#101319; border:1px solid #1e232b; border-radius:6px; padding:16px;">
+                <div style="font-size:12px; font-weight:600; margin-bottom:4px;">3 · Model weights</div>
+                <div style="font-size:11px; color:#6f7783; line-height:1.5; margin-bottom:12px;">Financial categories are off by default and their weight is renormalised across the six evidenced ones.</div>
+                <div style="display:flex; flex-direction:column; gap:1px;">
+                  <sc-for list="{{ weightRows }}" as="w" hint-placeholder-count="9">
+                    <label style="{{ w.rowStyle }}">
+                      <input type="checkbox" checked="{{ w.on }}" sc-camel-on-change="{{ w.onToggle }}" style="accent-color:#ffb020; width:13px; height:13px;">
+                      <span style="flex:1; font-size:11.5px;">{{ w.label }}</span>
+                      <span style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#5c636e;">{{ w.note }}</span>
+                      <span style="{{ w.weightStyle }}">{{ w.weight }}</span>
+                    </label>
+                  </sc-for>
+                </div>
+                <div style="display:flex; justify-content:space-between; margin-top:10px; padding-top:9px; border-top:1px solid #1e232b; font-family:'IBM Plex Mono',monospace; font-size:10px; color:#8b929e;">
+                  <span>ACTIVE WEIGHT</span><span style="color:#ffb020;">{{ activeWeight }}</span>
+                </div>
+              </section>
+              <section style="background:#101319; border:1px solid #1e232b; border-radius:6px; padding:16px;">
+                <div style="font-size:12px; font-weight:600; margin-bottom:4px;">4 · Strategic pillars</div>
+                <div style="font-size:11px; color:#6f7783; line-height:1.5; margin-bottom:12px;">Every division lands on a pillar; description keywords refine the score. Divisions marked * are nearest-fit.</div>
+                <div style="display:flex; flex-direction:column; gap:8px;">
+                  <sc-for list="{{ pillarRows }}" as="p" hint-placeholder-count="4">
+                    <div style="display:flex; gap:10px; align-items:flex-start; padding:7px 9px; background:#0b0d10; border:1px solid #1a1f27; border-radius:4px;">
+                      <span style="{{ p.dot }}"></span>
+                      <div style="display:flex; flex-direction:column; gap:2px; min-width:0;">
+                        <span style="font-size:11.5px; font-weight:600; color:#dfe3e9;">{{ p.division }}</span>
+                        <span style="font-size:10.5px; color:#8b929e; line-height:1.45;">{{ p.pillars }}</span>
+                        <span style="font-family:'IBM Plex Mono',monospace; font-size:9.5px; color:#5c636e; line-height:1.5; margin-top:2px;">{{ p.divisions }}</span>
+                      </div>
+                    </div>
+                  </sc-for>
+                </div>
+              </section>
+            </div>
+          </div>
         </sc-if>
         <sc-if value="{{ isMatrix }}" hint-placeholder-val="{{ false }}">
           <div style="position:absolute; inset:0; display:flex; flex-direction:column; padding:18px 22px 14px 22px;">
@@ -2875,7 +2939,7 @@ class Component extends DCLogic {
       return Object.assign({ showPriority: false, priTabs, kpis: [], execRows: [], mixRows: [],
         capChips: [], sliders: [], listH: "0px", ruleTop: "0px", execNote: "" }, viewFlags);
     }
-    const { list, W } = this.deriveScores();
+    const { list, act, totalW, W } = this.deriveScores();
     const EROW = 32;
     const shown = S.capFilter ? list.filter((r) => r.capability === S.capFilter) : list;
     const pos = {}; shown.forEach((r, i) => { pos[r.id] = i; });
@@ -3122,6 +3186,41 @@ class Component extends DCLogic {
         background: i === 0 ? "#ffb020" : "oklch(0.62 0.09 " + (60 + i * 14) + ")" },
       chips: s.items.map((r) => this.chip(r, { maxWidth: "190px" })),
     }));
+    // ---- Setup: financial toggles, pillars, upload (writes the shared store), LLM ----
+    const weightRows = WSJF.CATS.map((c) => ({
+      label: c.label, on: !S.off[c.k],
+      note: c.fin ? "unevidenced in corpus" : "",
+      weight: c.w.toFixed(1),
+      onToggle: () => { const o = Object.assign({}, S.off); o[c.k] = !o[c.k]; this.setState({ off: o }); },
+      rowStyle: { display: "flex", alignItems: "center", gap: "9px", padding: "6px 8px", borderRadius: "3px",
+        cursor: "pointer", background: S.off[c.k] ? "transparent" : "rgba(255,176,32,0.05)",
+        color: S.off[c.k] ? "#6f7783" : "#dfe3e9" },
+      weightStyle: { fontFamily: "'IBM Plex Mono',monospace", fontSize: "10.5px", width: "24px",
+        textAlign: "right", color: S.off[c.k] ? "#454c57" : "#ffb020" },
+    }));
+    const pillarRows = WSJF.PILLARS.map((p) => {
+      const divs = Object.keys(WSJF.DIV_PILLAR).filter((d) => WSJF.DIV_PILLAR[d][0] === p.name);
+      return {
+        division: p.name, pillars: p.list.join(" · "),
+        divisions: divs.map((d) => d + (WSJF.DIV_PILLAR[d][1] ? "" : "*")).join(", "),
+        dot: { width: "8px", height: "8px", borderRadius: "2px", marginTop: "4px", flexShrink: 0,
+          background: "oklch(0.72 0.15 " + p.hue + ")" },
+      };
+    });
+    const keyed = !!S.apiKey.trim() && !!S.apiEndpoint.trim();
+    // Upload OVERRIDES the one shared store (imports as stories), per design.
+    const onFile = (e) => {
+      const f = e.target.files && e.target.files[0]; if (!f) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const recs = this.csvToRecords(String(reader.result));
+          if (recs.length) this.importStories(recs);
+          else alert("No rows found in that CSV.");
+        } catch (err) { console.error("CSV import failed", err); alert("Could not read that CSV — check the column headers."); }
+      };
+      reader.readAsText(f); e.target.value = "";
+    };
     const editedN = list.filter((r) => r.edited).length;
     const onExport = () => {
       const head = ["Jira Key", "Opportunity", "Division", ...WSJF.CATS.map((c) => c.label),
@@ -3142,6 +3241,21 @@ class Component extends DCLogic {
       codMaxLabel: maxCod.toFixed(0), codMinLabel: minCod.toFixed(0),
       matrixRef: this.setMatrixEl, capacity: S.capacity,
       onCapacity: (e) => { const v = +e.target.value; this.setState({ capacity: v }); this.wsjfSave("wsjf.capacity.v1", v); },
+      weightRows, pillarRows, activeWeight: totalW.toFixed(1) + " / 14.5",
+      onFile,
+      sourceLine: list.length + " stories in the shared store · scored in-browser",
+      dropStyle: { display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+        gap: "6px", padding: "22px", border: "1px dashed #2f3742", borderRadius: "5px", cursor: "pointer", background: "#0b0d10" },
+      apiKey: S.apiKey,
+      onKey: (e) => { this.setState({ apiKey: e.target.value }); try { sessionStorage.setItem("wsjf.key", e.target.value); } catch (err) {} },
+      apiEndpoint: S.apiEndpoint,
+      onEndpoint: (e) => { this.setState({ apiEndpoint: e.target.value }); try { sessionStorage.setItem("wsjf.endpoint", e.target.value); } catch (err) {} },
+      judgeLabel: "RUN JUDGE ON 6 CATEGORIES",
+      judgeNote: keyed ? "Ready · 6 calls per story" : "Endpoint + key required · heuristic scoring active",
+      judgeBtnStyle: { background: keyed ? "#ffb020" : "#151a21", border: "1px solid " + (keyed ? "#ffb020" : "#2a3038"),
+        color: keyed ? "#0b0d10" : "#5c636e", fontFamily: "'IBM Plex Mono',monospace", fontSize: "10px",
+        fontWeight: 600, padding: "6px 11px", borderRadius: "4px", cursor: keyed ? "pointer" : "not-allowed", letterSpacing: "0.04em" },
+      onJudge: () => { if (keyed) alert("Judge run is stubbed in this build — heuristic scores stand."); },
       ruleTop: (10 * EROW + 5) + "px",
       onResetWeights: this.resetWeights,
       execNote: (S.capFilter ? S.capFilter + " only · " : "") + shown.length + " stories ranked",
