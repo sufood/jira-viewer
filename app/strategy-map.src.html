@@ -2784,7 +2784,8 @@ class Component extends DCLogic {
       people: Array.isArray(opp.people) ? opp.people.map(p => p.name || p).join("; ") : (opp.people || ""),
       title: opp.title || "", summary: opp.summary || "",
       themes, systems, body: WSJF.evidenceBody(desc),
-      rawLen: desc.length, thin: desc.length < 200,
+      rawLen: desc.length,
+      thin: /no deep-dive questions captured/i.test(desc) || desc.length < 900,
       fit: opp.fit || "", url: opp.jiraUrl || "", jiraKey: opp.jiraKey || "",
       dep, opp,
     };
