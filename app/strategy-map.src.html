@@ -470,6 +470,99 @@
   </div>
 
   <!-- Data lens: two tables -->
+  <!-- Priority tab: WSJF Studio views (overlay, like the Data tab) -->
+  <sc-if value="{{ showPriority }}" hint-placeholder-val="{{ false }}">
+    <div style="position: absolute; top: 100px; left: 34px; right: 34px; bottom: 22px; z-index: 7; display: flex; flex-direction: column; animation: fadeIn 0.3s ease; background: #0b0d10; border: 1px solid #1e232b; border-radius: 12px; overflow: hidden;">
+      <div style="display: flex; gap: 4px; padding: 9px 12px; border-bottom: 1px solid #1e232b; background: rgba(9,18,30,0.6);">
+        <sc-for list="{{ priTabs }}" as="t" hint-placeholder-count="7">
+          <button sc-camel-on-click="{{ t.onClick }}" style="{{ t.style }}">{{ t.label }}</button>
+        </sc-for>
+      </div>
+      <div style="position: relative; flex: 1; min-height: 0; color: #c3c9d3;">
+        <sc-if value="{{ isExec }}" hint-placeholder-val="{{ true }}">
+          <div style="position:absolute; inset:0; overflow:auto; padding:18px 22px 28px 22px;">
+            <div style="display:grid; grid-template-columns:minmax(0,1fr) 300px; gap:16px; align-items:start; max-width:1500px;">
+              <div style="display:flex; flex-direction:column; gap:14px; min-width:0;">
+                <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px;">
+                  <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="4">
+                    <div style="background:#101319; border:1px solid #1e232b; border-radius:6px; padding:12px 14px; display:flex; flex-direction:column; gap:4px;">
+                      <span style="font-family:'IBM Plex Mono',monospace; font-size:9px; color:#5c636e; letter-spacing:0.08em;">{{ k.label }}</span>
+                      <span style="{{ k.valueStyle }}">{{ k.value }}</span>
+                      <span style="font-size:10px; color:#6f7783; line-height:1.35;">{{ k.note }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+                <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+                  <span style="font-size:12px; font-weight:600;">Top 10 priorities</span>
+                  <span style="font-size:11px; color:#6f7783;">Next 15 below the rule as a watchlist. ▲▼ is movement against the default weighting.</span>
+                  <div style="flex:1"></div>
+                  <sc-for list="{{ capChips }}" as="c" hint-placeholder-count="5">
+                    <button sc-camel-on-click="{{ c.onClick }}" style="{{ c.style }}" style-hover="color:#e6e8ec;">{{ c.name }}</button>
+                  </sc-for>
+                </div>
+                <div style="position:relative; height:{{ listH }}; min-height:120px;">
+                  <div style="position:absolute; left:0; right:0; top:{{ ruleTop }}; height:1px; background:#232a34;"></div>
+                  <sc-for list="{{ execRows }}" as="r" hint-placeholder-count="12">
+                    <button sc-camel-on-click="{{ r.onClick }}" title="{{ r.title }}" style="{{ r.style }}" style-hover="background:#1a2029; border-color:#ffb020;">
+                      <span style="{{ r.rankStyle }}">{{ r.rank }}</span>
+                      <span style="{{ r.capDot }}"></span>
+                      <span style="{{ r.nameStyle }}">{{ r.name }}</span>
+                      <span style="{{ r.subStyle }}">{{ r.sub }}</span>
+                      <span style="{{ r.mustStyle }}">{{ r.must }}</span>
+                      <span style="{{ r.confBar }}"></span>
+                      <span style="{{ r.confStyle }}">{{ r.conf }}</span>
+                      <span style="{{ r.deltaStyle }}">{{ r.delta }}</span>
+                      <span style="{{ r.wsjfStyle }}">{{ r.wsjf }}</span>
+                    </button>
+                  </sc-for>
+                </div>
+                <span style="font-family:'IBM Plex Mono',monospace; font-size:9.5px; color:#5c636e;">{{ execNote }}</span>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:14px;">
+                <section style="background:#101319; border:1px solid #1e232b; border-radius:6px; padding:14px;">
+                  <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+                    <span style="font-size:12px; font-weight:600;">What-if weighting</span>
+                    <div style="flex:1"></div>
+                    <button sc-camel-on-click="{{ onResetWeights }}" style="background:transparent; border:1px solid #2a3038; color:#7d848f; font-family:'IBM Plex Mono',monospace; font-size:9px; padding:3px 7px; border-radius:3px; cursor:pointer; letter-spacing:0.04em;" style-hover="border-color:#ffb020; color:#ffb020;">RESET</button>
+                  </div>
+                  <div style="font-size:10.5px; color:#6f7783; line-height:1.5; margin-bottom:12px;">Move a weight and the ranking re-sorts live. Greyed rows are categories switched off in Setup.</div>
+                  <div style="display:flex; flex-direction:column; gap:9px;">
+                    <sc-for list="{{ sliders }}" as="s" hint-placeholder-count="9">
+                      <label style="{{ s.rowStyle }}">
+                        <span style="{{ s.labelStyle }}">{{ s.label }}</span>
+                        <input type="range" min="0" max="4" step="0.5" value="{{ s.value }}" sc-camel-on-change="{{ s.onChange }}" style="width:100%; height:14px;">
+                        <span style="{{ s.valueStyle }}">{{ s.display }}</span>
+                      </label>
+                    </sc-for>
+                  </div>
+                </section>
+                <section style="background:#101319; border:1px solid #1e232b; border-radius:6px; padding:14px;">
+                  <div style="font-size:12px; font-weight:600; margin-bottom:4px;">Investment mix</div>
+                  <div style="font-size:10.5px; color:#6f7783; line-height:1.5; margin-bottom:12px;">Share of Top 10 effort by strategic pillar, in story points.</div>
+                  <div style="display:flex; flex-direction:column; gap:11px;">
+                    <sc-for list="{{ mixRows }}" as="m" hint-placeholder-count="4">
+                      <div style="display:flex; flex-direction:column; gap:5px;">
+                        <div style="display:flex; align-items:baseline; gap:8px;">
+                          <span style="flex:1; font-size:11px; color:#c3c9d3;">{{ m.name }}</span>
+                          <span style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#5c636e;">{{ m.count }}</span>
+                          <span style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:#dfe3e9; width:34px; text-align:right;">{{ m.share }}</span>
+                        </div>
+                        <div style="height:6px; background:#0b0d10; border-radius:3px; overflow:hidden;"><div style="{{ m.barStyle }}"></div></div>
+                      </div>
+                    </sc-for>
+                  </div>
+                </section>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ isSetup }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#6f7783; font-size:12px;">More views coming — Table, Matrix, Bubble, Heat, Stair, Setup.</div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+
   <sc-if value="{{ showData }}" hint-placeholder-val="{{ false }}">
     <div data-ro="{{ readonlyFlag }}" style="position: absolute; top: 100px; left: 34px; right: 34px; bottom: 22px; z-index: 7; display: flex; flex-direction: column; animation: fadeIn 0.3s ease;">
       <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 13px;">
@@ -2541,6 +2634,135 @@ class Component extends DCLogic {
     list.forEach((r, i) => { r.rank = i + 1; });
     return { list, act, totalW, W };
   }
+  // Render props for the Priority tab. Ported from WSJF Studio's render() exec
+  // section (reference L1387–1486). Object styles are supported by dc-runtime.
+  priorityProps() {
+    const S = this.state;
+    const views = [["exec", "Exec"], ["table", "Table"], ["matrix", "Matrix"],
+                   ["bubble", "Bubble"], ["heat", "Heat"], ["stair", "Stair"], ["setup", "Setup"]];
+    const priTabs = views.map(([k, label]) => ({
+      label,
+      onClick: () => this.setState({ priorityView: k }),
+      style: {
+        cursor: "pointer", fontFamily: "inherit", border: "none", padding: "7px 15px",
+        borderRadius: "9px", fontSize: "12px", fontWeight: 600, transition: "all 0.15s",
+        background: S.priorityView === k ? "rgba(224,103,76,0.92)" : "transparent",
+        color: S.priorityView === k ? "#fff" : "#9db0c6",
+      },
+    }));
+    const viewFlags = {
+      isExec: S.priorityView === "exec", isTable: S.priorityView === "table",
+      isMatrix: S.priorityView === "matrix", isBubble: S.priorityView === "bubble",
+      isHeat: S.priorityView === "heat", isStair: S.priorityView === "stair",
+      isSetup: S.priorityView === "setup",
+    };
+    if (S.mode !== "priority") {
+      return Object.assign({ showPriority: false, priTabs, kpis: [], execRows: [], mixRows: [],
+        capChips: [], sliders: [], listH: "0px", ruleTop: "0px", execNote: "" }, viewFlags);
+    }
+    const { list, W } = this.deriveScores();
+    const EROW = 32;
+    const shown = S.capFilter ? list.filter((r) => r.capability === S.capFilter) : list;
+    const pos = {}; shown.forEach((r, i) => { pos[r.id] = i; });
+    const top25 = shown.slice(0, 25);
+    const top10 = shown.slice(0, 10);
+    const execRows = top25.slice().sort((a, b) => (a.id < b.id ? -1 : 1)).map((r) => {
+      const i = pos[r.id];
+      const d = r.baseRank - r.rank;
+      const cap = WSJF.CAPS.find((c) => c.name === r.capability) || WSJF.CAPS[3];
+      return {
+        name: r.opportunity, rank: i + 1, wsjf: r.wsjf.toFixed(1),
+        sub: r.id + " · " + WSJF.SIZES[r.sizeIdx].label,
+        title: r.opportunity + "  ·  " + r.division + "  ·  " + r.capability + "  ·  " + WSJF.SIZES[r.sizeIdx].label,
+        onClick: () => this.setState({ wsjfSel: r.id }),
+        style: { position: "absolute", left: 0, right: 0, top: (i * EROW + (i >= 10 ? 14 : 0)) + "px",
+          height: (EROW - 4) + "px", display: "flex", alignItems: "center", gap: "6px",
+          padding: "0 10px", borderRadius: "4px", cursor: "pointer", textAlign: "left",
+          background: i < 10 ? "#12161c" : "#0e1116", border: "1px solid " + (i < 10 ? "#232a34" : "#171c23"),
+          color: "#dfe3e9", fontFamily: "'IBM Plex Sans',sans-serif",
+          transition: "top 420ms cubic-bezier(.4,0,.2,1), background 200ms, border-color 200ms" },
+        rankStyle: { fontFamily: "'IBM Plex Mono',monospace", fontSize: "11px", width: "20px",
+          textAlign: "right", color: i < 10 ? "#ffb020" : "#5c636e", flexShrink: 0 },
+        capDot: { width: "6px", height: "6px", borderRadius: "50%", flexShrink: 0,
+          background: "oklch(0.72 0.15 " + cap.hue + ")" },
+        nameStyle: { flex: 1, minWidth: "200px", fontSize: "12px", overflow: "hidden",
+          textOverflow: "ellipsis", whiteSpace: "nowrap", opacity: i < 10 ? 1 : 0.72 },
+        subStyle: { fontFamily: "'IBM Plex Mono',monospace", fontSize: "9px", color: "#5c636e",
+          flexShrink: 0, width: "96px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" },
+        must: r.must ? "MUST" : "",
+        mustStyle: { fontFamily: "'IBM Plex Mono',monospace", fontSize: "8.5px", letterSpacing: "0.06em",
+          padding: "2px 5px", borderRadius: "3px", flexShrink: 0, width: "34px", textAlign: "center",
+          background: r.must ? "rgba(255,86,86,0.14)" : "transparent",
+          color: r.must ? "#ff7a7a" : "transparent" },
+        conf: r.confidence + "%",
+        confStyle: { fontFamily: "'IBM Plex Mono',monospace", fontSize: "9.5px", flexShrink: 0, width: "34px",
+          textAlign: "right", color: r.confidence < 40 ? "#ffb020" : "#5c636e" },
+        confBar: { width: "42px", height: "3px", borderRadius: "2px", flexShrink: 0,
+          background: "linear-gradient(to right, " + (r.confidence < 40 ? "#ffb020" : "#4a7f74") + " " +
+            r.confidence + "%, #1e232b " + r.confidence + "%)" },
+        delta: d === 0 ? "·" : (d > 0 ? "▲" + d : "▼" + (-d)),
+        deltaStyle: { fontFamily: "'IBM Plex Mono',monospace", fontSize: "9.5px", flexShrink: 0, width: "30px",
+          textAlign: "right", color: d > 0 ? "#5fbf8f" : d < 0 ? "#c96a6a" : "#333a44" },
+        wsjfStyle: { fontFamily: "'IBM Plex Mono',monospace", fontSize: "12px", fontWeight: 600,
+          flexShrink: 0, width: "40px", textAlign: "right", color: i < 10 ? "#ffb020" : "#8b929e" },
+      };
+    });
+    const mixPts = {}; let mixTotal = 0;
+    top10.forEach((r) => { mixPts[r.pillarGroup] = (mixPts[r.pillarGroup] || 0) + r.pts; mixTotal += r.pts; });
+    const mixRows = WSJF.PILLARS.map((p) => {
+      const pts = mixPts[p.name] || 0;
+      const share = mixTotal ? pts / mixTotal : 0;
+      return {
+        name: p.name, pts: pts + "pt", share: Math.round(share * 100) + "%",
+        count: top10.filter((r) => r.pillarGroup === p.name).length + " of 10",
+        barStyle: { height: "6px", borderRadius: "3px", width: Math.max(1.5, share * 100) + "%",
+          background: "oklch(0.68 0.14 " + p.hue + ")", transition: "width 420ms cubic-bezier(.4,0,.2,1)" },
+      };
+    });
+    const needsEvidence = list.filter((r) => r.confidence < 40).length;
+    const mustCount = list.filter((r) => r.must).length;
+    const confs = list.map((r) => r.confidence).sort((a, b) => a - b);
+    const medConf = confs.length ? confs[Math.floor(confs.length / 2)] : 0;
+    const kpis = [
+      { label: "TOP 10 LOAD", value: top10.reduce((a, r) => a + r.pts, 0) + "pt",
+        note: Math.ceil(top10.reduce((a, r) => a + r.pts, 0) / S.capacity) + " sprints at current capacity" },
+      { label: "MUST-DO", value: String(mustCount), note: "floated above WSJF order" },
+      { label: "NEEDS EVIDENCE", value: String(needsEvidence), note: "confidence below 40%" },
+      { label: "MEDIAN CONFIDENCE", value: medConf + "%", note: "evidence quality + hard numbers" },
+    ].map((k) => Object.assign(k, {
+      valueStyle: { fontFamily: "'IBM Plex Mono',monospace", fontSize: "22px", fontWeight: 600,
+        color: k.label === "NEEDS EVIDENCE" && needsEvidence > 0 ? "#ffb020" : "#dfe3e9" },
+    }));
+    const capChips = [{ name: "All", key: null, hue: 212 }]
+      .concat(WSJF.CAPS.map((c) => ({ name: c.name, key: c.name, hue: c.hue })))
+      .map((c) => ({
+        name: c.name + (c.key ? " " + list.filter((r) => r.capability === c.key).length : ""),
+        onClick: () => this.setState({ capFilter: c.key }),
+        style: { fontFamily: "'IBM Plex Mono',monospace", fontSize: "9.5px", letterSpacing: "0.04em",
+          padding: "4px 9px", borderRadius: "3px", cursor: "pointer",
+          background: S.capFilter === c.key ? "oklch(0.30 0.06 " + c.hue + ")" : "#101319",
+          border: "1px solid " + (S.capFilter === c.key ? "oklch(0.55 0.12 " + c.hue + ")" : "#1e232b"),
+          color: S.capFilter === c.key ? "oklch(0.85 0.10 " + c.hue + ")" : "#7d848f" },
+      }));
+    const sliders = WSJF.CATS.map((c) => ({
+      label: c.label, value: W[c.k], display: W[c.k].toFixed(1),
+      onChange: (e) => this.setWeight(c.k, e.target.value),
+      rowStyle: { display: "grid", gridTemplateColumns: "118px 1fr 30px", alignItems: "center", gap: "9px",
+        opacity: S.off[c.k] ? 0.32 : 1 },
+      labelStyle: { fontSize: "11px", color: "#a7aeb9", overflow: "hidden", textOverflow: "ellipsis",
+        whiteSpace: "nowrap" },
+      valueStyle: { fontFamily: "'IBM Plex Mono',monospace", fontSize: "10.5px", textAlign: "right",
+        color: W[c.k] !== c.w ? "#ffb020" : "#5c636e" },
+    }));
+    const listH = (Math.min(25, shown.length) * EROW + 14) + "px";
+    return Object.assign({
+      showPriority: true, priTabs,
+      execRows, mixRows, kpis, capChips, sliders, listH,
+      ruleTop: (10 * EROW + 5) + "px",
+      onResetWeights: this.resetWeights,
+      execNote: (S.capFilter ? S.capFilter + " only · " : "") + shown.length + " stories ranked",
+    }, viewFlags);
+  }
   csvToRecords(text) {
     const rows = this.parseCsv(text);
     if (rows.length < 2) return [];
@@ -2645,7 +2867,7 @@ class Component extends DCLogic {
     const s = this.state;
     const btn = (on) => on ? { bg: "#e0674c", color: "#fff" } : { bg: "transparent", color: "#aebfd2" };
     const dv = btn(s.mode === "divisions"), iv = btn(s.mode === "initiatives"), pv = btn(s.mode === "priority"), dtv = btn(s.mode === "data");
-    const caption = { divisions: "13 divisions \u00b7 workshop findings", initiatives: "25 initiatives \u00b7 who they span", priority: "25 initiatives \u00b7 effort vs value", data: "The numbers behind the map \u00b7 sortable detail" }[s.mode];
+    const caption = { divisions: "13 divisions \u00b7 workshop findings", initiatives: "25 initiatives \u00b7 who they span", priority: "WSJF prioritisation \u00b7 what-if weighting", data: "The numbers behind the map \u00b7 sortable detail" }[s.mode];
     const divChrome = (s.mode === "divisions" && !s.selected);
     const isData = s.mode === "data";
     const sub = (on) => on ? { bg: "rgba(224,103,76,0.92)", color: "#fff" } : { bg: "transparent", color: "#9db0c6" };
@@ -2653,6 +2875,7 @@ class Component extends DCLogic {
     const arr = (k) => s.dataSort.key === k ? (s.dataSort.dir === "asc" ? " \u25b2" : " \u25bc") : "";
     const sort = { num: arr("num"), name: arr("name"), cat: arr("cat"), effort: arr("effort"), value: arr("value"), quadrant: arr("quadrant"), div: arr("div") };
     return {
+      ...this.priorityProps(),
       rootRef: this.rootRef, canvasRef: this.canvasRef,
       mode: s.mode, modeCaption: caption,
       toggleOpacity: s.selected ? 0 : 1, togglePointer: s.selected ? "none" : "auto",
