@@ -1143,6 +1143,28 @@ function scoreStory(s, corpus) {
   return { scores: out, why: why, pillar: pil ? pil.name : null };
 }
 
+  // Provisional complexity proxy (triage aid) — verbatim from WSJF Studio v2.
+  function complexity(s) {
+    let n = Math.min(8, s.systems.length > 12 ? 4 : s.systems.length) * 1.4;
+    n += Math.min(6, s.themes.length > 12 ? 3 : s.themes.length) * 0.7;
+    if (/\b(legacy|delphi|mainframe|18-month|migration|decommission|replace)\b/i.test(s.body)) n += 2.5;
+    if (/\b(integrat|multiple systems|end-to-end|orchestrat|real-time)\b/i.test(s.body)) n += 1.5;
+    if (/\b(regulat|apra|asic|far\b|cps ?230|model risk|audit)\b/i.test(s.body)) n += 1.2;
+    if (/\b(poc|proof of concept|already exists|prototype|pilot)\b/i.test(s.body)) n -= 2;
+    n += Math.min(2, s.body.length / 1800);
+    return n;
+  }
+  // Bucket the corpus into quintiles so T-shirt sizes carry relative meaning.
+  function assignSizes(rows) {
+    const sorted = rows.map(r => r.cx_raw).sort((a, b) => a - b);
+    const q = [0.2, 0.4, 0.6, 0.8].map(p => sorted[Math.floor(p * (sorted.length - 1))]);
+    rows.forEach(r => {
+      let i = 0;
+      while (i < 4 && r.cx_raw > q[i]) i++;
+      r.autoSize = i;
+    });
+  }
+
   // Corpus builder — matches WSJF's own (reference L1155–1157).
   function buildCorpus(stories) {
     const themeFreq = {};
@@ -1153,9 +1175,9 @@ function scoreStory(s, corpus) {
     return { themeFreq, total: stories.length };
   }
 
-  return { CATS, SIZES, HEAT, HEAT_FG, PILLARS, DIV_PILLAR, CAPS, DIV_HUE,
+  return { CATS, SIZES, HEAT, HEAT_FG, PILLARS, DIV_PILLAR, CAPS, DIV_HUE, MUSTDO_RE,
            capabilityOf, confidenceOf, parseCSV, pick, shortName, evidenceBody,
-           hasNum, scoreStory, buildCorpus };
+           hasNum, scoreStory, complexity, assignSizes, buildCorpus };
 })();
 
 class Component extends DCLogic {
@@ -1168,6 +1190,12 @@ class Component extends DCLogic {
     selectedOppCount: 0, selectedPeopleCount: 0, centreX: 0, centreY: 0,
     cards: [], oppPage: 0, pager: { show: false, label: "", x: 0, y: 0 }, detail: null, systemChips: [], themeChips: [], categoryChips: [],
     dataTab: "init", dataSort: { key: "num", dir: "asc" }, expandedDiv: null, expandedInit: null,
+    // WSJF Priority tab: view + model params (what-if). Overrides/sizes/must are
+    // browser-local overlays; weights/capacity/off are the what-if knobs.
+    priorityView: "exec", wsjfSel: null, capFilter: null,
+    overrides: {}, sizes: {}, must: {}, weights: null,
+    off: { rev: true, out: true, avoid: true }, capacity: 18,
+    apiKey: "", apiEndpoint: "",
   };
 
   fitColor(fit) {
@@ -1195,6 +1223,7 @@ class Component extends DCLogic {
 
   componentDidMount() {
     this.data = this.loadData();
+    this.loadWsjfParams();
     this.mode = "divisions";
     this.hoverNode = null;
     this.hoverFilter = null;
@@ -2407,12 +2436,110 @@ class Component extends DCLogic {
     const desc = opp.description || "";
     return {
       id: opp.jiraKey || opp.sourceId || (dep.id + ":" + i),
-      division: dep.name, title: opp.title || "", summary: opp.summary || "",
+      num: opp.sourceId || String(i + 1),
+      division: dep.name,
+      // WSJF field aliases (its scoring + views read .opportunity/.aifit/.people)
+      opportunity: opp.title || "", aifit: opp.fit || "",
+      people: Array.isArray(opp.people) ? opp.people.map(p => p.name || p).join("; ") : (opp.people || ""),
+      title: opp.title || "", summary: opp.summary || "",
       themes, systems, body: WSJF.evidenceBody(desc),
       rawLen: desc.length, thin: desc.length < 200,
       fit: opp.fit || "", url: opp.jiraUrl || "", jiraKey: opp.jiraKey || "",
       dep, opp,
     };
+  }
+  // --- WSJF model params (what-if) + derivation ---------------------------
+  wsjfSave(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+  loadWsjfParams() {
+    try {
+      const o = JSON.parse(localStorage.getItem("wsjf.overrides.v1") || "{}");
+      const z = JSON.parse(localStorage.getItem("wsjf.sizes.v1") || "{}");
+      const c = localStorage.getItem("wsjf.capacity.v1");
+      const w = JSON.parse(localStorage.getItem("wsjf.weights.v1") || "null");
+      const m = JSON.parse(localStorage.getItem("wsjf.mustdo.v1") || "{}");
+      this.setState({
+        overrides: o, sizes: z, must: m,
+        weights: w || WSJF.CATS.reduce((a, c) => { a[c.k] = c.w; return a; }, {}),
+        capacity: c ? +c : this.state.capacity,
+      });
+    } catch (e) {}
+  }
+  W() { return this.state.weights || WSJF.CATS.reduce((a, c) => { a[c.k] = c.w; return a; }, {}); }
+  activeCats() { return WSJF.CATS.filter((c) => !this.state.off[c.k]); }
+  setScore = (id, cat, val) => {
+    const v = Math.max(1, Math.min(5, Math.round(+val || 1)));
+    const ov = Object.assign({}, this.state.overrides);
+    ov[id] = Object.assign({}, ov[id]); ov[id][cat] = v;
+    this.setState({ overrides: ov }); this.wsjfSave("wsjf.overrides.v1", ov);
+  };
+  setSize = (id, idx) => {
+    const sz = Object.assign({}, this.state.sizes); sz[id] = +idx;
+    this.setState({ sizes: sz }); this.wsjfSave("wsjf.sizes.v1", sz);
+  };
+  resetAll = () => {
+    this.setState({ overrides: {}, sizes: {}, must: {} });
+    this.wsjfSave("wsjf.overrides.v1", {}); this.wsjfSave("wsjf.sizes.v1", {}); this.wsjfSave("wsjf.mustdo.v1", {});
+  };
+  setWeight = (k, v) => {
+    const w = Object.assign({}, this.W()); w[k] = +v;
+    this.setState({ weights: w }); this.wsjfSave("wsjf.weights.v1", w);
+  };
+  resetWeights = () => {
+    const w = WSJF.CATS.reduce((a, c) => { a[c.k] = c.w; return a; }, {});
+    this.setState({ weights: w }); this.wsjfSave("wsjf.weights.v1", w);
+  };
+  toggleMust = (id) => {
+    const m = Object.assign({}, this.state.must);
+    const row = this.enrichStories(this.sharedStories()).find((r) => r.id === id);
+    const now = m[id] != null ? m[id] : !!(row && row.mustAuto);
+    m[id] = !now;
+    this.setState({ must: m }); this.wsjfSave("wsjf.mustdo.v1", m);
+  };
+  // Enrich raw shared stories with auto scores / sizing / pillar / capability,
+  // mirroring WSJF Studio's ingest() enrichment (reference L1155–1168).
+  enrichStories(stories) {
+    const corpus = WSJF.buildCorpus(stories);
+    stories.forEach((r) => {
+      const res = WSJF.scoreStory(r, corpus);
+      r.auto = res.scores; r.why = res.why; r.pillar = res.pillar;
+      r.cx_raw = WSJF.complexity(r);
+      const dp = WSJF.DIV_PILLAR[r.division] || ["Advice", false];
+      r.pillarGroup = dp[0]; r.pillarDirect = dp[1];
+      r.capability = WSJF.capabilityOf(r, corpus);
+      r.confidence = WSJF.confidenceOf(r);
+      r.mustAuto = WSJF.MUSTDO_RE.test(r.body + " " + r.summary);
+    });
+    WSJF.assignSizes(stories);
+    return stories;
+  }
+  // The one derivation both the Priority tab and the strategy map consume.
+  // Applies overrides + what-if weights/sizes/must to the enriched shared store.
+  deriveScores() {
+    const rows = this.enrichStories(this.sharedStories());
+    const act = this.activeCats();
+    const W = this.W();
+    const totalW = act.reduce((a, c) => a + W[c.k], 0) || 1;
+    const baseW = act.reduce((a, c) => a + c.w, 0) || 1;
+    const list = rows.map((r) => {
+      const ov = this.state.overrides[r.id] || {};
+      const sc = {}; WSJF.CATS.forEach((c) => { sc[c.k] = ov[c.k] != null ? ov[c.k] : r.auto[c.k]; });
+      const cod = act.reduce((a, c) => a + sc[c.k] * W[c.k], 0) / totalW * 14.5;
+      const baseCod = act.reduce((a, c) => a + sc[c.k] * c.w, 0) / baseW * 14.5;
+      const sizeIdx = this.state.sizes[r.id] != null ? this.state.sizes[r.id] : r.autoSize;
+      const pts = WSJF.SIZES[sizeIdx].pts;
+      const must = this.state.must[r.id] != null ? this.state.must[r.id] : r.mustAuto;
+      return Object.assign({}, r, {
+        sc, ov, cod, sizeIdx, pts, must,
+        wsjf: cod / pts, baseWsjf: baseCod / pts,
+        edited: Object.keys(ov).length > 0 || this.state.sizes[r.id] != null || this.state.must[r.id] != null,
+      });
+    });
+    const cmp = (key) => (a, b) => (b.must - a.must) || (b[key] - a[key]);
+    const base = list.slice().sort(cmp("baseWsjf"));
+    base.forEach((r, i) => { r.baseRank = i + 1; });
+    list.sort(cmp("wsjf"));
+    list.forEach((r, i) => { r.rank = i + 1; });
+    return { list, act, totalW, W };
   }
   csvToRecords(text) {
     const rows = this.parseCsv(text);
