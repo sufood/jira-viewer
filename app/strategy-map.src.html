@@ -2388,6 +2388,32 @@ class Component extends DCLogic {
     if (field.length || row.length) { row.push(field); rows.push(row); }
     return rows.filter((r) => r.some((c) => c.trim() !== ""));
   }
+  // --- Shared stories store: the ONE flat list of stories, derived from the
+  // canonical this.data.departments[].opportunities[]. Both the Priority tab
+  // (WSJF views) and the strategy map read this so there is a single source. ---
+  sharedStories() {
+    const out = [];
+    (this.data.departments || []).forEach((dep) => {
+      (dep.opportunities || []).forEach((opp, i) => out.push(this.normalizeStory(opp, dep, i)));
+    });
+    return out;
+  }
+  // Map a raw opportunity to the shape WSJF.scoreStory expects. Per-story
+  // themes/systems are used when present (CSV-imported stories carry them),
+  // else the story falls back to its division's themes/systems.
+  normalizeStory(opp, dep, i) {
+    const themes = (opp.themes && opp.themes.length) ? opp.themes : (dep.themes || []);
+    const systems = (opp.systems && opp.systems.length) ? opp.systems : (dep.systems || []);
+    const desc = opp.description || "";
+    return {
+      id: opp.jiraKey || opp.sourceId || (dep.id + ":" + i),
+      division: dep.name, title: opp.title || "", summary: opp.summary || "",
+      themes, systems, body: WSJF.evidenceBody(desc),
+      rawLen: desc.length, thin: desc.length < 200,
+      fit: opp.fit || "", url: opp.jiraUrl || "", jiraKey: opp.jiraKey || "",
+      dep, opp,
+    };
+  }
   csvToRecords(text) {
     const rows = this.parseCsv(text);
     if (rows.length < 2) return [];
@@ -2481,6 +2507,7 @@ class Component extends DCLogic {
         if (/^TLDR;/.test(tldr)) tldr = tldr.replace(/^TLDR;\s*/, "");
         dep.opportunities.push({ sourceId: this.getf(r, "Source ID", "#"), title: this.getf(r, "Opportunity", "Summary", "Title") || "Untitled",
           fit: this.normFit(this.getf(r, "AI Fit", "AI-fit", "Fit")), summary: tldr, description: body, people,
+          systems: this.splitList(this.getf(r, "Systems")), themes: this.splitList(this.getf(r, "Themes")),
           jiraKey: this.getf(r, "Jira Key"), jiraUrl: this.getf(r, "Jira URL") });
       });
       this.setState({ dataTab: "story" });
