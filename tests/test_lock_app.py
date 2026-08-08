@@ -161,3 +161,27 @@ def test_build_locked_is_idempotent():
     text_twice = bc.get_resource_text(twice, uuid)
     assert text_once == text_twice
     assert text_once.count("__lock_script") == 1
+
+
+def test_lock_guard_excludes_round_close_button():
+    """Deterministic (no browser) guard against re-hiding the story-card close
+    button. The delete '×' buttons and the story-card close button share the
+    '×' glyph; the guard must hide only the square delete buttons, keeping the
+    round (border-radius: 50%) close button. If the '!round' exclusion is ever
+    dropped, closeDetail vanishes from every locked/regenerated file again."""
+    import lock_app
+    import bundle_common as bc
+
+    locked = lock_app.build_locked(SRC.read_text(encoding="utf-8"))
+    pristine = bc.get_resource_text(
+        locked, bc.find_resource_with(locked, "__PRISTINE_HTML"))
+
+    # The guard must special-case the round close button so it is NOT hidden.
+    assert "border-radius: 50%" in pristine, \
+        "lock guard no longer excludes the round (close) × button"
+    # And the source must still contain a round close × button to protect.
+    assert 'closeDetail' in pristine
+    close_idx = pristine.find('closeDetail')
+    close_btn = pristine[pristine.rfind('<button', 0, close_idx):close_idx]
+    assert 'border-radius: 50%' in close_btn, \
+        "close button is no longer the round one — update the guard heuristic"

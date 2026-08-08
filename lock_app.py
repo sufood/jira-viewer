@@ -65,7 +65,11 @@ LOCK_GUARD = (
     "    if((l.textContent||'').indexOf('Upload CSV')!==-1) hide(l);});"
     "  document.querySelectorAll('button').forEach(function(b){"
     "    var t=(b.textContent||'').trim();"
-    "    if(t==='↺ Reset'||t.indexOf('+ Add')===0||t==='×'"
+    # The story-card close button also reads '×'; it is the only round one
+    # (inline 'border-radius: 50%'). Keep it — hide only the square '×'
+    # data-row delete buttons.
+    "    var round=(b.getAttribute('style')||'').indexOf('border-radius: 50%')!==-1;"
+    "    if(t==='↺ Reset'||t.indexOf('+ Add')===0||(t==='×'&&!round)"
     "       ||t.indexOf('Download standalone')!==-1"
     "       ||b.getAttribute('title')==='Edit details') hide(b);});"
     "  document.querySelectorAll('input:not([type=file]),textarea').forEach("
