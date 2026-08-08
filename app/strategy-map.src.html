@@ -618,16 +618,130 @@
           <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#6f7783; font-size:12px;">More views coming — Matrix, Bubble, Heat, Stair, Setup.</div>
         </sc-if>
         <sc-if value="{{ isMatrix }}" hint-placeholder-val="{{ false }}">
-          <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#6f7783; font-size:12px;">Matrix view coming next.</div>
+          <div style="position:absolute; inset:0; display:flex; flex-direction:column; padding:18px 22px 14px 22px;">
+            <div style="display:flex; align-items:baseline; gap:12px; margin-bottom:12px;">
+              <span style="font-size:12px; font-weight:600;">Value / Effort matrix</span>
+              <span style="font-size:11px; color:#6f7783;">Cost of Delay against T-shirt job size. Top-left is the buy zone.</span>
+            </div>
+            <div style="flex:1; min-height:0; display:flex; gap:10px;">
+              <div style="width:44px; position:relative; flex-shrink:0;">
+                <div style="position:absolute; left:0; top:0; bottom:22px; width:100%; display:flex; flex-direction:column; justify-content:space-between; align-items:flex-end; font-family:'IBM Plex Mono',monospace; font-size:9.5px; color:#5c636e; padding-right:6px;">
+                  <span>{{ codMaxLabel }}</span>
+                  <span title="Cost of Delay — weighted sum of the active categories">CoD</span>
+                  <span>{{ codMinLabel }}</span>
+                </div>
+              </div>
+              <div ref="{{ matrixRef }}" style="flex:1; display:flex; gap:8px; min-width:0; overflow-x:hidden; overflow-y:auto; scrollbar-width:thin; scrollbar-color:#2a3038 transparent;">
+                <sc-for list="{{ matrixCols }}" as="col" hint-placeholder-count="5">
+                  <div style="flex:1; min-width:0; display:flex; flex-direction:column;">
+                    <div style="{{ col.wellStyle }}">
+                      <div style="{{ col.spacerStyle }}"></div>
+                      <div style="position:absolute; left:0; right:0; top:33%; height:1px; background:#171c23;"></div>
+                      <div style="position:absolute; left:0; right:0; top:66%; height:1px; background:#171c23;"></div>
+                      <sc-for list="{{ col.chips }}" as="c" hint-placeholder-count="8">
+                        <button sc-camel-on-click="{{ c.onClick }}" title="{{ c.title }}" style="{{ c.style }}" style-hover="background:#232a34; border-color:#ffb020; z-index:5;">
+                          <span style="{{ c.dotStyle }}"></span>
+                          <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ c.name }}</span>
+                        </button>
+                      </sc-for>
+                    </div>
+                    <div style="height:22px; position:sticky; bottom:0; z-index:2; background:#0b0d10; display:flex; align-items:center; justify-content:center; gap:6px; font-family:'IBM Plex Mono',monospace; font-size:10px; color:#8b929e;">
+                      <span title="{{ col.sizeTitle }}" style="font-weight:600; color:#c3c9d3;">{{ col.label }}</span>
+                      <span style="color:#5c636e;">{{ col.count }}</span>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
         </sc-if>
         <sc-if value="{{ isBubble }}" hint-placeholder-val="{{ false }}">
-          <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#6f7783; font-size:12px;">Bubble view coming next.</div>
+          <div style="position:absolute; inset:0; overflow:auto; padding:18px 22px 24px 22px;">
+            <div style="display:flex; align-items:baseline; gap:12px; margin-bottom:14px;">
+              <span style="font-size:12px; font-weight:600;">Bubble field</span>
+              <span style="font-size:11px; color:#6f7783;">Swimlane per division · x-position is WSJF · chip weight is job size.</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:0; margin:0 0 6px 160px; font-family:'IBM Plex Mono',monospace; font-size:9.5px; color:#5c636e;">
+              <span style="flex:1;">low WSJF</span>
+              <span style="flex:1; text-align:center;">→</span>
+              <span style="flex:1; text-align:right;">high WSJF</span>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:6px;">
+              <sc-for list="{{ laneRows }}" as="row" hint-placeholder-count="8">
+                <div style="display:flex; gap:12px; align-items:stretch;">
+                  <div style="width:148px; flex-shrink:0; display:flex; flex-direction:column; gap:2px; padding-top:8px;">
+                    <span style="font-size:11px; font-weight:600; color:#c3c9d3; line-height:1.25;">{{ row.division }}</span>
+                    <span style="font-family:'IBM Plex Mono',monospace; font-size:9.5px; color:#5c636e;">{{ row.meta }}</span>
+                  </div>
+                  <div style="{{ row.wellStyle }}">
+                    <sc-for list="{{ row.chips }}" as="c" hint-placeholder-count="6">
+                      <button sc-camel-on-click="{{ c.onClick }}" title="{{ c.title }}" style="{{ c.style }}" style-hover="background:#232a34; border-color:#ffb020; z-index:5;">
+                        <span style="{{ c.dotStyle }}"></span>
+                        <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ c.name }}</span>
+                      </button>
+                    </sc-for>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
         </sc-if>
         <sc-if value="{{ isHeat }}" hint-placeholder-val="{{ false }}">
-          <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#6f7783; font-size:12px;">Heat view coming next.</div>
+          <div style="position:absolute; inset:0; overflow:auto; padding:18px 22px 24px 22px;">
+            <div style="display:flex; align-items:baseline; gap:12px; margin-bottom:14px;">
+              <span style="font-size:12px; font-weight:600;">Category heatmap</span>
+              <span style="font-size:11px; color:#6f7783;">Every story against all nine categories. Greyed columns are excluded from the provisional Cost of Delay.</span>
+            </div>
+            <div style="display:grid; grid-template-columns:212px repeat(9, minmax(46px,1fr)) 66px; gap:2px; align-items:stretch;">
+              <div style="position:sticky; top:0; z-index:3; background:#0b0d10; padding-bottom:4px;"></div>
+              <sc-for list="{{ catHeads }}" as="h" hint-placeholder-count="9">
+                <div title="{{ h.title }}" style="{{ h.style }}"><span style="{{ h.inner }}">{{ h.label }}</span></div>
+              </sc-for>
+              <div style="position:sticky; top:0; z-index:3; background:#0b0d10; padding-bottom:4px; display:flex; align-items:flex-end; justify-content:flex-end; font-family:'IBM Plex Mono',monospace; font-size:9.5px; color:#8b929e;" title="Weighted Shortest Job First — Cost of Delay divided by Job Size">WSJF</div>
+              <sc-for list="{{ heatRows }}" as="r" hint-placeholder-count="14">
+                <div style="display:contents;">
+                  <button sc-camel-on-click="{{ r.onClick }}" style="text-align:left; background:transparent; border:none; border-right:1px solid #1a1f27; color:#c3c9d3; font-family:'IBM Plex Sans',sans-serif; font-size:11px; padding:5px 8px 5px 0; cursor:pointer; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" style-hover="color:#ffb020;">{{ r.name }}</button>
+                  <sc-for list="{{ r.cells }}" as="c" hint-placeholder-count="9">
+                    <div title="{{ c.title }}" style="{{ c.style }}">{{ c.score }}</div>
+                  </sc-for>
+                  <div style="{{ r.wsjfStyle }}">{{ r.wsjf }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
         </sc-if>
         <sc-if value="{{ isStair }}" hint-placeholder-val="{{ false }}">
-          <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#6f7783; font-size:12px;">Stair view coming next.</div>
+          <div style="position:absolute; inset:0; overflow:auto; padding:18px 22px 24px 22px;">
+            <div style="display:flex; align-items:center; gap:14px; margin-bottom:14px;">
+              <span style="font-size:12px; font-weight:600;">Sprint staircase</span>
+              <span style="font-size:11px; color:#6f7783;">Stories packed in WSJF order into fixed-capacity sprints.</span>
+              <div style="flex:1"></div>
+              <label style="display:flex; align-items:center; gap:8px; font-family:'IBM Plex Mono',monospace; font-size:10px; color:#8b929e;">
+                CAPACITY / SPRINT
+                <input type="range" min="5" max="40" step="1" value="{{ capacity }}" sc-camel-on-change="{{ onCapacity }}" style="width:150px;">
+                <span style="color:#ffb020; font-weight:600; min-width:22px;">{{ capacity }}</span>
+              </label>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <sc-for list="{{ sprints }}" as="s" hint-placeholder-count="6">
+                <div style="display:flex; gap:12px; align-items:stretch;">
+                  <div style="width:96px; flex-shrink:0; display:flex; flex-direction:column; gap:3px; padding-top:9px;">
+                    <span style="font-size:11px; font-weight:600; color:#c3c9d3;">{{ s.label }}</span>
+                    <span style="font-family:'IBM Plex Mono',monospace; font-size:9.5px; color:#5c636e;">{{ s.meta }}</span>
+                    <div style="height:3px; background:#1a1f27; border-radius:2px; overflow:hidden; margin-top:2px;"><div style="{{ s.fillStyle }}"></div></div>
+                  </div>
+                  <div style="flex:1; min-width:0; background:#101319; border:1px solid #1a1f27; border-radius:5px; padding:9px; display:flex; flex-wrap:wrap; gap:5px; align-content:flex-start;">
+                    <sc-for list="{{ s.chips }}" as="c" hint-placeholder-count="8">
+                      <button sc-camel-on-click="{{ c.onClick }}" title="{{ c.title }}" style="{{ c.style }}" style-hover="background:#232a34; border-color:#ffb020;">
+                        <span style="{{ c.dotStyle }}"></span>
+                        <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ c.name }}</span>
+                      </button>
+                    </sc-for>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
         </sc-if>
       </div>
     </div>
@@ -1358,7 +1472,7 @@ class Component extends DCLogic {
     priorityView: "exec", wsjfSel: null, capFilter: null,
     overrides: {}, sizes: {}, must: {}, weights: null,
     off: { rev: true, out: true, avoid: true }, capacity: 18,
-    apiKey: "", apiEndpoint: "",
+    apiKey: "", apiEndpoint: "", mw: 0, mh: 0,
   };
 
   fitColor(fit) {
@@ -2704,6 +2818,37 @@ class Component extends DCLogic {
     list.forEach((r, i) => { r.rank = i + 1; });
     return { list, act, totalW, W };
   }
+  // A story chip used by Matrix / Bubble / Stair (ported from WSJF chip()).
+  chip(r, extra) {
+    const hue = WSJF.DIV_HUE[r.division] != null ? WSJF.DIV_HUE[r.division] : 212;
+    return {
+      id: r.id, name: WSJF.shortName(r.opportunity),
+      title: r.opportunity + "  ·  " + r.id + "  ·  WSJF " + r.wsjf.toFixed(1),
+      onClick: () => this.setState({ wsjfSel: r.id }),
+      dotStyle: "width:5px; height:5px; border-radius:50%; flex-shrink:0; background:oklch(0.72 0.15 " + hue + ");",
+      style: Object.assign({
+        display: "flex", alignItems: "center", gap: "5px", background: "#161b22",
+        border: "1px solid " + (r.edited ? "#5a4a1e" : "#242b35"), color: "#c9cfd8",
+        fontFamily: "'IBM Plex Sans',sans-serif", fontSize: "10px", lineHeight: 1,
+        padding: "0 6px", height: "19px", borderRadius: "3px", cursor: "pointer",
+        overflow: "hidden", whiteSpace: "nowrap", transition: "background 120ms, border-color 120ms",
+      }, extra || {}),
+    };
+  }
+  // Matrix well is measured so lane count / collision gap hold at any size.
+  setMatrixEl = (el) => {
+    if (this._mEl === el) return;
+    if (this._ro) { this._ro.disconnect(); this._ro = null; }
+    this._mEl = el;
+    if (!el) return;
+    const read = () => {
+      const r = el.getBoundingClientRect();
+      if (Math.abs(this.state.mw - r.width) > 2 || Math.abs(this.state.mh - r.height) > 2)
+        this.setState({ mw: r.width, mh: r.height });
+    };
+    if (typeof ResizeObserver !== "undefined") { this._ro = new ResizeObserver(read); this._ro.observe(el); }
+    read();
+  };
   // Render props for the Priority tab. Ported from WSJF Studio's render() exec
   // section (reference L1387–1486). Object styles are supported by dc-runtime.
   priorityProps() {
@@ -2868,6 +3013,115 @@ class Component extends DCLogic {
         color: r.confidence < 40 ? "#ffb020" : "#8b929e" },
       cod: r.cod.toFixed(1), wsjf: r.wsjf.toFixed(1),
     }));
+    // ---- Matrix (measured geometry) ----
+    const maxCod = Math.max(1, ...list.map((r) => r.cod));
+    const minCod = list.length ? Math.min(...list.map((r) => r.cod)) : 0;
+    const span = Math.max(0.5, maxCod - minCod);
+    const CHIP_H = 19, MIN_CHIP_W = 116;
+    const colW = S.mw ? (S.mw - 8 * (WSJF.SIZES.length - 1)) / WSJF.SIZES.length : 150;
+    const wellH = Math.max(160, (S.mh || 420) - 22);
+    const LANES = Math.max(1, Math.min(3, Math.floor((colW - 6) / MIN_CHIP_W)));
+    const chipW = (colW - 6 - (LANES - 1) * 4) / LANES;
+    const GAP = CHIP_H + 3;
+    const top0 = 4, usable = wellH - CHIP_H - 8;
+    const cols = WSJF.SIZES.map((sz, si) => {
+      const items = list.filter((r) => r.sizeIdx === si).sort((a, b) => b.cod - a.cod);
+      const last = new Array(LANES).fill(-999);
+      const placed = items.map((r) => {
+        const y = top0 + (1 - (r.cod - minCod) / span) * usable;
+        let li = -1;
+        for (let i = 0; i < LANES; i++) if (y - last[i] >= GAP) { li = i; break; }
+        let top = y;
+        if (li === -1) { li = last.indexOf(Math.min.apply(null, last)); top = last[li] + GAP; }
+        last[li] = top;
+        return { r, top, li };
+      });
+      return { sz, si, placed,
+        needed: placed.length ? Math.max.apply(null, placed.map((p) => p.top)) + CHIP_H + 8 : 0 };
+    });
+    const wellsH = S.mh ? Math.max(wellH, ...cols.map((c) => c.needed)) : 0;
+    const matrixCols = cols.map((c) => ({
+      label: c.sz.label, count: c.placed.length + " · " + c.sz.pts + "pt",
+      sizeTitle: ["Extra small", "Small", "Medium", "Large", "Extra large"][c.si] + " — " + c.sz.pts + " story points",
+      spacerStyle: { height: wellsH + "px", width: "1px", pointerEvents: "none" },
+      wellStyle: { position: "relative", flex: wellsH ? "none" : 1, height: wellsH ? wellsH + "px" : "auto",
+        minHeight: 0, background: c.si % 2 ? "#0e1116" : "#101319",
+        border: "1px solid #1a1f27", borderRadius: "4px", overflow: "hidden" },
+      chips: c.placed.map((p) => this.chip(p.r, {
+        position: "absolute", top: p.top + "px",
+        left: (3 + p.li * (chipW + 4)) + "px",
+        width: chipW + "px", maxWidth: "none",
+      })),
+    }));
+    // ---- Bubble field (swimlane per division, x by WSJF) ----
+    const maxW = Math.max(0.01, ...list.map((r) => r.wsjf));
+    const byDiv = {};
+    list.forEach((r) => { (byDiv[r.division] = byDiv[r.division] || []).push(r); });
+    const laneRows = Object.keys(byDiv).sort((a, b) => byDiv[b].length - byDiv[a].length).map((div) => {
+      const items = byDiv[div].slice().sort((a, b) => b.wsjf - a.wsjf);
+      const lanes = [];
+      const placed = items.map((r) => {
+        const w = 7 + r.pts * 1.1;
+        const leftPct = (r.wsjf / maxW) * (100 - w);
+        let li = lanes.findIndex((last) => Math.abs(leftPct - last) > w * 0.62);
+        if (li === -1) { lanes.push(leftPct); li = lanes.length - 1; } else lanes[li] = leftPct;
+        return { r, leftPct, li, w };
+      });
+      const n = Math.max(1, lanes.length);
+      return {
+        division: div,
+        meta: items.length + " · top " + items[0].wsjf.toFixed(1),
+        wellStyle: { position: "relative", flex: 1, minWidth: 0, height: (n * 23 + 10) + "px",
+          background: "#101319", border: "1px solid #1a1f27", borderRadius: "4px" },
+        chips: placed.map((p) => this.chip(p.r, {
+          position: "absolute", left: p.leftPct + "%", top: (5 + p.li * 23) + "px",
+          width: p.w + "%", minWidth: "62px",
+          height: (15 + p.r.pts * 0.6) + "px",
+          fontSize: (9 + p.r.pts * 0.16) + "px",
+          fontWeight: p.r.pts >= 5 ? 600 : 400,
+        })),
+      };
+    });
+    // ---- Heatmap ----
+    const catHeads = WSJF.CATS.map((c) => ({
+      label: c.short,
+      title: c.label + " · weight " + W[c.k].toFixed(1) + (S.off[c.k] ? " · excluded from Cost of Delay" : ""),
+      style: { position: "sticky", top: 0, zIndex: 3, background: "#0b0d10", paddingBottom: "4px",
+        display: "flex", alignItems: "flex-end", justifyContent: "center" },
+      inner: { fontFamily: "'IBM Plex Mono',monospace", fontSize: "9px", letterSpacing: "0.06em",
+        color: S.off[c.k] ? "#454c57" : "#8b929e" },
+    }));
+    const heatRows = list.map((r) => ({
+      name: WSJF.shortName(r.opportunity),
+      onClick: () => this.setState({ wsjfSel: r.id }),
+      cells: WSJF.CATS.map((c) => ({
+        score: r.sc[c.k],
+        title: c.label + " " + r.sc[c.k] + " — " + (r.ov[c.k] != null ? "manual override" : r.why[c.k]),
+        style: { height: "20px", display: "flex", alignItems: "center", justifyContent: "center",
+          fontFamily: "'IBM Plex Mono',monospace", fontSize: "10px", borderRadius: "2px",
+          background: WSJF.HEAT[r.sc[c.k] - 1], color: WSJF.HEAT_FG[r.sc[c.k] - 1],
+          opacity: S.off[c.k] ? 0.26 : 1,
+          outline: r.ov[c.k] != null ? "1px solid #ffb020" : "none", outlineOffset: "-1px" },
+      })),
+      wsjf: r.wsjf.toFixed(1),
+      wsjfStyle: { display: "flex", alignItems: "center", justifyContent: "flex-end", paddingLeft: "8px",
+        fontFamily: "'IBM Plex Mono',monospace", fontSize: "10.5px", color: "#ffb020" },
+    }));
+    // ---- Staircase (WSJF-order sprint packing) ----
+    const sprintsAcc = [];
+    let cur = { items: [], pts: 0 };
+    list.forEach((r) => {
+      if (cur.pts + r.pts > S.capacity && cur.items.length) { sprintsAcc.push(cur); cur = { items: [], pts: 0 }; }
+      cur.items.push(r); cur.pts += r.pts;
+    });
+    if (cur.items.length) sprintsAcc.push(cur);
+    const sprints = sprintsAcc.slice(0, 14).map((s, i) => ({
+      label: "Sprint " + (i + 1),
+      meta: s.pts + "/" + S.capacity + " pts · " + s.items.length,
+      fillStyle: { width: Math.min(100, s.pts / S.capacity * 100) + "%", height: "100%",
+        background: i === 0 ? "#ffb020" : "oklch(0.62 0.09 " + (60 + i * 14) + ")" },
+      chips: s.items.map((r) => this.chip(r, { maxWidth: "190px" })),
+    }));
     const editedN = list.filter((r) => r.edited).length;
     const onExport = () => {
       const head = ["Jira Key", "Opportunity", "Division", ...WSJF.CATS.map((c) => c.label),
@@ -2884,6 +3138,10 @@ class Component extends DCLogic {
       execRows, mixRows, kpis, capChips, sliders, listH,
       tableHeads, tableRows, overrideCount: editedN + " edited",
       onResetAll: this.resetAll, onExport,
+      matrixCols, laneRows, catHeads, heatRows, sprints,
+      codMaxLabel: maxCod.toFixed(0), codMinLabel: minCod.toFixed(0),
+      matrixRef: this.setMatrixEl, capacity: S.capacity,
+      onCapacity: (e) => { const v = +e.target.value; this.setState({ capacity: v }); this.wsjfSave("wsjf.capacity.v1", v); },
       ruleTop: (10 * EROW + 5) + "px",
       onResetWeights: this.resetWeights,
       execNote: (S.capFilter ? S.capFilter + " only · " : "") + shown.length + " stories ranked",
