@@ -473,10 +473,14 @@
   <!-- Priority tab: WSJF Studio views (overlay, like the Data tab) -->
   <sc-if value="{{ showPriority }}" hint-placeholder-val="{{ false }}">
     <div style="position: absolute; top: 100px; left: 34px; right: 34px; bottom: 22px; z-index: 7; display: flex; flex-direction: column; animation: fadeIn 0.3s ease; background: #0b0d10; border: 1px solid #1e232b; border-radius: 12px; overflow: hidden;">
-      <div style="display: flex; gap: 4px; padding: 9px 12px; border-bottom: 1px solid #1e232b; background: rgba(9,18,30,0.6);">
+      <div style="display: flex; align-items: center; gap: 4px; padding: 9px 12px; border-bottom: 1px solid #1e232b; background: rgba(9,18,30,0.6);">
         <sc-for list="{{ priTabs }}" as="t" hint-placeholder-count="7">
           <button sc-camel-on-click="{{ t.onClick }}" style="{{ t.style }}">{{ t.label }}</button>
         </sc-for>
+        <div style="flex:1"></div>
+        <sc-if value="{{ hasDivFilter }}" hint-placeholder-val="{{ false }}">
+          <button sc-camel-on-click="{{ onClearDivision }}" style="cursor:pointer; font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.03em; border:1px solid #ffb020; background:rgba(255,176,32,0.14); color:#ffce7a; padding:4px 10px; border-radius:20px;" style-hover="background:rgba(255,176,32,0.24);">{{ priorityDivision }} ✕</button>
+        </sc-if>
       </div>
       <div style="position: relative; flex: 1; min-height: 0; color: #c3c9d3;">
         <sc-if value="{{ isExec }}" hint-placeholder-val="{{ true }}">
@@ -1089,6 +1093,7 @@
         <div style="width: 1px; background: rgba(255,255,255,0.12);"></div>
         <div style="text-align: center;"><div style="font-family: 'Newsreader', serif; font-size: 23px; color: {{ selectedColor }};">{{ selectedPeopleCount }}</div><div style="font-size: 9.5px; letter-spacing: 0.14em; text-transform: uppercase; color: #7f93aa;">people</div></div>
       </div>
+      <button sc-camel-on-click="{{ viewInPriority }}" style="pointer-events: auto; cursor: pointer; margin-top: 14px; font-family: inherit; display: inline-flex; align-items: center; gap: 6px; border: 1px solid rgba(255,176,32,0.5); background: rgba(255,176,32,0.12); color: #ffce7a; padding: 6px 13px; border-radius: 20px; font-size: 11.5px; font-weight: 600; transition: all 0.15s;" style-hover="background: rgba(255,176,32,0.2); border-color: #ffb020;">View in Priority →</button>
     </div>
   </sc-if>
 
@@ -1533,7 +1538,7 @@ class Component extends DCLogic {
     dataTab: "init", dataSort: { key: "num", dir: "asc" }, expandedDiv: null, expandedInit: null,
     // WSJF Priority tab: view + model params (what-if). Overrides/sizes/must are
     // browser-local overlays; weights/capacity/off are the what-if knobs.
-    priorityView: "exec", wsjfSel: null, capFilter: null,
+    priorityView: "exec", wsjfSel: null, capFilter: null, priorityDivision: null,
     overrides: {}, sizes: {}, must: {}, weights: null,
     off: { rev: true, out: true, avoid: true }, capacity: 18,
     apiKey: "", apiEndpoint: "", mw: 0, mh: 0,
@@ -2949,7 +2954,10 @@ class Component extends DCLogic {
       return Object.assign({ showPriority: false, priTabs, kpis: [], execRows: [], mixRows: [],
         capChips: [], sliders: [], listH: "0px", ruleTop: "0px", execNote: "" }, viewFlags);
     }
-    const { list, act, totalW, W } = this.deriveScores();
+    const derived = this.deriveScores();
+    const act = derived.act, totalW = derived.totalW, W = derived.W;
+    // Scope every view to one division when the map's "View in Priority" was used.
+    const list = S.priorityDivision ? derived.list.filter((r) => r.division === S.priorityDivision) : derived.list;
     const EROW = 32;
     const shown = S.capFilter ? list.filter((r) => r.capability === S.capFilter) : list;
     const pos = {}; shown.forEach((r, i) => { pos[r.id] = i; });
@@ -3244,6 +3252,8 @@ class Component extends DCLogic {
     };
     return Object.assign({
       showPriority: true, priTabs,
+      priorityDivision: S.priorityDivision, hasDivFilter: !!S.priorityDivision,
+      onClearDivision: () => this.setState({ priorityDivision: null }),
       execRows, mixRows, kpis, capChips, sliders, listH,
       tableHeads, tableRows, overrideCount: editedN + " edited",
       onResetAll: this.resetAll, onExport,
@@ -3384,6 +3394,7 @@ class Component extends DCLogic {
     const sort = { num: arr("num"), name: arr("name"), cat: arr("cat"), effort: arr("effort"), value: arr("value"), quadrant: arr("quadrant"), div: arr("div") };
     return {
       ...this.priorityProps(),
+      viewInPriority: () => this.setState({ mode: "priority", priorityDivision: this.state.selectedName, selected: false, cards: [] }),
       rootRef: this.rootRef, canvasRef: this.canvasRef,
       mode: s.mode, modeCaption: caption,
       toggleOpacity: s.selected ? 0 : 1, togglePointer: s.selected ? "none" : "auto",
