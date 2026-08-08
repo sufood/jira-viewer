@@ -31,23 +31,71 @@ def _find_pristine_uuid(html, manifest):
             return uuid
     return None
 
+# --- Runtime <-> authoring form -------------------------------------------
+# The `__bundler/template` block is the *runtime* form (what the loader injects
+# directly). `window.__PRISTINE_HTML` is the *authoring* form that the app's own
+# serializer (downloadPage) feeds to support.js to rebuild a shareable page.
+# The two differ ONLY inside the markup region (</helmet>..</x-dc>) by three
+# bijective rewrites (verified byte-exact against the shipped bundle):
+#   sc-camel-on-<kebab>=  <-> on<Pascal>=      (event handlers)
+#   <sc-raw-<tag>         <-> <<tag>           (raw form controls, e.g. select)
+#   data-mut=""           <-> data-mut         (bare mutability marker)
+# The <helmet> head (fonts / ./support.js refs) and the dc-body are otherwise
+# form-independent, so we keep pristine's own head and splice the transformed
+# markup + the (identical-form) dc-body from the edited source.
+_PRISTINE_RE = re.compile(r'window\.__PRISTINE_HTML\s*=\s*"(?:[^"\\]|\\.)*"')
+
+def _kebab_to_pascal(k):
+    return "".join(w.capitalize() for w in k.split("-"))
+
+def runtime_to_authoring(markup):
+    markup = re.sub(r'sc-camel-on-([a-z-]+)=',
+                    lambda m: "on" + _kebab_to_pascal(m.group(1)) + "=", markup)
+    markup = re.sub(r'(</?)sc-raw-([a-z0-9]+)', r'\1\2', markup)
+    markup = markup.replace('data-mut=""', 'data-mut')
+    return markup
+
+def _sync_pristine(old_pristine, new_source):
+    """Return the authoring-form pristine updated with new_source's edits,
+    preserving old_pristine's own <helmet>/head (its ./support.js structure)."""
+    HELMET = "</helmet>"
+    a = old_pristine.find(HELMET)
+    nb0 = new_source.find(HELMET)
+    nx = new_source.find("</x-dc>")
+    if a == -1 or nb0 == -1 or nx == -1:
+        # Structure not recognised — fall back to clobbering (better a loud
+        # failure in tests than a silent partial write).
+        return new_source
+    head = old_pristine[: a + len(HELMET)]
+    markup = runtime_to_authoring(new_source[nb0 + len(HELMET): nx])
+    # </x-dc> + dc-body: form-independent except the dc-script open tag, whose
+    # bare boolean `data-dc-script` is normalised to `data-dc-script=""` in the
+    # runtime form. Restore the bare form on the tag only (count=1).
+    core_end = new_source.rfind("</script>") + len("</script>")
+    tail = new_source[nx:core_end].replace('data-dc-script=""', 'data-dc-script', 1)
+    # Keep pristine's own trailing (its </body></html> whitespace differs from
+    # the runtime form's and is form-specific).
+    trailing = old_pristine[old_pristine.rfind("</script>") + len("</script>"):]
+    return head + markup + tail + trailing
+
 def apply(html, source):
-    # 1. Replace the template block (JSON string of the source HTML).
-    # The bundler escapes "</" as a JSON unicode escape (backslash + u002F)
-    # in this block so an embedded "</script>" inside the source HTML can't
-    # prematurely close the outer <script type="__bundler/template"> wrapper.
+    # 1. Replace the template block with the runtime-form source. The bundler
+    # escapes "</" as a JSON unicode escape so an embedded "</script>" inside the
+    # source can't close the outer <script type="__bundler/template"> wrapper.
     new_tmpl_json = json.dumps(source).replace("</", "<\\u002F")
     m = TMPL_RE.search(html)
     html = html[:m.start(2)] + new_tmpl_json + html[m.end(2):]
-    # 2. Rebuild the __PRISTINE_HTML resource to match, preserving its wrapper.
+    # 2. Sync the __PRISTINE_HTML authoring copy in place (see notes above).
     mman, manifest = _manifest(html)
     uuid = _find_pristine_uuid(html, manifest)
     if uuid:
         v = manifest[uuid]; text = _dec(v)
-        esc = json.dumps(source).replace("</", "<\\/")
+        pm = _PRISTINE_RE.search(text)
+        old_pristine = json.loads(pm.group(0).split("=", 1)[1].strip())
+        new_pristine = _sync_pristine(old_pristine, source)
+        esc = json.dumps(new_pristine).replace("</", "<\\/")
         replacement = "window.__PRISTINE_HTML = " + esc
-        text = re.sub(r'window\.__PRISTINE_HTML\s*=\s*"(?:[^"\\]|\\.)*"',
-                      lambda _m: replacement, text, count=1)
+        text = _PRISTINE_RE.sub(lambda _m: replacement, text, count=1)
         manifest[uuid] = _enc(v, text)
         new_man = json.dumps(manifest, separators=(",", ":"))
         html = html[:mman.start(2)] + new_man + html[mman.end(2):]
