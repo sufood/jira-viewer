@@ -477,8 +477,8 @@
   <!-- Data lens: two tables -->
   <!-- Priority tab: WSJF Studio views (overlay, like the Data tab) -->
   <sc-if value="{{ showPriority }}" hint-placeholder-val="{{ false }}">
-    <div style="position: absolute; top: 100px; left: 34px; right: 34px; bottom: 22px; z-index: 7; display: flex; flex-direction: column; animation: fadeIn 0.3s ease; background: #0b0d10; border: 1px solid #1e232b; border-radius: 12px; overflow: hidden;">
-      <div style="display: flex; align-items: center; gap: 4px; padding: 9px 12px; border-bottom: 1px solid #1e232b; background: rgba(9,18,30,0.6);">
+    <div style="position: absolute; top: 100px; left: 34px; right: 34px; bottom: 22px; z-index: 7; display: flex; flex-direction: column; animation: fadeIn 0.3s ease; background: linear-gradient(180deg, rgba(13,28,46,0.97) 0%, rgba(8,17,30,0.98) 100%); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; overflow: hidden; box-shadow: 0 24px 60px rgba(0,0,0,0.45);">
+      <div style="display: flex; align-items: center; gap: 4px; padding: 9px 12px; border-bottom: 1px solid rgba(255,255,255,0.1); background: rgba(9,18,30,0.6);">
         <sc-for list="{{ priTabs }}" as="t" hint-placeholder-count="7">
           <button sc-camel-on-click="{{ t.onClick }}" style="{{ t.style }}">{{ t.label }}</button>
         </sc-for>
@@ -494,7 +494,7 @@
               <div style="display:flex; flex-direction:column; gap:14px; min-width:0;">
                 <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px;">
                   <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="4">
-                    <div style="background:#101319; border:1px solid #1e232b; border-radius:6px; padding:12px 14px; display:flex; flex-direction:column; gap:4px;">
+                    <div style="background:rgba(255,255,255,0.035); border:1px solid rgba(255,255,255,0.1); border-radius:6px; padding:12px 14px; display:flex; flex-direction:column; gap:4px;">
                       <span style="font-family:'IBM Plex Mono',monospace; font-size:9px; color:#5c636e; letter-spacing:0.08em;">{{ k.label }}</span>
                       <span style="{{ k.valueStyle }}">{{ k.value }}</span>
                       <span style="font-size:10px; color:#6f7783; line-height:1.35;">{{ k.note }}</span>
@@ -510,7 +510,7 @@
                   </sc-for>
                 </div>
                 <div style="position:relative; height:{{ listH }}; min-height:120px;">
-                  <div style="position:absolute; left:0; right:0; top:{{ ruleTop }}; height:1px; background:#232a34;"></div>
+                  <div style="position:absolute; left:0; right:0; top:{{ ruleTop }}; height:1px; background:rgba(255,255,255,0.14);"></div>
                   <sc-for list="{{ execRows }}" as="r" hint-placeholder-count="12">
                     <button sc-camel-on-click="{{ r.onClick }}" title="{{ r.title }}" style="{{ r.style }}" style-hover="background:#1a2029; border-color:#ffb020;">
                       <span style="{{ r.rankStyle }}">{{ r.rank }}</span>
@@ -528,11 +528,11 @@
                 <span style="font-family:'IBM Plex Mono',monospace; font-size:9.5px; color:#5c636e;">{{ execNote }}</span>
               </div>
               <div style="display:flex; flex-direction:column; gap:14px;">
-                <section style="background:#101319; border:1px solid #1e232b; border-radius:6px; padding:14px;">
+                <section style="background:rgba(255,255,255,0.035); border:1px solid rgba(255,255,255,0.1); border-radius:6px; padding:14px;">
                   <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
                     <span style="font-size:12px; font-weight:600;">What-if weighting</span>
                     <div style="flex:1"></div>
-                    <button sc-camel-on-click="{{ onResetWeights }}" style="background:transparent; border:1px solid #2a3038; color:#7d848f; font-family:'IBM Plex Mono',monospace; font-size:9px; padding:3px 7px; border-radius:3px; cursor:pointer; letter-spacing:0.04em;" style-hover="border-color:#ffb020; color:#ffb020;">RESET</button>
+                    <button sc-camel-on-click="{{ onResetWeights }}" style="background:transparent; border:1px solid rgba(255,255,255,0.14); color:#7d848f; font-family:'IBM Plex Mono',monospace; font-size:9px; padding:3px 7px; border-radius:3px; cursor:pointer; letter-spacing:0.04em;" style-hover="border-color:#ffb020; color:#ffb020;">RESET</button>
                   </div>
                   <div style="font-size:10.5px; color:#6f7783; line-height:1.5; margin-bottom:12px;">Move a weight and the ranking re-sorts live. Greyed rows are categories switched off in Setup.</div>
                   <div style="display:flex; flex-direction:column; gap:9px;">
@@ -545,7 +545,7 @@
                     </sc-for>
                   </div>
                 </section>
-                <section style="background:#101319; border:1px solid #1e232b; border-radius:6px; padding:14px;">
+                <section style="background:rgba(255,255,255,0.035); border:1px solid rgba(255,255,255,0.1); border-radius:6px; padding:14px;">
                   <div style="font-size:12px; font-weight:600; margin-bottom:4px;">Investment mix</div>
                   <div style="font-size:10.5px; color:#6f7783; line-height:1.5; margin-bottom:12px;">Share of Top 10 effort by strategic pillar, in story points.</div>
                   <div style="display:flex; flex-direction:column; gap:11px;">
@@ -556,7 +556,7 @@
                           <span style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#5c636e;">{{ m.count }}</span>
                           <span style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:#dfe3e9; width:34px; text-align:right;">{{ m.share }}</span>
                         </div>
-                        <div style="height:6px; background:#0b0d10; border-radius:3px; overflow:hidden;"><div style="{{ m.barStyle }}"></div></div>
+                        <div style="height:6px; background:#0a1524; border-radius:3px; overflow:hidden;"><div style="{{ m.barStyle }}"></div></div>
                       </div>
                     </sc-for>
                   </div>
@@ -572,28 +572,28 @@
               <span style="font-size:11px; color:#6f7783;">Every cell is editable. Edits are stored in your browser and override the auto-score.</span>
               <div style="flex:1"></div>
               <span style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#8b929e;">{{ overrideCount }}</span>
-              <button sc-camel-on-click="{{ onResetAll }}" style="background:#151a21; border:1px solid #2a3038; color:#c3c9d3; font-family:'IBM Plex Mono',monospace; font-size:10px; padding:5px 10px; border-radius:4px; cursor:pointer; letter-spacing:0.04em;" style-hover="border-color:#ffb020; color:#ffb020;">RESET ALL</button>
-              <button sc-camel-on-click="{{ onExport }}" style="background:#ffb020; border:1px solid #ffb020; color:#0b0d10; font-family:'IBM Plex Mono',monospace; font-size:10px; font-weight:600; padding:5px 10px; border-radius:4px; cursor:pointer; letter-spacing:0.04em;" style-hover="background:#ffc95c;">EXPORT CSV</button>
+              <button sc-camel-on-click="{{ onResetAll }}" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.14); color:#c3c9d3; font-family:'IBM Plex Mono',monospace; font-size:10px; padding:5px 10px; border-radius:4px; cursor:pointer; letter-spacing:0.04em;" style-hover="border-color:#ffb020; color:#ffb020;">RESET ALL</button>
+              <button sc-camel-on-click="{{ onExport }}" style="background:#ffb020; border:1px solid #ffb020; color:#0a1524; font-family:'IBM Plex Mono',monospace; font-size:10px; font-weight:600; padding:5px 10px; border-radius:4px; cursor:pointer; letter-spacing:0.04em;" style-hover="background:#ffc95c;">EXPORT CSV</button>
             </div>
             <div style="flex:1; min-height:0; overflow:auto; padding:0 22px 24px 22px;">
               <sc-raw-table style="width:100%; border-collapse:separate; border-spacing:0; font-size:11px;">
                 <sc-raw-thead>
                   <sc-raw-tr>
-                    <sc-raw-th style="position:sticky; top:0; z-index:2; background:#0b0d10; text-align:left; padding:6px 8px 8px 0; font-weight:600; color:#8b929e; font-family:'IBM Plex Mono',monospace; font-size:9.5px; letter-spacing:0.06em; border-bottom:1px solid #232a34;">STORY</sc-raw-th>
+                    <sc-raw-th style="position:sticky; top:0; z-index:2; background:#0a1524; text-align:left; padding:6px 8px 8px 0; font-weight:600; color:#8b929e; font-family:'IBM Plex Mono',monospace; font-size:9.5px; letter-spacing:0.06em; border-bottom:1px solid rgba(255,255,255,0.14);">STORY</sc-raw-th>
                     <sc-for list="{{ tableHeads }}" as="h" hint-placeholder-count="9">
                       <sc-raw-th title="{{ h.title }}" style="{{ h.style }}">{{ h.label }}</sc-raw-th>
                     </sc-for>
-                    <sc-raw-th style="position:sticky; top:0; z-index:2; background:#0b0d10; padding:6px 8px 8px 8px; color:#8b929e; font-family:'IBM Plex Mono',monospace; font-size:9.5px; letter-spacing:0.06em; border-bottom:1px solid #232a34; text-align:left; width:132px;" title="Job Size — T-shirt size, the WSJF denominator">JOB SIZE</sc-raw-th>
-                    <sc-raw-th style="position:sticky; top:0; z-index:2; background:#0b0d10; padding:6px 8px 8px 8px; color:#8b929e; font-family:'IBM Plex Mono',monospace; font-size:9.5px; letter-spacing:0.06em; border-bottom:1px solid #232a34; text-align:left;" title="Must-do — regulatory or mandatory work, floated above WSJF order">MUST</sc-raw-th>
-                    <sc-raw-th style="position:sticky; top:0; z-index:2; background:#0b0d10; padding:6px 8px 8px 8px; color:#8b929e; font-family:'IBM Plex Mono',monospace; font-size:9.5px; letter-spacing:0.06em; border-bottom:1px solid #232a34; text-align:right;" title="Confidence — evidence quality plus hard numbers in the description">CONF</sc-raw-th>
-                    <sc-raw-th style="position:sticky; top:0; z-index:2; background:#0b0d10; padding:6px 8px 8px 8px; color:#8b929e; font-family:'IBM Plex Mono',monospace; font-size:9.5px; letter-spacing:0.06em; border-bottom:1px solid #232a34; text-align:right;" title="Cost of Delay — weighted sum of the active categories">CoD</sc-raw-th>
-                    <sc-raw-th style="position:sticky; top:0; z-index:2; background:#0b0d10; padding:6px 0 8px 8px; color:#ffb020; font-family:'IBM Plex Mono',monospace; font-size:9.5px; letter-spacing:0.06em; border-bottom:1px solid #232a34; text-align:right;" title="Weighted Shortest Job First — Cost of Delay divided by Job Size">WSJF</sc-raw-th>
+                    <sc-raw-th style="position:sticky; top:0; z-index:2; background:#0a1524; padding:6px 8px 8px 8px; color:#8b929e; font-family:'IBM Plex Mono',monospace; font-size:9.5px; letter-spacing:0.06em; border-bottom:1px solid rgba(255,255,255,0.14); text-align:left; width:132px;" title="Job Size — T-shirt size, the WSJF denominator">JOB SIZE</sc-raw-th>
+                    <sc-raw-th style="position:sticky; top:0; z-index:2; background:#0a1524; padding:6px 8px 8px 8px; color:#8b929e; font-family:'IBM Plex Mono',monospace; font-size:9.5px; letter-spacing:0.06em; border-bottom:1px solid rgba(255,255,255,0.14); text-align:left;" title="Must-do — regulatory or mandatory work, floated above WSJF order">MUST</sc-raw-th>
+                    <sc-raw-th style="position:sticky; top:0; z-index:2; background:#0a1524; padding:6px 8px 8px 8px; color:#8b929e; font-family:'IBM Plex Mono',monospace; font-size:9.5px; letter-spacing:0.06em; border-bottom:1px solid rgba(255,255,255,0.14); text-align:right;" title="Confidence — evidence quality plus hard numbers in the description">CONF</sc-raw-th>
+                    <sc-raw-th style="position:sticky; top:0; z-index:2; background:#0a1524; padding:6px 8px 8px 8px; color:#8b929e; font-family:'IBM Plex Mono',monospace; font-size:9.5px; letter-spacing:0.06em; border-bottom:1px solid rgba(255,255,255,0.14); text-align:right;" title="Cost of Delay — weighted sum of the active categories">CoD</sc-raw-th>
+                    <sc-raw-th style="position:sticky; top:0; z-index:2; background:#0a1524; padding:6px 0 8px 8px; color:#ffb020; font-family:'IBM Plex Mono',monospace; font-size:9.5px; letter-spacing:0.06em; border-bottom:1px solid rgba(255,255,255,0.14); text-align:right;" title="Weighted Shortest Job First — Cost of Delay divided by Job Size">WSJF</sc-raw-th>
                   </sc-raw-tr>
                 </sc-raw-thead>
                 <sc-raw-tbody>
                   <sc-for list="{{ tableRows }}" as="r" hint-placeholder-count="12">
                     <sc-raw-tr style="{{ r.rowStyle }}">
-                      <sc-raw-td style="padding:0; border-bottom:1px solid #151a21; max-width:190px;">
+                      <sc-raw-td style="padding:0; border-bottom:1px solid rgba(255,255,255,0.05); max-width:190px;">
                         <button sc-camel-on-click="{{ r.onClick }}" style="display:flex; flex-direction:column; align-items:flex-start; gap:1px; background:transparent; border:none; color:inherit; text-align:left; padding:6px 10px 6px 0; cursor:pointer; width:100%;" style-hover="color:#ffb020;">
                           <span style="font-size:11.5px; color:#dfe3e9; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:180px;">{{ r.name }}</span>
                           <span style="font-family:'IBM Plex Mono',monospace; font-size:9.5px; color:#5c636e;">{{ r.sub }}</span>
@@ -604,18 +604,18 @@
                           <input type="number" min="1" max="5" step="1" value="{{ c.score }}" sc-camel-on-change="{{ c.onChange }}" title="{{ c.title }}" style="{{ c.inputStyle }}">
                         </sc-raw-td>
                       </sc-for>
-                      <sc-raw-td style="padding:4px 8px; border-bottom:1px solid #151a21;">
+                      <sc-raw-td style="padding:4px 8px; border-bottom:1px solid rgba(255,255,255,0.05);">
                         <div style="display:flex; align-items:center; gap:8px;">
                           <span style="{{ r.sizeBadge }}">{{ r.sizeLabel }}</span>
                           <input type="range" min="0" max="4" step="1" value="{{ r.sizeIdx }}" sc-camel-on-change="{{ r.onSize }}" title="{{ r.sizeTitle }}" style="flex:1; min-width:0; height:16px;">
                         </div>
                       </sc-raw-td>
-                      <sc-raw-td style="padding:4px 8px; border-bottom:1px solid #151a21;">
+                      <sc-raw-td style="padding:4px 8px; border-bottom:1px solid rgba(255,255,255,0.05);">
                         <button sc-camel-on-click="{{ r.onMust }}" style="{{ r.mustStyle }}" style-hover="border-color:#ff7a7a;">{{ r.mustLabel }}</button>
                       </sc-raw-td>
-                      <sc-raw-td style="padding:4px 8px; border-bottom:1px solid #151a21; text-align:right;"><span style="{{ r.confStyle }}">{{ r.conf }}</span></sc-raw-td>
-                      <sc-raw-td style="padding:4px 8px; border-bottom:1px solid #151a21; text-align:right; font-family:'IBM Plex Mono',monospace; font-size:11px; color:#8b929e;">{{ r.cod }}</sc-raw-td>
-                      <sc-raw-td style="padding:4px 0 4px 8px; border-bottom:1px solid #151a21; text-align:right; font-family:'IBM Plex Mono',monospace; font-size:12px; font-weight:600; color:#ffb020;">{{ r.wsjf }}</sc-raw-td>
+                      <sc-raw-td style="padding:4px 8px; border-bottom:1px solid rgba(255,255,255,0.05); text-align:right;"><span style="{{ r.confStyle }}">{{ r.conf }}</span></sc-raw-td>
+                      <sc-raw-td style="padding:4px 8px; border-bottom:1px solid rgba(255,255,255,0.05); text-align:right; font-family:'IBM Plex Mono',monospace; font-size:11px; color:#8b929e;">{{ r.cod }}</sc-raw-td>
+                      <sc-raw-td style="padding:4px 0 4px 8px; border-bottom:1px solid rgba(255,255,255,0.05); text-align:right; font-family:'IBM Plex Mono',monospace; font-size:12px; font-weight:600; color:#ffb020;">{{ r.wsjf }}</sc-raw-td>
                     </sc-raw-tr>
                   </sc-for>
                 </sc-raw-tbody>
@@ -626,7 +626,7 @@
         <sc-if value="{{ isSetup }}" hint-placeholder-val="{{ false }}">
           <div style="position:absolute; inset:0; overflow:auto; padding:18px 22px 30px 22px;">
             <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(330px,1fr)); gap:14px; max-width:1180px;">
-              <section style="background:#101319; border:1px solid #1e232b; border-radius:6px; padding:16px;">
+              <section style="background:rgba(255,255,255,0.035); border:1px solid rgba(255,255,255,0.1); border-radius:6px; padding:16px;">
                 <div style="font-size:12px; font-weight:600; margin-bottom:4px;">1 · Backlog source</div>
                 <div style="font-size:11px; color:#6f7783; line-height:1.5; margin-bottom:12px;">Drop a Jira CSV export. Parsed in the browser; it replaces the shared stories store used by every tab.</div>
                 <label style="{{ dropStyle }}">
@@ -636,17 +636,17 @@
                 </label>
                 <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#8b929e; margin-top:10px;">{{ sourceLine }}</div>
               </section>
-              <section style="background:#101319; border:1px solid #1e232b; border-radius:6px; padding:16px;">
+              <section style="background:rgba(255,255,255,0.035); border:1px solid rgba(255,255,255,0.1); border-radius:6px; padding:16px;">
                 <div style="font-size:12px; font-weight:600; margin-bottom:4px;">2 · Judge API</div>
                 <div style="font-size:11px; color:#6f7783; line-height:1.5; margin-bottom:12px;">Optional. Without a key every story is scored by the in-browser heuristic. Held in session storage only — never persisted to disk.</div>
                 <div style="display:flex; flex-direction:column; gap:8px;">
                   <label style="display:flex; flex-direction:column; gap:4px;">
                     <span style="font-family:'IBM Plex Mono',monospace; font-size:9px; color:#5c636e; letter-spacing:0.08em;">API ENDPOINT</span>
-                    <input type="url" placeholder="https://api.unify.ai/v0/chat/completions" value="{{ apiEndpoint }}" sc-camel-on-change="{{ onEndpoint }}" style="width:100%; background:#0b0d10; border:1px solid #2a3038; border-radius:4px; color:#e6e8ec; font-family:'IBM Plex Mono',monospace; font-size:11px; padding:8px 10px; outline:none;">
+                    <input type="url" placeholder="https://api.unify.ai/v0/chat/completions" value="{{ apiEndpoint }}" sc-camel-on-change="{{ onEndpoint }}" style="width:100%; background:#0a1524; border:1px solid rgba(255,255,255,0.14); border-radius:4px; color:#e6e8ec; font-family:'IBM Plex Mono',monospace; font-size:11px; padding:8px 10px; outline:none;">
                   </label>
                   <label style="display:flex; flex-direction:column; gap:4px;">
                     <span style="font-family:'IBM Plex Mono',monospace; font-size:9px; color:#5c636e; letter-spacing:0.08em;">API KEY</span>
-                    <input type="password" placeholder="uni_..." value="{{ apiKey }}" sc-camel-on-change="{{ onKey }}" style="width:100%; background:#0b0d10; border:1px solid #2a3038; border-radius:4px; color:#e6e8ec; font-family:'IBM Plex Mono',monospace; font-size:11px; padding:8px 10px; outline:none;">
+                    <input type="password" placeholder="uni_..." value="{{ apiKey }}" sc-camel-on-change="{{ onKey }}" style="width:100%; background:#0a1524; border:1px solid rgba(255,255,255,0.14); border-radius:4px; color:#e6e8ec; font-family:'IBM Plex Mono',monospace; font-size:11px; padding:8px 10px; outline:none;">
                   </label>
                 </div>
                 <div style="display:flex; align-items:center; gap:10px; margin-top:10px;">
@@ -654,7 +654,7 @@
                   <span style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#5c636e;">{{ judgeNote }}</span>
                 </div>
               </section>
-              <section style="background:#101319; border:1px solid #1e232b; border-radius:6px; padding:16px;">
+              <section style="background:rgba(255,255,255,0.035); border:1px solid rgba(255,255,255,0.1); border-radius:6px; padding:16px;">
                 <div style="font-size:12px; font-weight:600; margin-bottom:4px;">3 · Model weights</div>
                 <div style="font-size:11px; color:#6f7783; line-height:1.5; margin-bottom:12px;">Financial categories are off by default and their weight is renormalised across the six evidenced ones.</div>
                 <div style="display:flex; flex-direction:column; gap:1px;">
@@ -667,16 +667,16 @@
                     </label>
                   </sc-for>
                 </div>
-                <div style="display:flex; justify-content:space-between; margin-top:10px; padding-top:9px; border-top:1px solid #1e232b; font-family:'IBM Plex Mono',monospace; font-size:10px; color:#8b929e;">
+                <div style="display:flex; justify-content:space-between; margin-top:10px; padding-top:9px; border-top:1px solid rgba(255,255,255,0.1); font-family:'IBM Plex Mono',monospace; font-size:10px; color:#8b929e;">
                   <span>ACTIVE WEIGHT</span><span style="color:#ffb020;">{{ activeWeight }}</span>
                 </div>
               </section>
-              <section style="background:#101319; border:1px solid #1e232b; border-radius:6px; padding:16px;">
+              <section style="background:rgba(255,255,255,0.035); border:1px solid rgba(255,255,255,0.1); border-radius:6px; padding:16px;">
                 <div style="font-size:12px; font-weight:600; margin-bottom:4px;">4 · Strategic pillars</div>
                 <div style="font-size:11px; color:#6f7783; line-height:1.5; margin-bottom:12px;">Every division lands on a pillar; description keywords refine the score. Divisions marked * are nearest-fit.</div>
                 <div style="display:flex; flex-direction:column; gap:8px;">
                   <sc-for list="{{ pillarRows }}" as="p" hint-placeholder-count="4">
-                    <div style="display:flex; gap:10px; align-items:flex-start; padding:7px 9px; background:#0b0d10; border:1px solid #1a1f27; border-radius:4px;">
+                    <div style="display:flex; gap:10px; align-items:flex-start; padding:7px 9px; background:#0a1524; border:1px solid rgba(255,255,255,0.08); border-radius:4px;">
                       <span style="{{ p.dot }}"></span>
                       <div style="display:flex; flex-direction:column; gap:2px; min-width:0;">
                         <span style="font-size:11.5px; font-weight:600; color:#dfe3e9;">{{ p.division }}</span>
@@ -704,21 +704,21 @@
                   <span>{{ codMinLabel }}</span>
                 </div>
               </div>
-              <div ref="{{ matrixRef }}" style="flex:1; display:flex; gap:8px; min-width:0; overflow-x:hidden; overflow-y:auto; scrollbar-width:thin; scrollbar-color:#2a3038 transparent;">
+              <div ref="{{ matrixRef }}" style="flex:1; display:flex; gap:8px; min-width:0; overflow-x:hidden; overflow-y:auto; scrollbar-width:thin; scrollbar-color:rgba(255,255,255,0.14) transparent;">
                 <sc-for list="{{ matrixCols }}" as="col" hint-placeholder-count="5">
                   <div style="flex:1; min-width:0; display:flex; flex-direction:column;">
                     <div style="{{ col.wellStyle }}">
                       <div style="{{ col.spacerStyle }}"></div>
-                      <div style="position:absolute; left:0; right:0; top:33%; height:1px; background:#171c23;"></div>
-                      <div style="position:absolute; left:0; right:0; top:66%; height:1px; background:#171c23;"></div>
+                      <div style="position:absolute; left:0; right:0; top:33%; height:1px; background:rgba(255,255,255,0.05);"></div>
+                      <div style="position:absolute; left:0; right:0; top:66%; height:1px; background:rgba(255,255,255,0.05);"></div>
                       <sc-for list="{{ col.chips }}" as="c" hint-placeholder-count="8">
-                        <button sc-camel-on-click="{{ c.onClick }}" title="{{ c.title }}" style="{{ c.style }}" style-hover="background:#232a34; border-color:#ffb020; z-index:5;">
+                        <button sc-camel-on-click="{{ c.onClick }}" title="{{ c.title }}" style="{{ c.style }}" style-hover="background:rgba(255,255,255,0.14); border-color:#ffb020; z-index:5;">
                           <span style="{{ c.dotStyle }}"></span>
                           <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ c.name }}</span>
                         </button>
                       </sc-for>
                     </div>
-                    <div style="height:22px; position:sticky; bottom:0; z-index:2; background:#0b0d10; display:flex; align-items:center; justify-content:center; gap:6px; font-family:'IBM Plex Mono',monospace; font-size:10px; color:#8b929e;">
+                    <div style="height:22px; position:sticky; bottom:0; z-index:2; background:#0a1524; display:flex; align-items:center; justify-content:center; gap:6px; font-family:'IBM Plex Mono',monospace; font-size:10px; color:#8b929e;">
                       <span title="{{ col.sizeTitle }}" style="font-weight:600; color:#c3c9d3;">{{ col.label }}</span>
                       <span style="color:#5c636e;">{{ col.count }}</span>
                     </div>
@@ -748,7 +748,7 @@
                   </div>
                   <div style="{{ row.wellStyle }}">
                     <sc-for list="{{ row.chips }}" as="c" hint-placeholder-count="6">
-                      <button sc-camel-on-click="{{ c.onClick }}" title="{{ c.title }}" style="{{ c.style }}" style-hover="background:#232a34; border-color:#ffb020; z-index:5;">
+                      <button sc-camel-on-click="{{ c.onClick }}" title="{{ c.title }}" style="{{ c.style }}" style-hover="background:rgba(255,255,255,0.14); border-color:#ffb020; z-index:5;">
                         <span style="{{ c.dotStyle }}"></span>
                         <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ c.name }}</span>
                       </button>
@@ -766,14 +766,14 @@
               <span style="font-size:11px; color:#6f7783;">Every story against all nine categories. Greyed columns are excluded from the provisional Cost of Delay.</span>
             </div>
             <div style="display:grid; grid-template-columns:212px repeat(9, minmax(46px,1fr)) 66px; gap:2px; align-items:stretch;">
-              <div style="position:sticky; top:0; z-index:3; background:#0b0d10; padding-bottom:4px;"></div>
+              <div style="position:sticky; top:0; z-index:3; background:#0a1524; padding-bottom:4px;"></div>
               <sc-for list="{{ catHeads }}" as="h" hint-placeholder-count="9">
                 <div title="{{ h.title }}" style="{{ h.style }}"><span style="{{ h.inner }}">{{ h.label }}</span></div>
               </sc-for>
-              <div style="position:sticky; top:0; z-index:3; background:#0b0d10; padding-bottom:4px; display:flex; align-items:flex-end; justify-content:flex-end; font-family:'IBM Plex Mono',monospace; font-size:9.5px; color:#8b929e;" title="Weighted Shortest Job First — Cost of Delay divided by Job Size">WSJF</div>
+              <div style="position:sticky; top:0; z-index:3; background:#0a1524; padding-bottom:4px; display:flex; align-items:flex-end; justify-content:flex-end; font-family:'IBM Plex Mono',monospace; font-size:9.5px; color:#8b929e;" title="Weighted Shortest Job First — Cost of Delay divided by Job Size">WSJF</div>
               <sc-for list="{{ heatRows }}" as="r" hint-placeholder-count="14">
                 <div style="display:contents;">
-                  <button sc-camel-on-click="{{ r.onClick }}" style="text-align:left; background:transparent; border:none; border-right:1px solid #1a1f27; color:#c3c9d3; font-family:'IBM Plex Sans',sans-serif; font-size:11px; padding:5px 8px 5px 0; cursor:pointer; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" style-hover="color:#ffb020;">{{ r.name }}</button>
+                  <button sc-camel-on-click="{{ r.onClick }}" style="text-align:left; background:transparent; border:none; border-right:1px solid rgba(255,255,255,0.08); color:#c3c9d3; font-family:'IBM Plex Sans',sans-serif; font-size:11px; padding:5px 8px 5px 0; cursor:pointer; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" style-hover="color:#ffb020;">{{ r.name }}</button>
                   <sc-for list="{{ r.cells }}" as="c" hint-placeholder-count="9">
                     <div title="{{ c.title }}" style="{{ c.style }}">{{ c.score }}</div>
                   </sc-for>
@@ -801,11 +801,11 @@
                   <div style="width:96px; flex-shrink:0; display:flex; flex-direction:column; gap:3px; padding-top:9px;">
                     <span style="font-size:11px; font-weight:600; color:#c3c9d3;">{{ s.label }}</span>
                     <span style="font-family:'IBM Plex Mono',monospace; font-size:9.5px; color:#5c636e;">{{ s.meta }}</span>
-                    <div style="height:3px; background:#1a1f27; border-radius:2px; overflow:hidden; margin-top:2px;"><div style="{{ s.fillStyle }}"></div></div>
+                    <div style="height:3px; background:rgba(255,255,255,0.08); border-radius:2px; overflow:hidden; margin-top:2px;"><div style="{{ s.fillStyle }}"></div></div>
                   </div>
-                  <div style="flex:1; min-width:0; background:#101319; border:1px solid #1a1f27; border-radius:5px; padding:9px; display:flex; flex-wrap:wrap; gap:5px; align-content:flex-start;">
+                  <div style="flex:1; min-width:0; background:rgba(255,255,255,0.035); border:1px solid rgba(255,255,255,0.08); border-radius:5px; padding:9px; display:flex; flex-wrap:wrap; gap:5px; align-content:flex-start;">
                     <sc-for list="{{ s.chips }}" as="c" hint-placeholder-count="8">
-                      <button sc-camel-on-click="{{ c.onClick }}" title="{{ c.title }}" style="{{ c.style }}" style-hover="background:#232a34; border-color:#ffb020;">
+                      <button sc-camel-on-click="{{ c.onClick }}" title="{{ c.title }}" style="{{ c.style }}" style-hover="background:rgba(255,255,255,0.14); border-color:#ffb020;">
                         <span style="{{ c.dotStyle }}"></span>
                         <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ c.name }}</span>
                       </button>
@@ -1280,7 +1280,7 @@ const SIZES = [
 ];
 
 const HEAT = ['#161a21','#22303f','#2f5a58','#7d7a35','#ffb020'];
-const HEAT_FG = ['#4a525e','#8fa6bd','#a8ded9','#161a21','#0b0d10'];
+const HEAT_FG = ['#4a525e','#8fa6bd','#a8ded9','#161a21','#0a1524'];
 
 const PILLARS = [
   { match:['advice'], name:'Advice', hue:36,
@@ -2933,8 +2933,8 @@ class Component extends DCLogic {
       onClick: () => this.setState({ wsjfSel: r.id }),
       dotStyle: "width:5px; height:5px; border-radius:50%; flex-shrink:0; background:oklch(0.72 0.15 " + hue + ");",
       style: Object.assign({
-        display: "flex", alignItems: "center", gap: "5px", background: "#161b22",
-        border: "1px solid " + (r.edited ? "#5a4a1e" : "#242b35"), color: "#c9cfd8",
+        display: "flex", alignItems: "center", gap: "5px", background: "rgba(255,255,255,0.06)",
+        border: "1px solid " + (r.edited ? "#5a4a1e" : "rgba(255,255,255,0.1)"), color: "#c9cfd8",
         fontFamily: "'IBM Plex Sans',sans-serif", fontSize: "10px", lineHeight: 1,
         padding: "0 6px", height: "19px", borderRadius: "3px", cursor: "pointer",
         overflow: "hidden", whiteSpace: "nowrap", transition: "background 120ms, border-color 120ms",
@@ -3002,7 +3002,7 @@ class Component extends DCLogic {
         style: { position: "absolute", left: 0, right: 0, top: (i * EROW + (i >= 10 ? 14 : 0)) + "px",
           height: (EROW - 4) + "px", display: "flex", alignItems: "center", gap: "6px",
           padding: "0 10px", borderRadius: "4px", cursor: "pointer", textAlign: "left",
-          background: i < 10 ? "#12161c" : "#0e1116", border: "1px solid " + (i < 10 ? "#232a34" : "#171c23"),
+          background: i < 10 ? "rgba(255,255,255,0.05)" : "rgba(255,255,255,0.02)", border: "1px solid " + (i < 10 ? "rgba(255,255,255,0.14)" : "rgba(255,255,255,0.05)"),
           color: "#dfe3e9", fontFamily: "'IBM Plex Sans',sans-serif",
           transition: "top 420ms cubic-bezier(.4,0,.2,1), background 200ms, border-color 200ms" },
         rankStyle: { fontFamily: "'IBM Plex Mono',monospace", fontSize: "11px", width: "20px",
@@ -3023,7 +3023,7 @@ class Component extends DCLogic {
           textAlign: "right", color: r.confidence < 40 ? "#ffb020" : "#5c636e" },
         confBar: { width: "42px", height: "3px", borderRadius: "2px", flexShrink: 0,
           background: "linear-gradient(to right, " + (r.confidence < 40 ? "#ffb020" : "#4a7f74") + " " +
-            r.confidence + "%, #1e232b " + r.confidence + "%)" },
+            r.confidence + "%, rgba(255,255,255,0.1) " + r.confidence + "%)" },
         delta: d === 0 ? "·" : (d > 0 ? "▲" + d : "▼" + (-d)),
         deltaStyle: { fontFamily: "'IBM Plex Mono',monospace", fontSize: "9.5px", flexShrink: 0, width: "30px",
           textAlign: "right", color: d > 0 ? "#5fbf8f" : d < 0 ? "#c96a6a" : "#333a44" },
@@ -3064,8 +3064,8 @@ class Component extends DCLogic {
         onClick: () => this.setState({ capFilter: c.key }),
         style: { fontFamily: "'IBM Plex Mono',monospace", fontSize: "9.5px", letterSpacing: "0.04em",
           padding: "4px 9px", borderRadius: "3px", cursor: "pointer",
-          background: S.capFilter === c.key ? "oklch(0.30 0.06 " + c.hue + ")" : "#101319",
-          border: "1px solid " + (S.capFilter === c.key ? "oklch(0.55 0.12 " + c.hue + ")" : "#1e232b"),
+          background: S.capFilter === c.key ? "oklch(0.30 0.06 " + c.hue + ")" : "rgba(255,255,255,0.035)",
+          border: "1px solid " + (S.capFilter === c.key ? "oklch(0.55 0.12 " + c.hue + ")" : "rgba(255,255,255,0.1)"),
           color: S.capFilter === c.key ? "oklch(0.85 0.10 " + c.hue + ")" : "#7d848f" },
       }));
     const sliders = WSJF.CATS.map((c) => ({
@@ -3083,9 +3083,9 @@ class Component extends DCLogic {
     const tableHeads = WSJF.CATS.map((c) => ({
       label: c.short,
       title: c.label + " · weight " + W[c.k].toFixed(1) + (S.off[c.k] ? " · excluded from Cost of Delay" : ""),
-      style: { position: "sticky", top: 0, zIndex: 2, background: "#0b0d10", padding: "6px 2px 8px 2px",
+      style: { position: "sticky", top: 0, zIndex: 2, background: "#0a1524", padding: "6px 2px 8px 2px",
         color: S.off[c.k] ? "#454c57" : "#8b929e", fontFamily: "'IBM Plex Mono',monospace",
-        fontSize: "9.5px", letterSpacing: "0.05em", borderBottom: "1px solid #232a34", textAlign: "center", width: "40px" },
+        fontSize: "9.5px", letterSpacing: "0.05em", borderBottom: "1px solid rgba(255,255,255,0.14)", textAlign: "center", width: "40px" },
     }));
     const tableRows = list.map((r) => ({
       name: r.opportunity,
@@ -3096,9 +3096,9 @@ class Component extends DCLogic {
         score: r.sc[c.k],
         title: c.label + " — " + (r.ov[c.k] != null ? "manual override" : r.why[c.k]),
         onChange: (e) => this.setScore(r.id, c.k, e.target.value),
-        tdStyle: { padding: "3px 2px", borderBottom: "1px solid #151a21", textAlign: "center", opacity: S.off[c.k] ? 0.35 : 1 },
-        inputStyle: { width: "32px", background: r.ov[c.k] != null ? "#241d0c" : "#12161c",
-          border: "1px solid " + (r.ov[c.k] != null ? "#ffb020" : "#232a34"), borderRadius: "3px",
+        tdStyle: { padding: "3px 2px", borderBottom: "1px solid rgba(255,255,255,0.05)", textAlign: "center", opacity: S.off[c.k] ? 0.35 : 1 },
+        inputStyle: { width: "32px", background: r.ov[c.k] != null ? "#241d0c" : "rgba(255,255,255,0.05)",
+          border: "1px solid " + (r.ov[c.k] != null ? "#ffb020" : "rgba(255,255,255,0.14)"), borderRadius: "3px",
           color: r.ov[c.k] != null ? "#ffb020" : "#c3c9d3", fontFamily: "'IBM Plex Mono',monospace",
           fontSize: "11px", textAlign: "center", padding: "3px 0", outline: "none" },
       })),
@@ -3106,16 +3106,16 @@ class Component extends DCLogic {
       sizeTitle: WSJF.SIZES[r.sizeIdx].label + " — " + r.pts + " story points",
       sizeBadge: { display: "inline-flex", alignItems: "center", justifyContent: "center", width: "26px",
         height: "18px", borderRadius: "3px", fontFamily: "'IBM Plex Mono',monospace", fontSize: "9.5px",
-        fontWeight: 600, background: S.sizes[r.id] != null ? "#241d0c" : "#171c23",
+        fontWeight: 600, background: S.sizes[r.id] != null ? "#241d0c" : "rgba(255,255,255,0.05)",
         color: S.sizes[r.id] != null ? "#ffb020" : "#8b929e",
-        border: "1px solid " + (S.sizes[r.id] != null ? "#ffb020" : "#242b35") },
+        border: "1px solid " + (S.sizes[r.id] != null ? "#ffb020" : "rgba(255,255,255,0.1)") },
       onSize: (e) => this.setSize(r.id, e.target.value),
       mustLabel: r.must ? "MUST" : "no",
       onMust: (e) => { e.stopPropagation(); this.toggleMust(r.id); },
       mustStyle: { fontFamily: "'IBM Plex Mono',monospace", fontSize: "9px", letterSpacing: "0.05em",
         padding: "3px 6px", borderRadius: "3px", cursor: "pointer", width: "42px",
-        background: r.must ? "rgba(255,86,86,0.14)" : "#12161c",
-        border: "1px solid " + (r.must ? "#7a3535" : "#232a34"),
+        background: r.must ? "rgba(255,86,86,0.14)" : "rgba(255,255,255,0.05)",
+        border: "1px solid " + (r.must ? "#7a3535" : "rgba(255,255,255,0.14)"),
         color: r.must ? "#ff7a7a" : "#4a525e" },
       conf: r.confidence + "%",
       confStyle: { fontFamily: "'IBM Plex Mono',monospace", fontSize: "10px",
@@ -3154,8 +3154,8 @@ class Component extends DCLogic {
       sizeTitle: ["Extra small", "Small", "Medium", "Large", "Extra large"][c.si] + " — " + c.sz.pts + " story points",
       spacerStyle: { height: wellsH + "px", width: "1px", pointerEvents: "none" },
       wellStyle: { position: "relative", flex: wellsH ? "none" : 1, height: wellsH ? wellsH + "px" : "auto",
-        minHeight: 0, background: c.si % 2 ? "#0e1116" : "#101319",
-        border: "1px solid #1a1f27", borderRadius: "4px", overflow: "hidden" },
+        minHeight: 0, background: c.si % 2 ? "rgba(255,255,255,0.02)" : "rgba(255,255,255,0.035)",
+        border: "1px solid rgba(255,255,255,0.08)", borderRadius: "4px", overflow: "hidden" },
       chips: c.placed.map((p) => this.chip(p.r, {
         position: "absolute", top: p.top + "px",
         left: (3 + p.li * (chipW + 4)) + "px",
@@ -3181,7 +3181,7 @@ class Component extends DCLogic {
         division: div,
         meta: items.length + " · top " + items[0].wsjf.toFixed(1),
         wellStyle: { position: "relative", flex: 1, minWidth: 0, height: (n * 23 + 10) + "px",
-          background: "#101319", border: "1px solid #1a1f27", borderRadius: "4px" },
+          background: "rgba(255,255,255,0.035)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "4px" },
         chips: placed.map((p) => this.chip(p.r, {
           position: "absolute", left: p.leftPct + "%", top: (5 + p.li * 23) + "px",
           width: p.w + "%", minWidth: "62px",
@@ -3195,7 +3195,7 @@ class Component extends DCLogic {
     const catHeads = WSJF.CATS.map((c) => ({
       label: c.short,
       title: c.label + " · weight " + W[c.k].toFixed(1) + (S.off[c.k] ? " · excluded from Cost of Delay" : ""),
-      style: { position: "sticky", top: 0, zIndex: 3, background: "#0b0d10", paddingBottom: "4px",
+      style: { position: "sticky", top: 0, zIndex: 3, background: "#0a1524", paddingBottom: "4px",
         display: "flex", alignItems: "flex-end", justifyContent: "center" },
       inner: { fontFamily: "'IBM Plex Mono',monospace", fontSize: "9px", letterSpacing: "0.06em",
         color: S.off[c.k] ? "#454c57" : "#8b929e" },
@@ -3292,15 +3292,15 @@ class Component extends DCLogic {
       onFile,
       sourceLine: list.length + " stories in the shared store · scored in-browser",
       dropStyle: { display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-        gap: "6px", padding: "22px", border: "1px dashed #2f3742", borderRadius: "5px", cursor: "pointer", background: "#0b0d10" },
+        gap: "6px", padding: "22px", border: "1px dashed #2f3742", borderRadius: "5px", cursor: "pointer", background: "#0a1524" },
       apiKey: S.apiKey,
       onKey: (e) => { this.setState({ apiKey: e.target.value }); try { sessionStorage.setItem("wsjf.key", e.target.value); } catch (err) {} },
       apiEndpoint: S.apiEndpoint,
       onEndpoint: (e) => { this.setState({ apiEndpoint: e.target.value }); try { sessionStorage.setItem("wsjf.endpoint", e.target.value); } catch (err) {} },
       judgeLabel: "RUN JUDGE ON 6 CATEGORIES",
       judgeNote: keyed ? "Ready · 6 calls per story" : "Endpoint + key required · heuristic scoring active",
-      judgeBtnStyle: { background: keyed ? "#ffb020" : "#151a21", border: "1px solid " + (keyed ? "#ffb020" : "#2a3038"),
-        color: keyed ? "#0b0d10" : "#5c636e", fontFamily: "'IBM Plex Mono',monospace", fontSize: "10px",
+      judgeBtnStyle: { background: keyed ? "#ffb020" : "rgba(255,255,255,0.05)", border: "1px solid " + (keyed ? "#ffb020" : "rgba(255,255,255,0.14)"),
+        color: keyed ? "#0a1524" : "#5c636e", fontFamily: "'IBM Plex Mono',monospace", fontSize: "10px",
         fontWeight: 600, padding: "6px 11px", borderRadius: "4px", cursor: keyed ? "pointer" : "not-allowed", letterSpacing: "0.04em" },
       onJudge: () => { if (keyed) alert("Judge run is stubbed in this build — heuristic scores stand."); },
       ruleTop: (10 * EROW + 5) + "px",
