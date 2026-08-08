@@ -30,6 +30,10 @@ def _first_uuid_with_mime(manifest, mime):
 
 
 def test_copy_resource_adds_font_entry_from_wsjf_into_main():
+    # Hermetic: uses an explicit, guaranteed-novel new_uuid so the result
+    # doesn't depend on whether MAIN already contains this WSJF font uuid
+    # (it does, permanently, once import_wsjf_fonts.py has run — see the
+    # idempotent-overwrite test below for that property).
     main_html = _read(MAIN)
     wsjf_html = _read(WSJF)
 
@@ -37,12 +41,37 @@ def test_copy_resource_adds_font_entry_from_wsjf_into_main():
     wsjf_manifest = _manifest(wsjf_html)
     src_uuid = _first_uuid_with_mime(wsjf_manifest, "font/woff2")
 
-    new_html, new_uuid = br.copy_resource(main_html, wsjf_html, src_uuid)
+    novel_uuid = "wsjf-copytest-0001"
+    assert novel_uuid not in main_manifest, "test fixture uuid unexpectedly already present"
+
+    new_html, new_uuid = br.copy_resource(main_html, wsjf_html, src_uuid, new_uuid=novel_uuid)
 
     new_manifest = _manifest(new_html)
+    assert new_uuid == novel_uuid
     assert new_uuid in new_manifest
     assert len(new_manifest) == len(main_manifest) + 1
     assert new_manifest[new_uuid] == wsjf_manifest[src_uuid]
+
+
+def test_copy_resource_default_new_uuid_is_idempotent_overwrite():
+    # Documents the property import_wsjf_fonts.py relies on: copying with
+    # the default new_uuid (= src_uuid) is safe to re-run — the second call
+    # overwrites the same key instead of growing the manifest.
+    main_html = _read(MAIN)
+    wsjf_html = _read(WSJF)
+
+    wsjf_manifest = _manifest(wsjf_html)
+    src_uuid = _first_uuid_with_mime(wsjf_manifest, "font/woff2")
+
+    once_html, once_uuid = br.copy_resource(main_html, wsjf_html, src_uuid)
+    once_manifest = _manifest(once_html)
+
+    twice_html, twice_uuid = br.copy_resource(once_html, wsjf_html, src_uuid)
+    twice_manifest = _manifest(twice_html)
+
+    assert once_uuid == twice_uuid == src_uuid
+    assert len(twice_manifest) == len(once_manifest)
+    assert twice_manifest[src_uuid] == wsjf_manifest[src_uuid]
 
 
 def test_remove_resource_drops_csv_entry_from_wsjf():
