@@ -106,12 +106,20 @@ from the provided CSV:
 ```bash
 pip install -r requirements.txt
 python3 -m playwright install chromium
-python3 regenerate_html.py
+python3 src/regenerate_html.py
 ```
 
 This writes **`Insignia AI Strategy Map - regenerated.html`** — a locked, view‑only, offline
 file. Open it in any browser. Switch to the **Priority** tab to see the WSJF studio scored from
 the provided stories.
+
+**Or use `make`** (a convenience wrapper over the same commands; run `make help` for the full list):
+
+```bash
+make install        # pip install + playwright install chromium
+make build          # -> Insignia AI Strategy Map - regenerated.html
+make deploy         # copy the regenerated HTML to app/index.html
+```
 
 To sync with Jira instead, see [Jira Sync](#jira-sync--push-and-pull).
 
@@ -169,9 +177,9 @@ saved after each create. Rows already linked are skipped. A row with only **one*
 filled is inconsistent — reported and skipped, never duplicated.
 
 ```bash
-python3 jira_sync.py push --dry-run           # preview payloads, no API calls
-python3 jira_sync.py push                       # create + write Key/URL back to the CSV
-python3 jira_sync.py push --assign --verify     # set assignee (when unambiguous), verify each create
+python3 src/jira_sync.py push --dry-run           # preview payloads, no API calls
+python3 src/jira_sync.py push                       # create + write Key/URL back to the CSV
+python3 src/jira_sync.py push --assign --verify     # set assignee (when unambiguous), verify each create
 ```
 
 Other flags: `-v/--verbose`, `--csv PATH`, `--ca-bundle PATH`. A per‑run audit log is appended
@@ -185,8 +193,8 @@ people / Systems / Themes / Summary from the description's context block). Rows 
 untouched.
 
 ```bash
-python3 jira_sync.py pull --dry-run           # show per-cell diff, no write
-python3 jira_sync.py pull                       # apply
+python3 src/jira_sync.py pull --dry-run           # show per-cell diff, no write
+python3 src/jira_sync.py pull                       # apply
 ```
 
 Also accepts `--csv PATH`, `-v/--verbose`, `--ca-bundle PATH`.
@@ -200,9 +208,9 @@ import + "Download standalone HTML" in headless Chromium (the data is compressed
 bundle, so this reuses the app's real serializer).
 
 ```bash
-python3 regenerate_html.py                     # -> "Insignia AI Strategy Map - regenerated.html"
-python3 regenerate_html.py --headed            # watch it run in a visible browser
-python3 regenerate_html.py --csv X --html Y --out Z
+python3 src/regenerate_html.py                     # -> "Insignia AI Strategy Map - regenerated.html"
+python3 src/regenerate_html.py --headed            # watch it run in a visible browser
+python3 src/regenerate_html.py --csv X --html Y --out Z
 ```
 
 It composes the page from:
@@ -222,8 +230,8 @@ It composes the page from:
 Seed the editable overlay files from the app's current content, then regenerate:
 
 ```bash
-python3 export_tabs.py       # writes initiatives.csv, settings.yaml, people.csv
-python3 regenerate_html.py   # stories CSV + initiatives.csv + settings.yaml + people.csv -> HTML
+python3 src/export_tabs.py       # writes initiatives.csv, settings.yaml, people.csv
+python3 src/regenerate_html.py   # stories CSV + initiatives.csv + settings.yaml + people.csv -> HTML
 ```
 
 ### The output is locked (view‑only)
@@ -244,8 +252,8 @@ is hidden.
   tool only** — never the thing you distribute; the locked output is.
 
 ```bash
-python3 lock_app.py          # (optional) build the locked bundle explicitly
-python3 regenerate_html.py   # builds it if missing, then ships the locked output
+python3 src/lock_app.py          # (optional) build the locked bundle explicitly
+python3 src/regenerate_html.py   # builds it if missing, then ships the locked output
 ```
 
 ---
@@ -291,8 +299,8 @@ cp seed-template.csv my-backlog.csv
 # Fill each row's columns; leave "Jira Key" and "Jira URL" BLANK.
 # Columns: #, Division, Opportunity, AI-fit, Key people, Systems, Themes, Summary, Description, Jira Key, Jira URL
 
-python3 jira_sync.py push --csv my-backlog.csv --dry-run   # preview
-python3 jira_sync.py push --csv my-backlog.csv             # creates issues, writes Key/URL back
+python3 src/jira_sync.py push --csv my-backlog.csv --dry-run   # preview
+python3 src/jira_sync.py push --csv my-backlog.csv             # creates issues, writes Key/URL back
 ```
 
 **Path B — you already have issues in Jira (pull them):**
@@ -300,8 +308,8 @@ Put one row per issue in a CSV with its `Jira URL` filled (Division/Opportunity/
 blank — `pull` fills them), then:
 
 ```bash
-python3 jira_sync.py pull --csv my-backlog.csv --dry-run   # per-cell diff
-python3 jira_sync.py pull --csv my-backlog.csv             # apply
+python3 src/jira_sync.py pull --csv my-backlog.csv --dry-run   # per-cell diff
+python3 src/jira_sync.py pull --csv my-backlog.csv             # apply
 ```
 
 > **Skipping Jira entirely?** You don't have to use Jira at all. Just author `my-backlog.csv`
@@ -341,7 +349,7 @@ need cross‑cutting initiatives or per‑division people.
 ### Step 4 — build your standalone app
 
 ```bash
-python3 regenerate_html.py --csv my-backlog.csv --out "Acme AI Prioritisation.html"
+python3 src/regenerate_html.py --csv my-backlog.csv --out "Acme AI Prioritisation.html"
 ```
 
 - Divisions, Systems/Themes catalogues, and the whole map are derived automatically from
@@ -383,9 +391,9 @@ front‑end build step** — the app is authored directly inside the single HTML
 ### Extract → edit → apply
 
 ```bash
-python3 apply_source.py --extract                # -> app/strategy-map.src.html (editable)
-# ...edit app/strategy-map.src.html in your editor...
-python3 apply_source.py                          # writes it back into the bundle (both copies)
+python3 src/apply_source.py --extract                # -> src/strategy-map.src.html (editable)
+# ...edit src/strategy-map.src.html in your editor...
+python3 src/apply_source.py                          # writes it back into the bundle (both copies)
 python3 -m pytest tests/ -q                      # ALWAYS run the full suite after an edit
 ```
 
@@ -436,6 +444,9 @@ CoD ÷ job size. Confidence reflects evidence quality and how many hard numbers 
 
 ## File reference
 
+The source code lives in **`src/`**; data/config stay in the repo root. `app/` is the deploy
+directory (`make deploy` writes `app/index.html`).
+
 | File | Role |
 |---|---|
 | `insignia-division-stories-jira-linked.csv` | **The stories CSV** — single source of truth |
@@ -443,18 +454,21 @@ CoD ÷ job size. Confidence reflects evidence quality and how many hard numbers 
 | `Insignia AI Strategy Map - Jira linked.html` | Editable app bundle — **internal build tool**, not for distribution |
 | `Insignia AI Strategy Map - locked.html` | View‑only shipped bundle (generated, gitignored) |
 | `Insignia AI Strategy Map - regenerated.html` | `regenerate` output (generated, gitignored) |
-| `jira_sync.py` | CLI: `push` / `pull` |
-| `jira_common.py` | Shared: `.env` loader, CSV I/O, markdown⇄ADF, context‑block round‑trip, labels, Jira client + preflight |
-| `regenerate_html.py` | Rebuild the whole HTML from stories CSV + `initiatives.csv` + `settings.yaml` + `people.csv` |
-| `settings_common.py` | Settings load, division derivation, settings + people overlay |
-| `export_tabs.py` | Seed `initiatives.csv` / `settings.yaml` / `people.csv` from the app's current content |
-| `lock_app.py` | Bake the view‑only lock guard into the app source → locked bundle |
+| `app/index.html` | Deployed page — `make deploy` copies the regenerated HTML here (gitignored) |
+| `Makefile` | Convenience targets (`make help` lists them) |
+| `src/jira_sync.py` | CLI: `push` / `pull` |
+| `src/jira_common.py` | Shared: `.env` loader, CSV I/O, markdown⇄ADF, context‑block round‑trip, labels, Jira client + preflight |
+| `src/regenerate_html.py` | Rebuild the whole HTML from stories CSV + `initiatives.csv` + `settings.yaml` + `people.csv` |
+| `src/settings_common.py` | Settings load, division derivation, settings + people overlay |
+| `src/export_tabs.py` | Seed `initiatives.csv` / `settings.yaml` / `people.csv` from the app's current content |
+| `src/lock_app.py` | Bake the view‑only lock guard into the app source → locked bundle |
+| `src/apply_source.py` | Extract (`--extract`) / apply `src/strategy-map.src.html` ⇄ the bundle (runtime + pristine copies) |
+| `src/strategy-map.src.html` | The editable app source (extracted; edit here, then `make apply`) |
+| `src/bundle_resources.py` | Copy/remove manifest resources between bundles |
+| `src/bundle_common.py` | Decode/edit/re‑encode a single bundle resource |
 | `settings.yaml` | Header / hub / legend / per‑division overrides |
 | `initiatives.csv` | Standalone editable cross‑cutting initiatives |
 | `people.csv` | Division key people (name, role, relevance) |
-| `apply_source.py` | Extract (`--extract`) / apply `app/strategy-map.src.html` ⇄ the bundle (runtime + pristine copies) |
-| `bundle_resources.py` | Copy/remove manifest resources between bundles |
-| `bundle_common.py` | Decode/edit/re‑encode a single bundle resource |
 | `.env.example` | Jira credentials template |
 | `requirements.txt` | Python dependencies |
 | `docs/` | Design spec + implementation plan for the WSJF merge |

@@ -18,9 +18,9 @@ def test_roundtrip_unchanged(tmp_path):
     work = tmp_path / "b.html"
     shutil.copy(BUNDLE, work)
     src = tmp_path / "s.html"
-    subprocess.run([sys.executable, "apply_source.py", "--extract",
+    subprocess.run([sys.executable, "src/apply_source.py", "--extract",
                     "--bundle", str(work), "--src", str(src)], check=True)
-    subprocess.run([sys.executable, "apply_source.py",
+    subprocess.run([sys.executable, "src/apply_source.py",
                     "--bundle", str(work), "--src", str(src)], check=True)
     html = work.read_text(encoding="utf-8")
     tmpl = json.loads(_block(html, "template"))
@@ -29,12 +29,12 @@ def test_roundtrip_unchanged(tmp_path):
 def test_edit_lands_in_template_and_pristine(tmp_path):
     work = tmp_path / "b.html"; shutil.copy(BUNDLE, work)
     src = tmp_path / "s.html"
-    subprocess.run([sys.executable, "apply_source.py", "--extract",
+    subprocess.run([sys.executable, "src/apply_source.py", "--extract",
                     "--bundle", str(work), "--src", str(src)], check=True)
     text = src.read_text(encoding="utf-8")
     marker = "/*__WSJF_MERGE_MARKER__*/"
     src.write_text(text.replace("</x-dc>", marker + "</x-dc>", 1), encoding="utf-8")
-    subprocess.run([sys.executable, "apply_source.py",
+    subprocess.run([sys.executable, "src/apply_source.py",
                     "--bundle", str(work), "--src", str(src)], check=True)
     html = work.read_text(encoding="utf-8")
     assert marker in json.loads(_block(html, "template"))

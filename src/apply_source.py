@@ -134,7 +134,7 @@ def apply(html, source):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--bundle", default="Insignia AI Strategy Map - Jira linked.html")
-    ap.add_argument("--src", default="app/strategy-map.src.html")
+    ap.add_argument("--src", default="src/strategy-map.src.html")
     ap.add_argument("--extract", action="store_true")
     a = ap.parse_args()
     html = open(a.bundle, encoding="utf-8").read()
