@@ -79,3 +79,32 @@ def test_apply_preserves_pristine_standalone_structure():
     tmpl = json.loads(_block(out, "template"))
     tmk = tmpl[tmpl.find("</helmet>"): tmpl.find("</x-dc>")]
     assert "sc-camel-on" in tmk and "onClick=" not in tmk
+
+
+def test_apply_puts_plex_mono_in_pristine_font_link():
+    """The Priority views use IBM Plex Mono. The runtime form declares it via
+    inline @font-face, but the shipped output is built from the pristine
+    (authoring) copy, which loads fonts from a Google Fonts <link>. apply() must
+    top that link up with IBM Plex Mono, or shipped mono numerics fall back."""
+    import apply_source as A
+    html = open(BUNDLE, encoding="utf-8").read()
+    out = A.apply(html, A.extract(html))
+    pris = _pristine(out)
+    head = pris[: pris.find("</helmet>")]
+    m = re.search(r'<link href="https://fonts\.googleapis\.com/css2\?[^"]*"', head)
+    assert m, "pristine has no Google Fonts link"
+    assert "IBM+Plex+Mono" in m.group(0), "IBM Plex Mono missing from the shipped font link"
+    # idempotent — a second apply must not add it twice
+    out2 = A.apply(out, A.extract(out))
+    assert _pristine(out2)[: _pristine(out2).find("</helmet>")].count("IBM+Plex+Mono") == 1
+
+
+def test_apply_raises_on_malformed_source():
+    """apply() must refuse to write a broken pristine rather than silently
+    clobber it when the source lacks </helmet> or </x-dc>."""
+    import apply_source as A
+    import pytest
+    html = open(BUNDLE, encoding="utf-8").read()
+    bad = A.extract(html).replace("</x-dc>", "<!--gone-->", 1)
+    with pytest.raises(ValueError):
+        A.apply(html, bad)

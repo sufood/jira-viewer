@@ -185,3 +185,32 @@ def test_lock_guard_excludes_round_close_button():
     close_btn = pristine[pristine.rfind('<button', 0, close_idx):close_idx]
     assert 'border-radius: 50%' in close_btn, \
         "close button is no longer the round one — update the guard heuristic"
+
+
+def test_lock_guard_targets_choose_csv_upload():
+    """Deterministic (no browser): the baked lock guard hides the Priority
+    Setup 'CHOOSE CSV' upload, and that label actually exists in the guarded
+    pristine — so the guard has a real target. Covers the branch's lock change.
+    """
+    import json, base64, gzip, re as _re
+    import lock_app
+    if not SRC.exists():
+        pytest.skip("source bundle not present")
+    locked = lock_app.build_locked(SRC.read_text(encoding="utf-8"))
+    man = json.loads(_re.search(r'<script type="__bundler/manifest">(.*?)</script>', locked, _re.S).group(1))
+    pris = None
+    for v in man.values():
+        if "javascript" not in (v.get("mime") or ""):
+            continue
+        raw = base64.b64decode(v["data"])
+        txt = gzip.decompress(raw).decode() if v.get("compressed") else raw.decode()
+        m = _re.search(r'window\.__PRISTINE_HTML\s*=\s*("(?:[^"\\]|\\.)*")', txt)
+        if m:
+            pris = json.loads(m.group(1))
+            break
+    assert pris is not None, "no __PRISTINE_HTML in locked bundle"
+    # guard clause present (hides labels containing this text)...
+    assert "CHOOSE CSV" in pris and "indexOf('CHOOSE CSV')" in pris
+    # ...and a real <label> whose text includes CHOOSE CSV exists to be hidden.
+    assert _re.search(r"<label[^>]*>(?:(?!</label>).)*CHOOSE CSV", pris, _re.S), \
+        "no CHOOSE CSV upload label in the guarded pristine"
