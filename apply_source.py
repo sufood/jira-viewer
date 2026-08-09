@@ -55,23 +55,53 @@ def runtime_to_authoring(markup):
     markup = markup.replace('data-mut=""', 'data-mut')
     return markup
 
+def _ensure_priority_fonts(head):
+    """The Priority (WSJF) views use IBM Plex Mono. In the runtime template that
+    is an inline @font-face, but the authoring/pristine form loads fonts from a
+    Google Fonts <link> — so the regenerated/locked output (built from pristine)
+    must request IBM Plex Mono there too, or its mono numerics fall back to a
+    system font. `apply_source` doesn't sync the head (the two forms' heads
+    diverge: uuid script refs vs ./support.js), so we top up just this one link.
+    Idempotent."""
+    if "IBM+Plex+Mono" in head or "IBM Plex Mono" in head:
+        return head
+    m = re.search(r'<link href="https://fonts\.googleapis\.com/css2\?[^"]*"', head)
+    if not m:
+        return head
+    link = m.group(0)
+    add = "&family=IBM+Plex+Mono:wght@400;500;600"
+    new_link = link.replace("&display=swap", add + "&display=swap", 1) \
+        if "&display=swap" in link else link[:-1] + add + '"'
+    return head[:m.start()] + new_link + head[m.end():]
+
 def _sync_pristine(old_pristine, new_source):
     """Return the authoring-form pristine updated with new_source's edits,
-    preserving old_pristine's own <helmet>/head (its ./support.js structure)."""
+    preserving old_pristine's own <helmet>/head (its ./support.js structure).
+
+    NOTE: the head is otherwise taken verbatim from the old pristine — edits to
+    the source <head> (meta, <link>, <style>) do NOT propagate here, because the
+    two forms' heads diverge (uuid script refs vs ./support.js) and re-deriving
+    one from the other is out of scope. The only head top-up we make is the
+    Priority-views font link (see _ensure_priority_fonts)."""
     HELMET = "</helmet>"
     a = old_pristine.find(HELMET)
     nb0 = new_source.find(HELMET)
     nx = new_source.find("</x-dc>")
     if a == -1 or nb0 == -1 or nx == -1:
-        # Structure not recognised — fall back to clobbering (better a loud
-        # failure in tests than a silent partial write).
-        return new_source
-    head = old_pristine[: a + len(HELMET)]
+        # Refuse to write a broken/wrong-form pristine rather than silently
+        # clobber it with the runtime-form source.
+        raise ValueError(
+            "apply_source: source is missing </helmet> or </x-dc>; refusing to "
+            "write the authoring __PRISTINE_HTML copy")
+    head = _ensure_priority_fonts(old_pristine[: a + len(HELMET)])
     markup = runtime_to_authoring(new_source[nb0 + len(HELMET): nx])
     # </x-dc> + dc-body: form-independent except the dc-script open tag, whose
     # bare boolean `data-dc-script` is normalised to `data-dc-script=""` in the
     # runtime form. Restore the bare form on the tag only (count=1).
-    core_end = new_source.rfind("</script>") + len("</script>")
+    core = new_source.rfind("</script>")
+    if core == -1:
+        raise ValueError("apply_source: source has no dc-body </script>; aborting")
+    core_end = core + len("</script>")
     tail = new_source[nx:core_end].replace('data-dc-script=""', 'data-dc-script', 1)
     # Keep pristine's own trailing (its </body></html> whitespace differs from
     # the runtime form's and is form-specific).

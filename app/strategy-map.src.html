@@ -816,6 +816,70 @@
             </div>
           </div>
         </sc-if>
+        <sc-if value="{{ hasSel }}" hint-placeholder-val="{{ false }}">
+          <div sc-camel-on-click="{{ onCloseDetail }}" style="position:absolute; inset:0; background:rgba(6,8,11,0.55); z-index:40;"></div>
+          <aside style="position:absolute; top:0; right:0; bottom:0; width:min(520px,92%); background:linear-gradient(180deg, rgba(15,30,49,0.99), rgba(9,18,30,0.99)); border-left:1px solid rgba(255,255,255,0.12); z-index:41; display:flex; flex-direction:column; box-shadow:-24px 0 60px rgba(0,0,0,0.5);">
+            <div style="display:flex; align-items:flex-start; gap:14px; padding:18px 20px 14px 20px; border-bottom:1px solid rgba(255,255,255,0.1);">
+              <div style="flex:1; min-width:0; display:flex; flex-direction:column; gap:6px;">
+                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                  <span style="{{ sel.divBadge }}">{{ sel.division }}</span>
+                  <span style="{{ sel.evidenceBadge }}">{{ sel.evidence }}</span>
+                  <span style="{{ sel.confStyle }}">{{ sel.conf }}</span>
+                </div>
+                <span style="font-size:16px; font-weight:600; line-height:1.25; letter-spacing:-0.01em; color:#eef3f8;">{{ sel.opportunity }}</span>
+                <a href="{{ sel.url }}" target="_blank" rel="noopener noreferrer" style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#ffce7a; display:inline-flex; align-items:center; gap:6px; width:fit-content;">{{ sel.key }} <span style="font-size:10px;">↗</span></a>
+              </div>
+              <button sc-camel-on-click="{{ onCloseDetail }}" style="background:transparent; border:1px solid rgba(255,255,255,0.14); color:#8b929e; width:26px; height:26px; border-radius:4px; cursor:pointer; font-size:14px; line-height:1; flex-shrink:0;" style-hover="border-color:#ffb020; color:#ffb020;">×</button>
+            </div>
+            <div style="display:grid; grid-template-columns:repeat(3,1fr); border-bottom:1px solid rgba(255,255,255,0.1);">
+              <div style="padding:12px 20px; border-right:1px solid rgba(255,255,255,0.1); display:flex; flex-direction:column; gap:3px;">
+                <span style="font-family:'IBM Plex Mono',monospace; font-size:9px; color:#5c636e; letter-spacing:0.08em;">COST OF DELAY</span>
+                <span style="font-family:'IBM Plex Mono',monospace; font-size:19px; font-weight:600; color:#dfe3e9;">{{ sel.cod }}</span>
+              </div>
+              <div style="padding:12px 20px; border-right:1px solid rgba(255,255,255,0.1); display:flex; flex-direction:column; gap:3px;">
+                <span style="font-family:'IBM Plex Mono',monospace; font-size:9px; color:#5c636e; letter-spacing:0.08em;">JOB SIZE</span>
+                <span style="font-family:'IBM Plex Mono',monospace; font-size:19px; font-weight:600; color:#dfe3e9;">{{ sel.sizeLabel }}</span>
+              </div>
+              <div style="padding:12px 20px; display:flex; flex-direction:column; gap:3px;">
+                <span style="font-family:'IBM Plex Mono',monospace; font-size:9px; color:#5c636e; letter-spacing:0.08em;">WSJF · RANK {{ sel.rank }}</span>
+                <span style="font-family:'IBM Plex Mono',monospace; font-size:19px; font-weight:600; color:#ffb020;">{{ sel.wsjf }}</span>
+              </div>
+            </div>
+            <div style="flex:1; min-height:0; overflow:auto; padding:16px 20px 28px 20px; display:flex; flex-direction:column; gap:18px;">
+              <div style="display:flex; flex-direction:column; gap:6px;">
+                <span style="font-family:'IBM Plex Mono',monospace; font-size:9px; color:#5c636e; letter-spacing:0.08em;">SUMMARY</span>
+                <p style="margin:0; font-size:12.5px; line-height:1.6; color:#c3c9d3;">{{ sel.summary }}</p>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:7px;">
+                <span style="font-family:'IBM Plex Mono',monospace; font-size:9px; color:#5c636e; letter-spacing:0.08em;">SCORE BREAKDOWN</span>
+                <sc-for list="{{ sel.scores }}" as="s" hint-placeholder-count="9">
+                  <div style="{{ s.rowStyle }}">
+                    <div style="display:flex; align-items:center; gap:9px;">
+                      <span style="{{ s.chipStyle }}">{{ s.score }}</span>
+                      <span style="flex:1; font-size:12px; font-weight:500; color:#dfe3e9;">{{ s.label }}</span>
+                      <span style="font-family:'IBM Plex Mono',monospace; font-size:9.5px; color:#5c636e;">{{ s.weightLabel }}</span>
+                    </div>
+                    <div style="display:flex; gap:9px; padding-left:29px;">
+                      <span style="flex:1; font-size:11px; color:#8b929e; line-height:1.5;">{{ s.why }}</span>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:6px;">
+                <span style="font-family:'IBM Plex Mono',monospace; font-size:9px; color:#5c636e; letter-spacing:0.08em;">PROBLEM &amp; AI RELEVANCE</span>
+                <p style="margin:0; font-size:12px; line-height:1.65; color:#a7aeb9; white-space:pre-wrap;">{{ sel.body }}</p>
+              </div>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+                <div style="display:flex; flex-direction:column; gap:5px;"><span style="font-family:'IBM Plex Mono',monospace; font-size:9px; color:#5c636e; letter-spacing:0.08em;">SYSTEMS</span><span style="font-size:11.5px; color:#a7aeb9; line-height:1.5;">{{ sel.systems }}</span></div>
+                <div style="display:flex; flex-direction:column; gap:5px;"><span style="font-family:'IBM Plex Mono',monospace; font-size:9px; color:#5c636e; letter-spacing:0.08em;">THEMES</span><span style="font-size:11.5px; color:#a7aeb9; line-height:1.5;">{{ sel.themes }}</span></div>
+                <div style="display:flex; flex-direction:column; gap:5px;"><span style="font-family:'IBM Plex Mono',monospace; font-size:9px; color:#5c636e; letter-spacing:0.08em;">KEY PEOPLE</span><span style="font-size:11.5px; color:#a7aeb9; line-height:1.5;">{{ sel.people }}</span></div>
+                <div style="display:flex; flex-direction:column; gap:5px;"><span style="font-family:'IBM Plex Mono',monospace; font-size:9px; color:#5c636e; letter-spacing:0.08em;">PILLAR MATCH</span><span style="font-size:11.5px; color:#a7aeb9; line-height:1.5;">{{ sel.pillar }}</span></div>
+                <div style="display:flex; flex-direction:column; gap:5px;"><span style="font-family:'IBM Plex Mono',monospace; font-size:9px; color:#5c636e; letter-spacing:0.08em;">CAPABILITY</span><span style="font-size:11.5px; color:#a7aeb9; line-height:1.5;">{{ sel.capability }}</span></div>
+              </div>
+              <button sc-camel-on-click="{{ sel.onMust }}" style="{{ sel.mustStyle }}">{{ sel.mustLabel }}</button>
+            </div>
+          </aside>
+        </sc-if>
       </div>
     </div>
   </sc-if>
@@ -1626,6 +1690,7 @@ class Component extends DCLogic {
   componentWillUnmount() {
     cancelAnimationFrame(this._raf);
     window.removeEventListener("resize", this._onResize);
+    if (this._ro) { this._ro.disconnect(); this._ro = null; }
   }
 
   buildNodes() {
@@ -2844,6 +2909,8 @@ class Component extends DCLogic {
         overrides: o, sizes: z, must: m,
         weights: w || WSJF.CATS.reduce((a, c) => { a[c.k] = c.w; return a; }, {}),
         capacity: c ? +c : this.state.capacity,
+        apiKey: sessionStorage.getItem("wsjf.key") || "",
+        apiEndpoint: sessionStorage.getItem("wsjf.endpoint") || "",
       });
     } catch (e) {}
   }
@@ -3277,8 +3344,52 @@ class Component extends DCLogic {
       const a = document.createElement("a");
       a.href = URL.createObjectURL(blob); a.download = "wsjf-ranked.csv"; a.click();
     };
+    // ---- Story detail drawer (opened by clicking any story; wsjfSel) ----
+    const sel = S.wsjfSel ? derived.list.find((r) => r.id === S.wsjfSel) : null;
+    const hue = sel ? (WSJF.DIV_HUE[sel.division] != null ? WSJF.DIV_HUE[sel.division] : 212) : 212;
+    const selVals = sel ? {
+      division: sel.division, opportunity: sel.opportunity, key: sel.id, url: sel.url || "#",
+      cod: sel.cod.toFixed(1), wsjf: sel.wsjf.toFixed(1), rank: sel.rank,
+      sizeLabel: WSJF.SIZES[sel.sizeIdx].label + " · " + sel.pts + "pt",
+      summary: sel.summary || "—", body: sel.body || "—",
+      systems: sel.systems.join(", ") || "—", themes: sel.themes.join(", ") || "—",
+      people: sel.people || "—",
+      pillar: sel.pillarGroup + (sel.pillarDirect ? " (direct)" : " (nearest fit)"),
+      capability: sel.capability, conf: sel.confidence + "% confidence",
+      confStyle: { fontFamily: "'IBM Plex Mono',monospace", fontSize: "9px", letterSpacing: "0.07em",
+        padding: "3px 7px", borderRadius: "3px", color: sel.confidence < 40 ? "#ffb020" : "#6f7783",
+        background: sel.confidence < 40 ? "rgba(255,176,32,0.12)" : "rgba(255,255,255,0.05)" },
+      mustLabel: sel.must ? "MUST-DO · FLOATED TO TOP" : "MARK AS MUST-DO",
+      onMust: () => this.toggleMust(sel.id),
+      mustStyle: { display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
+        padding: "9px", borderRadius: "5px", cursor: "pointer", fontFamily: "'IBM Plex Mono',monospace",
+        fontSize: "10px", letterSpacing: "0.05em",
+        background: sel.must ? "rgba(255,86,86,0.12)" : "rgba(255,255,255,0.05)",
+        border: "1px solid " + (sel.must ? "#7a3535" : "rgba(255,255,255,0.14)"),
+        color: sel.must ? "#ff7a7a" : "#8b929e" },
+      evidence: sel.thin ? "THIN EVIDENCE" : "ADEQUATE EVIDENCE",
+      evidenceBadge: { fontFamily: "'IBM Plex Mono',monospace", fontSize: "9px", letterSpacing: "0.07em",
+        padding: "3px 7px", borderRadius: "3px", color: sel.thin ? "#ffb020" : "#6f7783",
+        background: sel.thin ? "rgba(255,176,32,0.12)" : "rgba(255,255,255,0.05)" },
+      divBadge: { fontFamily: "'IBM Plex Mono',monospace", fontSize: "9px", letterSpacing: "0.07em",
+        padding: "3px 7px", borderRadius: "3px", color: "oklch(0.82 0.13 " + hue + ")",
+        background: "oklch(0.30 0.06 " + hue + ")" },
+      scores: WSJF.CATS.map((c) => ({
+        label: c.label, score: sel.sc[c.k],
+        weightLabel: S.off[c.k] ? "excluded" : "w " + c.w.toFixed(1),
+        why: sel.ov[c.k] != null ? "Manual override — auto-score was " + sel.auto[c.k] + ". " + sel.why[c.k] : sel.why[c.k],
+        rowStyle: { display: "flex", flexDirection: "column", gap: "4px", padding: "9px 10px",
+          background: "rgba(255,255,255,0.02)",
+          border: "1px solid " + (sel.ov[c.k] != null ? "#3d3115" : "rgba(255,255,255,0.08)"),
+          borderRadius: "4px", opacity: S.off[c.k] ? 0.5 : 1 },
+        chipStyle: { display: "inline-flex", alignItems: "center", justifyContent: "center", width: "20px",
+          height: "20px", borderRadius: "3px", fontFamily: "'IBM Plex Mono',monospace", fontSize: "11px",
+          fontWeight: 600, background: WSJF.HEAT[sel.sc[c.k] - 1], color: WSJF.HEAT_FG[sel.sc[c.k] - 1] },
+      })),
+    } : {};
     return Object.assign({
       showPriority: true, priTabs,
+      hasSel: !!sel, sel: selVals, onCloseDetail: () => this.setState({ wsjfSel: null }),
       priorityDivision: S.priorityDivision, hasDivFilter: !!S.priorityDivision,
       onClearDivision: () => this.setState({ priorityDivision: null }),
       execRows, mixRows, kpis, capChips, sliders, listH,

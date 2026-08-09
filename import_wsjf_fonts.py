@@ -16,7 +16,10 @@ def main():
             main_html, new_uuid = br.copy_resource(main_html, wsjf_html, uuid)
             mapping[uuid] = new_uuid
     open(MAIN, "w", encoding="utf-8").write(main_html)
-    open("app/_wsjf_font_map.json", "w").write(json.dumps(mapping, indent=2))
+    # Record which WSJF font uuids were copied (uuids are preserved on copy, so
+    # this doubles as the list of fonts now resident in the main bundle).
+    open("app/_wsjf_font_map.json", "w", encoding="utf-8").write(
+        json.dumps(sorted(mapping), indent=2))
     print("copied", len(mapping), "fonts")
 if __name__ == "__main__":
     main()
