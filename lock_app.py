@@ -62,7 +62,8 @@ LOCK_GUARD = (
     "function hide(el){el.setAttribute('data-lock-hide','');}"
     "function apply(){"
     "  document.querySelectorAll('label').forEach(function(l){"
-    "    if((l.textContent||'').indexOf('Upload CSV')!==-1) hide(l);});"
+    "    var lt=(l.textContent||'');"
+    "    if(lt.indexOf('Upload CSV')!==-1||lt.indexOf('CHOOSE CSV')!==-1) hide(l);});"
     "  document.querySelectorAll('button').forEach(function(b){"
     "    var t=(b.textContent||'').trim();"
     # The story-card close button also reads '×'; it is the only round one
