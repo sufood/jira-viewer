@@ -23,15 +23,16 @@ It needs no server and works offline, including from a `file://` path.
 1. [How it fits together](#how-it-fits-together)
 2. [Prerequisites & install](#prerequisites--install)
 3. [Quick start (provided data)](#quick-start-provided-data)
-4. [The stories CSV — the single source of truth](#the-stories-csv--the-single-source-of-truth)
-5. [Jira Sync — `push` and `pull`](#jira-sync--push-and-pull)
-6. [Regenerate & lock the app](#regenerate--lock-the-app)
-7. [Fresh setup from a *different* Jira & project](#fresh-setup-from-a-different-jira--project)
-8. [Editing the app itself (WSJF Priority tab & UI)](#editing-the-app-itself-wsjf-priority-tab--ui)
-9. [The WSJF Priority tab in depth](#the-wsjf-priority-tab-in-depth)
-10. [File reference](#file-reference)
-11. [Tests](#tests)
-12. [Troubleshooting](#troubleshooting)
+4. [Using `make`](#using-make)
+5. [The stories CSV — the single source of truth](#the-stories-csv--the-single-source-of-truth)
+6. [Jira Sync — `push` and `pull`](#jira-sync--push-and-pull)
+7. [Regenerate & lock the app](#regenerate--lock-the-app)
+8. [Fresh setup from a *different* Jira & project](#fresh-setup-from-a-different-jira--project)
+9. [Editing the app itself (WSJF Priority tab & UI)](#editing-the-app-itself-wsjf-priority-tab--ui)
+10. [The WSJF Priority tab in depth](#the-wsjf-priority-tab-in-depth)
+11. [File reference](#file-reference)
+12. [Tests](#tests)
+13. [Troubleshooting](#troubleshooting)
 
 ---
 
@@ -122,6 +123,46 @@ make deploy         # copy the regenerated HTML to app/index.html
 ```
 
 To sync with Jira instead, see [Jira Sync](#jira-sync--push-and-pull).
+
+---
+
+## Using `make`
+
+A `Makefile` wraps the common commands (each is just the `python3 src/…` invocation documented
+elsewhere in this README). Run targets **from the repo root** — `make` does this for you. `make`
+with no target, or `make help`, prints the list.
+
+| Target | What it does | Runs |
+|---|---|---|
+| `make install` | Install Python deps **and** the headless Chromium browser | `pip install -r requirements.txt` + `python3 -m playwright install chromium` |
+| `make build` | Rebuild the standalone HTML from the stories CSV | `python3 src/regenerate_html.py` |
+| `make lock` | Build the view‑only locked bundle | `python3 src/lock_app.py` |
+| `make deploy` | Copy the built `*regenerated*.html` to `app/index.html` | (run `make build` first) |
+| `make test` | Run the full test suite | `python3 -m pytest tests/ -q` |
+| `make extract` | Extract the editable app source | `python3 src/apply_source.py --extract` |
+| `make apply` | Apply `src/strategy-map.src.html` back into the bundle | `python3 src/apply_source.py` |
+| `make seed` | Seed `initiatives.csv` / `settings.yaml` / `people.csv` from the app | `python3 src/export_tabs.py` |
+| `make push` | Create Jira issues for blank CSV rows (needs `.env`) | `python3 src/jira_sync.py push` |
+| `make pull` | Refresh the stories CSV from linked Jira issues | `python3 src/jira_sync.py pull` |
+| `make clean` | Remove generated build outputs (regenerated/locked HTML, `divisions*.csv`, error PNGs, `__pycache__`, `.pytest_cache`) | — |
+
+**Common flows**
+
+```bash
+make install && make build && make deploy      # first run: set up, build, publish to app/index.html
+make build deploy                              # rebuild after a CSV change, then re-deploy
+make extract                                   # then edit src/strategy-map.src.html …
+make apply && make test                        # … apply your edit and verify
+```
+
+**Notes**
+
+- `make deploy` does **not** rebuild first — it copies whatever `*regenerated*.html` is on disk
+  (and errors with a hint if there is none). Use `make build deploy` for a fresh publish.
+- Override the interpreter with `PYTHON=…` if `python3` isn't your default, e.g.
+  `make build PYTHON=python3.12`.
+- `make build`, `lock`, `deploy`, `seed` need the regeneration extras (`playwright` + Chromium +
+  `PyYAML`); `make install` sets them up. `make push`/`pull` need only `requests` and a `.env`.
 
 ---
 
