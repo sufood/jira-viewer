@@ -1,0 +1,14 @@
+# Jira ⇄ CSV ⇄ standalone-HTML toolkit — Python dependencies.
+# Install:  pip install -r requirements.txt
+#           python -m playwright install chromium   # one-time browser download
+
+# Jira sync (push / pull) — the only hard dependency for jira_sync.py:
+requests>=2.31
+
+# HTML regeneration / locking (regenerate_html.py, export_tabs.py):
+playwright>=1.40        # also run: python -m playwright install chromium
+PyYAML>=6.0             # settings.yaml parsing
+
+# Optional — corporate TLS-inspecting proxies (Zscaler / Netskope etc.);
+# auto-detected by jira_sync.py when installed. Or use --ca-bundle instead.
+# truststore>=0.9
