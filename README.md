@@ -512,7 +512,6 @@ directory (`make deploy` writes `app/index.html`).
 | `people.csv` | Division key people (name, role, relevance) |
 | `.env.example` | Jira credentials template |
 | `requirements.txt` | Python dependencies |
-| `docs/` | Design spec + implementation plan for the WSJF merge |
 
 ---
 
