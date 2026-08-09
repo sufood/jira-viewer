@@ -56,7 +56,7 @@ It needs no server and works offline, including from a `file://` path.
   overlay files (`settings.yaml`, `initiatives.csv`, `people.csv`), then hands you a locked,
   view‑only file to distribute.
 - **Editing the app's UI/behaviour** (map, Priority tab, styling) is a separate workflow using
-  `extract_source.py` / `apply_source.py` — see [Editing the app itself](#editing-the-app-itself-wsjf-priority-tab--ui).
+  `apply_source.py` (`--extract` / apply) — see [Editing the app itself](#editing-the-app-itself-wsjf-priority-tab--ui).
 
 ---
 
@@ -222,7 +222,7 @@ It composes the page from:
 Seed the editable overlay files from the app's current content, then regenerate:
 
 ```bash
-python3 export_tabs.py       # writes initiatives.csv, settings.yaml, people.csv, divisions-current.csv
+python3 export_tabs.py       # writes initiatives.csv, settings.yaml, people.csv
 python3 regenerate_html.py   # stories CSV + initiatives.csv + settings.yaml + people.csv -> HTML
 ```
 
@@ -383,7 +383,7 @@ front‑end build step** — the app is authored directly inside the single HTML
 ### Extract → edit → apply
 
 ```bash
-python3 extract_source.py                       # -> app/strategy-map.src.html (editable)
+python3 apply_source.py --extract                # -> app/strategy-map.src.html (editable)
 # ...edit app/strategy-map.src.html in your editor...
 python3 apply_source.py                          # writes it back into the bundle (both copies)
 python3 -m pytest tests/ -q                      # ALWAYS run the full suite after an edit
@@ -401,8 +401,6 @@ serializer keeps working. It also supports `--extract`, `--bundle PATH`, `--src 
 
 - `bundle_resources.py` — copy a resource (font/JS) from one bundle's manifest into another, or
   remove one by uuid.
-- `import_wsjf_fonts.py` — one‑shot: copy the IBM Plex Mono woff2 fonts used by the Priority views
-  into the main bundle.
 
 ---
 
@@ -454,11 +452,9 @@ CoD ÷ job size. Confidence reflects evidence quality and how many hard numbers 
 | `settings.yaml` | Header / hub / legend / per‑division overrides |
 | `initiatives.csv` | Standalone editable cross‑cutting initiatives |
 | `people.csv` | Division key people (name, role, relevance) |
-| `extract_source.py` | Extract the app's editable template to `app/strategy-map.src.html` |
-| `apply_source.py` | Apply `app/strategy-map.src.html` back into the bundle (runtime + pristine copies) |
+| `apply_source.py` | Extract (`--extract`) / apply `app/strategy-map.src.html` ⇄ the bundle (runtime + pristine copies) |
 | `bundle_resources.py` | Copy/remove manifest resources between bundles |
 | `bundle_common.py` | Decode/edit/re‑encode a single bundle resource |
-| `import_wsjf_fonts.py` | Copy the WSJF IBM Plex Mono fonts into the main bundle |
 | `.env.example` | Jira credentials template |
 | `requirements.txt` | Python dependencies |
 | `docs/` | Design spec + implementation plan for the WSJF merge |

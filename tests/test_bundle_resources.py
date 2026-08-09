@@ -1,5 +1,5 @@
-# tests/test_bundle_resources.py — verify copy_resource/remove_resource
-# against the real repo-root bundles.
+# tests/test_bundle_resources.py — verify copy_resource/remove_resource on
+# synthetic in-memory bundles (no dependency on any real bundle file).
 import json
 import re
 
@@ -7,8 +7,12 @@ import bundle_resources as br
 
 MANI_RE = re.compile(r'<script type="__bundler/manifest">(.*?)</script>', re.S)
 
-MAIN = "Insignia AI Strategy Map - Jira linked.html"
-WSJF = "WSJF Studio v2.html"
+
+def _bundle(manifest):
+    return ('<!doctype html><html><head></head><body>'
+            '<script type="__bundler/manifest">'
+            + json.dumps(manifest, separators=(",", ":"))
+            + '</script></body></html>')
 
 
 def _manifest(html):
@@ -17,71 +21,47 @@ def _manifest(html):
     return json.loads(m.group(1).strip())
 
 
-def _read(path):
-    with open(path, encoding="utf-8") as f:
-        return f.read()
+def _entry(mime, data):
+    return {"mime": mime, "compressed": False, "data": data}
 
 
-def _first_uuid_with_mime(manifest, mime):
-    for uuid, entry in manifest.items():
-        if entry.get("mime") == mime:
-            return uuid
-    raise AssertionError(f"no manifest entry with mime={mime!r}")
+def test_copy_resource_adds_entry_with_novel_uuid():
+    src = _bundle({"font-a": _entry("font/woff2", "AAA="),
+                   "csv-a": _entry("text/csv", "Q1NW")})
+    dst = _bundle({"x": _entry("text/javascript", "Zm9v")})
+    dst_manifest = _manifest(dst)
 
-
-def test_copy_resource_adds_font_entry_from_wsjf_into_main():
-    # Hermetic: uses an explicit, guaranteed-novel new_uuid so the result
-    # doesn't depend on whether MAIN already contains this WSJF font uuid
-    # (it does, permanently, once import_wsjf_fonts.py has run — see the
-    # idempotent-overwrite test below for that property).
-    main_html = _read(MAIN)
-    wsjf_html = _read(WSJF)
-
-    main_manifest = _manifest(main_html)
-    wsjf_manifest = _manifest(wsjf_html)
-    src_uuid = _first_uuid_with_mime(wsjf_manifest, "font/woff2")
-
-    novel_uuid = "wsjf-copytest-0001"
-    assert novel_uuid not in main_manifest, "test fixture uuid unexpectedly already present"
-
-    new_html, new_uuid = br.copy_resource(main_html, wsjf_html, src_uuid, new_uuid=novel_uuid)
-
+    new_html, new_uuid = br.copy_resource(dst, src, "font-a", new_uuid="copied-1")
     new_manifest = _manifest(new_html)
-    assert new_uuid == novel_uuid
+
+    assert new_uuid == "copied-1"
     assert new_uuid in new_manifest
-    assert len(new_manifest) == len(main_manifest) + 1
-    assert new_manifest[new_uuid] == wsjf_manifest[src_uuid]
+    assert len(new_manifest) == len(dst_manifest) + 1
+    assert new_manifest[new_uuid] == _manifest(src)["font-a"]
 
 
 def test_copy_resource_default_new_uuid_is_idempotent_overwrite():
-    # Documents the property import_wsjf_fonts.py relies on: copying with
-    # the default new_uuid (= src_uuid) is safe to re-run — the second call
-    # overwrites the same key instead of growing the manifest.
-    main_html = _read(MAIN)
-    wsjf_html = _read(WSJF)
+    # Copying with the default new_uuid (= src_uuid) is safe to re-run: the
+    # second call overwrites the same key instead of growing the manifest.
+    src = _bundle({"font-a": _entry("font/woff2", "AAA=")})
+    dst = _bundle({"x": _entry("text/javascript", "Zm9v")})
 
-    wsjf_manifest = _manifest(wsjf_html)
-    src_uuid = _first_uuid_with_mime(wsjf_manifest, "font/woff2")
+    once_html, once_uuid = br.copy_resource(dst, src, "font-a")
+    twice_html, twice_uuid = br.copy_resource(once_html, src, "font-a")
 
-    once_html, once_uuid = br.copy_resource(main_html, wsjf_html, src_uuid)
-    once_manifest = _manifest(once_html)
-
-    twice_html, twice_uuid = br.copy_resource(once_html, wsjf_html, src_uuid)
-    twice_manifest = _manifest(twice_html)
-
-    assert once_uuid == twice_uuid == src_uuid
-    assert len(twice_manifest) == len(once_manifest)
-    assert twice_manifest[src_uuid] == wsjf_manifest[src_uuid]
+    assert once_uuid == twice_uuid == "font-a"
+    assert len(_manifest(twice_html)) == len(_manifest(once_html))
+    assert _manifest(twice_html)["font-a"] == _manifest(src)["font-a"]
 
 
-def test_remove_resource_drops_csv_entry_from_wsjf():
-    wsjf_html = _read(WSJF)
+def test_remove_resource_drops_entry():
+    html = _bundle({"keep": _entry("text/javascript", "Zm9v"),
+                    "drop": _entry("text/csv", "Q1NW")})
+    before = _manifest(html)
 
-    before_manifest = _manifest(wsjf_html)
-    victim_uuid = _first_uuid_with_mime(before_manifest, "text/csv")
+    new_html = br.remove_resource(html, "drop")
+    after = _manifest(new_html)
 
-    new_html = br.remove_resource(wsjf_html, victim_uuid)
-
-    after_manifest = _manifest(new_html)
-    assert victim_uuid not in after_manifest
-    assert len(after_manifest) == len(before_manifest) - 1
+    assert "drop" not in after
+    assert len(after) == len(before) - 1
+    assert "keep" in after

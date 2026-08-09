@@ -10,6 +10,7 @@ Insignia AI Strategy Map - locked.html
 *.save-error.png
 *.tab-error.png
 divisions.csv
+divisions-current.csv
 robust-locked.html
 .DS_Store
 **/.DS_Store
