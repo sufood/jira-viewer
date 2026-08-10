@@ -38,7 +38,9 @@ def _find_pristine_uuid(html, manifest):
 # The two differ ONLY inside the markup region (</helmet>..</x-dc>) by three
 # bijective rewrites (verified byte-exact against the shipped bundle):
 #   sc-camel-on-<kebab>=  <-> on<Pascal>=      (event handlers)
-#   <sc-raw-<tag>         <-> <<tag>           (raw form controls, e.g. select)
+#   <sc-raw-select        <-> <select          (only select is de-sugared; the
+#                                               table-family raw tags stay
+#                                               wrapped — see runtime_to_authoring)
 #   data-mut=""           <-> data-mut         (bare mutability marker)
 # The <helmet> head (fonts / ./support.js refs) and the dc-body are otherwise
 # form-independent, so we keep pristine's own head and splice the transformed
@@ -51,7 +53,17 @@ def _kebab_to_pascal(k):
 def runtime_to_authoring(markup):
     markup = re.sub(r'sc-camel-on-([a-z-]+)=',
                     lambda m: "on" + _kebab_to_pascal(m.group(1)) + "=", markup)
-    markup = re.sub(r'(</?)sc-raw-([a-z0-9]+)', r'\1\2', markup)
+    # Unwrap ONLY <sc-raw-select> -> <select>. The table-family raw tags
+    # (table/thead/tbody/tfoot/tr/td/th/caption) MUST stay wrapped in the
+    # authoring form: a real <table> can't hold <sc-for>/<sc-if>/{{ }} children
+    # through the browser's HTML parser — table foster-parenting relocates the
+    # non-table content out of the table, stripping the dynamic rows from the
+    # standalone's live <x-dc> before the runtime ever parses it (the Priority
+    # Table tab then renders a single static row). Unknown <sc-raw-*> elements
+    # are exempt from that parsing rule, so keeping them wrapped preserves the
+    # loops; the runtime still renders them as real tables. <select> keeps its
+    # <sc-for><option> children through parsing, so it stays safe to de-sugar.
+    markup = re.sub(r'(</?)sc-raw-(select)(?=[\s>])', r'\1\2', markup)
     markup = markup.replace('data-mut=""', 'data-mut')
     return markup
 

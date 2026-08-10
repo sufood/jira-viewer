@@ -73,7 +73,11 @@ def test_apply_preserves_pristine_standalone_structure():
     # authoring-form markup (not the runtime de-sugared form), edit propagated
     assert marker in markup
     assert "onClick=" in markup and "sc-camel-on" not in markup
-    assert "<select" in markup and "sc-raw-" not in markup
+    # <select> is de-sugared, but the table-family raw tags stay wrapped so the
+    # standalone's live <x-dc> survives HTML table foster-parenting (real <table>
+    # tags would drop the <sc-for> row loops on parse).
+    assert "<select" in markup and "sc-raw-select" not in markup
+    assert "<sc-raw-table" in markup and "sc-raw-tbody" in markup
 
     # meanwhile the template block is the runtime form
     tmpl = json.loads(_block(out, "template"))
