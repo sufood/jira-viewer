@@ -2796,7 +2796,15 @@ class Component extends DCLogic {
       }
       const dataJson = escClose(JSON.stringify(this.data));
       let out = html;
-      if (needsSupport) out = out.replace(/<script\s+src=["']\.\/support\.js["']>\s*<\/script>/i, () => open() + "\n" + support + "\n" + close);
+      // Mark the standalone as self-contained BEFORE the runtime boots. The
+      // dc-runtime's boot() otherwise re-fetches location.href and re-slices it
+      // between the first and last x-dc tags unless window.__resources is set;
+      // in a fully-inlined file that slice begins at an x-dc tag sitting inside
+      // the runtime's own source string, so it would clobber the (correct) DOM-
+      // parsed root template with runtime source and fail to compile. The
+      // bundler sets __resources in the editable bundle; the download must too.
+      const resourcesGuard = "window.__resources = window.__resources || {};\n";
+      if (needsSupport) out = out.replace(/<script\s+src=["']\.\/support\.js["']>\s*<\/script>/i, () => open() + "\n" + resourcesGuard + support + "\n" + close);
       out = out.replace(/<script\s+src=["']\.\/workshop-data\.js["']>\s*<\/script>/i, () => open() + "window.WORKSHOP_DATA = " + dataJson + ";window.__DATA_READONLY = true;" + close);
       // Inline the source snapshot too, so the downloaded file can itself
       // re-download (again with no network).
