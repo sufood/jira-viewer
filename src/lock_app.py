@@ -73,7 +73,14 @@ LOCK_GUARD = (
     "    if(t==='↺ Reset'||t.indexOf('+ Add')===0||(t==='×'&&!round)"
     "       ||t.indexOf('Download standalone')!==-1"
     "       ||b.getAttribute('title')==='Edit details') hide(b);});"
-    "  document.querySelectorAll('input:not([type=file]),textarea').forEach("
+    # Flatten data-entry inputs to static, but leave the Priority tab's what-if
+    # controls live: every range slider (weights / capacity / job-size) and every
+    # checkbox (Setup model-weight on/off) is a view-time exploration lever, not a
+    # data edit — a view-only recipient must still be able to re-weight and re-sort
+    # (and un-grey a category from Setup). They mutate only browser-local what-if
+    # state, never the shipped data model, so exempting them keeps the lock's
+    # intent (no upload/edit/add/delete of the underlying data) intact.
+    "  document.querySelectorAll('input:not([type=file]):not([type=range]):not([type=checkbox]),textarea').forEach("
     "    function(i){i.classList.add('__lock-static');i.setAttribute('readonly','');"
     "    i.tabIndex=-1;});"
     "}"
