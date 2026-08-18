@@ -237,7 +237,7 @@ AITR dataset: `make build CSV=ai-topics.csv OUT="AITR Strategy Map.html"`.
 **Columns (exactly, in order):**
 
 ```
-#, Division, Initiative, Opportunity, AI-fit, Status, Key people, Systems, Themes, Summary, Description, Jira Key, Jira URL
+#, Division, Initiative, Opportunity, AI-fit, Status, Key people, Systems, Themes, Summary, Description, Jira Key, Jira URL, Stage, Swimlane
 ```
 
 - **UTF‑8 with BOM**, every field quoted.
@@ -283,7 +283,8 @@ cp .env.example .env      # then edit .env
 JIRA_BASE_URL=https://yourcompany.atlassian.net   # no trailing slash
 JIRA_EMAIL=you@company.com
 JIRA_API_TOKEN=...        # https://id.atlassian.com/manage-profile/security/api-tokens
-JIRA_PROJECT_KEY=ABC      # the project issues are created in
+JIRA_PROJECT_KEY=ABC      # the ONE project push creates issues in (import can span
+                          # several with --project AITR,AIENG)
 JIRA_ISSUE_TYPE=Story     # must already exist in that project
 ```
 
@@ -343,8 +344,9 @@ Also accepts `--csv PATH`, `-v/--verbose`, `--ca-bundle PATH`, `-y/--yes`.
 ### `import` — read a whole project (or JQL) into a new CSV
 
 `push`/`pull` only touch rows you already have. `import` is how you **start** from a project:
-nominate an issue-key prefix — e.g. `AITR-*`, whose Jira project key is simply `AITR` — and it reads
-**every** matching issue into a fresh jira-linked CSV, one row per issue, ready for `regenerate`.
+nominate one or more issue-key prefixes — e.g. `AITR-*` and `AIENG-*`, whose Jira project keys are
+simply `AITR` and `AIENG` — and it reads **every** matching issue into a fresh jira-linked CSV, one
+row per issue, ready for `regenerate`.
 
 It searches with JQL through Jira's token-paginated
 [`/rest/api/3/search/jql`](https://confluence.atlassian.com/jirakb/run-jql-search-query-using-jira-cloud-rest-api-1289424308.html)
@@ -354,9 +356,25 @@ API token (`read:jira-work`) is enough — it never writes to Jira.
 ```bash
 python3 src/jira_sync.py import --project AITR --csv ai-topics.csv --dry-run   # list what it'd import
 python3 src/jira_sync.py import --project AITR --csv ai-topics.csv             # write the CSV
+
+# several projects in one CSV — comma-separated, or repeat the flag:
+python3 src/jira_sync.py import --project AITR,AIENG --csv ai-topics.csv --dry-run
+python3 src/jira_sync.py import --project AITR --project AIENG --csv ai-topics.csv
+
 # or with make:
 make import PROJECT=AITR CSV=ai-topics.csv
+make import PROJECT=AITR,AIENG CSV=ai-topics.csv
 ```
+
+**Several projects at once.** Keys are stripped, de-duplicated and kept in the order you gave them.
+One key builds `project = AITR`; several build `project in (AITR, AIENG)`. Every key is checked for
+visibility *before* the import runs, and any unreachable ones are reported together — so a typo in
+the second key doesn't cost you a second round trip. Issues arrive ordered by key, which groups
+them by project.
+
+> `push` **creates** issues, so it targets exactly one project: `JIRA_PROJECT_KEY` must name a
+> single key. A comma there fails fast rather than creating issues in a project called
+> `AITR,AIENG`. `import` is happy to use a comma-separated `JIRA_PROJECT_KEY` as its default.
 
 Each issue maps to a row: `summary → Opportunity`, `description → Description`. For issues **this
 toolkit created**, the metadata context block round-trips fully (Division / Initiative / AI-fit /
@@ -370,15 +388,8 @@ have no context block, only those two content columns are known, so:
 - `--ai-fit LEVEL` (optional, e.g. `Medium`) gives foreign rows a defined legend colour on the map.
 
 `Jira Key` / `Jira URL` are filled for every row, so a subsequent `pull` keeps the CSV in sync.
-`--project` takes one key or several — `--project AITR,AIENG`, or the flag
-repeated. Several keys become `project in (AITR, AIENG)`; every key is checked
-for visibility before the import runs, and all unreachable ones are reported
-together. `push` still targets exactly one project, so `JIRA_PROJECT_KEY` must
-name a single key.
-
-With several projects there is no "first board on the project", so the board is
-resolved as `--board`, then `kanban.board` in `settings.yaml`, then the first
-board on the first key.
+`pull` works across projects already — it fetches by the issue key in each row, so `AITR-1` and
+`AIENG-5` in one CSV refresh together.
 
 Also accepts `--jql "…"` (overrides `--project` for subsets/components/labels),
 `-v/--verbose`, `--csv PATH`, `--ca-bundle PATH`.
@@ -394,8 +405,11 @@ make build CSV=ai-topics.csv OUT="AI Topics.html"
 
 `import` also captures each issue's **board position** so the map can show a
 progress stepper on every card. It reads the board's column order via the Agile
-API (`--board ID`, or the first board on the project) and maps each issue's
-status to a column → the `Stage` column. It reconstructs the query-**swimlane**
+API and maps each issue's
+status to a column → the `Stage` column. The board is `--board ID`, else `kanban.board` in
+`settings.yaml`, else the first board on the first project — with several projects "the first board
+on the project" no longer names one board, so the configured id wins. It reconstructs the
+query-**swimlane**
 each issue sits in by running each lane's JQL (Jira's API doesn't expose that),
 first-match-wins → the `Swimlane` column. Both are configured in the `kanban:`
 block of `settings.yaml`:
@@ -603,6 +617,12 @@ changes only by re‑running `regenerate`), while an **Export CSV** download is 
 In the Priority tab, the scoring grid and the API‑key field become read‑only and the CSV upload
 is hidden.
 
+> The **Division stories** export writes the same 15 columns as the stories CSV, `Stage` and
+> `Swimlane` included, so exporting and re-importing is lossless. (It used to stop at `Jira URL`,
+> which silently wiped every kanban stepper on the way back in.) The Priority tab's **EXPORT CSV**
+> is a different thing — WSJF scores, job size, cost of delay and rank — and is not a stories
+> round-trip.
+
 - The lock is baked into the app's own source by `lock_app.py`, which produces
   **`Insignia AI Strategy Map - locked.html`** (generated, gitignored). `regenerate` builds it
   automatically if missing.
@@ -659,7 +679,8 @@ Pick **one**:
 ```bash
 cp seed-template.csv my-backlog.csv
 # Fill each row's columns; leave "Jira Key" and "Jira URL" BLANK.
-# Columns: #, Division, Opportunity, AI-fit, Key people, Systems, Themes, Summary, Description, Jira Key, Jira URL
+# Columns: #, Division, Initiative, Opportunity, AI-fit, Status, Key people, Systems, Themes,
+#          Summary, Description, Jira Key, Jira URL, Stage, Swimlane
 
 python3 src/jira_sync.py push --csv my-backlog.csv --dry-run   # preview
 python3 src/jira_sync.py push --csv my-backlog.csv             # creates issues, writes Key/URL back
@@ -873,8 +894,13 @@ directory (`make deploy` writes `app/index.html`).
 ## Tests
 
 ```bash
-python3 -m pytest tests/ -q
+make bundle && python3 -m pytest tests/ -q
 ```
+
+The bundle is a **generated, gitignored artifact**, so a fresh clone must assemble it before the
+suite will run — without it the bundle tests fail with `FileNotFoundError` on
+`Insignia AI Strategy Map - Jira linked.html`. Once it exists, `python3 -m pytest tests/ -q` alone
+is enough until you next change the app source.
 
 The suite covers the Jira sync helpers, the CSV round‑trips, the bundle tooling (extract/apply
 byte‑fidelity, resource copy/remove, structural invariants), and — via headless Chromium — that
