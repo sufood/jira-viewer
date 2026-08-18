@@ -4,8 +4,9 @@ import jira_common as jc
 
 def test_columns_constant_exact_order():
     assert jc.COLUMNS == [
-        "#", "Division", "Opportunity", "AI-fit", "Key people", "Systems",
-        "Themes", "Summary", "Description", "Jira Key", "Jira URL",
+        "#", "Division", "Initiative", "Opportunity", "AI-fit", "Status",
+        "Key people", "Systems", "Themes", "Summary", "Description",
+        "Jira Key", "Jira URL", "Stage", "Swimlane",
     ]
 
 
@@ -25,8 +26,9 @@ def test_write_csv_roundtrips_bom_and_quoting(write_csv_file, sample_row, tmp_pa
     assert raw.startswith(b"\xef\xbb\xbf")          # BOM preserved
     text = raw.decode("utf-8-sig")
     assert text.splitlines()[0] == (                # every field quoted
-        '"#","Division","Opportunity","AI-fit","Key people","Systems",'
-        '"Themes","Summary","Description","Jira Key","Jira URL"'
+        '"#","Division","Initiative","Opportunity","AI-fit","Status",'
+        '"Key people","Systems","Themes","Summary","Description",'
+        '"Jira Key","Jira URL","Stage","Swimlane"'
     )
     assert jc.read_csv(out) == rows                 # data round-trips
 

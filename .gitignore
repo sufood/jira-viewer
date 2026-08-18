@@ -4,6 +4,10 @@
 __pycache__/
 .pytest_cache/
 *.pyc
+# The single-file app bundle is now a GENERATED artifact, assembled from source
+# (src/engine/ + src/strategy-map.src.html) by `make build` / build_bundle.py.
+# The committed source is src/engine/ (vendored engine) + strategy-map.src.html.
+Insignia AI Strategy Map - Jira linked.html
 Insignia AI Strategy Map - regenerated.html
 Insignia AI Strategy Map - locked.html
 *.load-error.png

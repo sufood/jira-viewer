@@ -49,6 +49,72 @@ def test_push_writes_key_and_url_back(monkeypatch, tmp_path):
     assert row1["Jira URL"] == "https://x.atlassian.net/browse/ABC-1"
 
 
+def test_push_aborts_when_confirmation_declined(monkeypatch, tmp_path):
+    """require_confirm + a 'no' answer must NOT write to Jira and must leave the
+    CSV untouched."""
+    rows = _make_rows()
+
+    class FakeJira:
+        base = "https://x.atlassian.net"
+        def create_issue(self, payload):
+            raise AssertionError("must not create when the user declines")
+
+    monkeypatch.setattr(jira_sync, "confirm", lambda q: False)
+    csv_path = tmp_path / "d.csv"
+    jira_sync.jc.write_csv(csv_path, rows)
+    result = jira_sync.run_push(FakeJira(), csv_path, "PROJ", "Story",
+                                assign=False, verify=False, verbose=False,
+                                require_confirm=True)
+    assert result["created"] == 0
+    assert result.get("aborted") is True
+    # the blank row stays blank — nothing was written back
+    assert jira_sync.jc.read_csv(csv_path)[0]["Jira Key"] == ""
+
+
+def test_push_proceeds_when_confirmation_accepted(monkeypatch, tmp_path):
+    rows = _make_rows()
+
+    class FakeResp:
+        status_code = 201
+        def json(self):
+            return {"key": "ABC-1", "id": "1001"}
+
+    class FakeJira:
+        base = "https://x.atlassian.net"
+        def create_issue(self, payload):
+            return FakeResp()
+
+    asked = []
+    monkeypatch.setattr(jira_sync, "confirm",
+                        lambda q: asked.append(q) or True)
+    csv_path = tmp_path / "d.csv"
+    jira_sync.jc.write_csv(csv_path, rows)
+    result = jira_sync.run_push(FakeJira(), csv_path, "PROJ", "Story",
+                                assign=False, verify=False, verbose=False,
+                                require_confirm=True)
+    assert result["created"] == 1
+    assert len(asked) == 1                    # confirmation was requested once
+
+
+def test_confirm_defaults_to_no(monkeypatch):
+    """Blank/'n' answer -> False; only an explicit y/yes -> True."""
+    class TTY:
+        def isatty(self): return True
+    monkeypatch.setattr(jira_sync.sys, "stdin", TTY())
+    for answer, expected in [("", False), ("n", False), ("no", False),
+                             ("y", True), ("Y", True), ("yes", True)]:
+        monkeypatch.setattr("builtins.input", lambda prompt, a=answer: a)
+        assert jira_sync.confirm("go?") is expected
+
+
+def test_confirm_declines_non_interactive(monkeypatch):
+    """A non-TTY stdin declines rather than proceeding silently."""
+    class NotTTY:
+        def isatty(self): return False
+    monkeypatch.setattr(jira_sync.sys, "stdin", NotTTY())
+    assert jira_sync.confirm("go?") is False
+
+
 def test_push_verify_confirms_created_issue(tmp_path):
     rows = _make_rows()
 

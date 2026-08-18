@@ -1,5 +1,5 @@
-﻿"#","Division","Opportunity","AI-fit","Key people","Systems","Themes","Summary","Description","Jira Key","Jira URL"
-"1","Portfolio & FAO","Unit Pricing Control — the “S.U.E.” agent","High","Chris Page","Unified Data Platform; Copilot; Jira","Anomaly detection; Reconciliation & matching; Reporting automation","Move from a tolerance-based control that generates high volumes of low-value alerts to predictive, risk-weighted alerting. Anomaly detection, expected-movement modelling and exception narratives — with FAR regulatory consequence.","## Problem
+﻿"#","Division","Initiative","Opportunity","AI-fit","Status","Key people","Systems","Themes","Summary","Description","Jira Key","Jira URL"
+"1","Portfolio & FAO","Unit Price Monitoring","Unit Pricing Control — the “S.U.E.” agent","High","Funded","Chris Page","Unified Data Platform; Copilot; Jira","Anomaly detection; Reconciliation & matching; Reporting automation","Move from a tolerance-based control that generates high volumes of low-value alerts to predictive, risk-weighted alerting. Anomaly detection, expected-movement modelling and exception narratives — with FAR regulatory consequence.","## Problem
 
 **Core problem:** The existing tolerance-based control model generates high volumes of low-value alerts, consuming skilled staff time on immaterial investigations. Controls are retrospective, not forward-looking.
 
@@ -29,7 +29,7 @@
 - Is there an existing model risk management policy that this would need to comply with?
 
 Source: Portfolio & FAO AI Workshop synthesis document","AIENG-859","https://ifl.atlassian.net/browse/AIENG-859"
-"2","Portfolio & FAO","Wrap Bank Reconciliations","High","Claire","Unified Data Platform; Copilot; Jira","Anomaly detection; Reconciliation & matching; Reporting automation","Wrap auto-matches at 82–84% vs Master Trust's 95–98% across ~2M transactions. Train a recommendation model on historical manual matches and classify/exclude non-cash items — but only after the workflow is decomposed.","## Problem
+"2","Portfolio & FAO","Wrap Reconciliations","Wrap Bank Reconciliations","High","Parked","Claire","Unified Data Platform; Copilot; Jira","Anomaly detection; Reconciliation & matching; Reporting automation","Wrap auto-matches at 82–84% vs Master Trust's 95–98% across ~2M transactions. Train a recommendation model on historical manual matches and classify/exclude non-cash items — but only after the workflow is decomposed.","## Problem
 
 **Core problem:** Wrap's auto-matching rate (82–84%) lags Master Trust (95–98%) by 10–12 percentage points. Across 2 million transactions, the unmatched population is large, persistent, and manually intensive. Non-cash items are included in the unmatched population despite not being true cash exceptions.
 
@@ -55,7 +55,7 @@ Source: Portfolio & FAO AI Workshop synthesis document","AIENG-859","https://ifl
 - Are there regulatory or audit requirements around the reconciliation process that an AI-assisted model would need to satisfy?
 
 Source: Portfolio & FAO AI Workshop synthesis document","AIENG-860","https://ifl.atlassian.net/browse/AIENG-860"
-"3","Portfolio & FAO","RBA Cash Rate Change Handling","Medium-High","Ben Spencer","Unified Data Platform; Copilot; Jira","Anomaly detection; Reconciliation & matching; Reporting automation","Orchestrate a time-pressured, cross-system response that today relies on individual knowledge. Checklist generation by rate magnitude, downstream-impact validation, and BPMN process documentation via Copilot.","## Problem
+"3","Portfolio & FAO","Automation Tooling (e.g. ROVO)","RBA Cash Rate Change Handling","Medium-High","Endorsed","Ben Spencer","Unified Data Platform; Copilot; Jira","Anomaly detection; Reconciliation & matching; Reporting automation","Orchestrate a time-pressured, cross-system response that today relies on individual knowledge. Checklist generation by rate magnitude, downstream-impact validation, and BPMN process documentation via Copilot.","## Problem
 
 **Core problem:** Cash rate change events are time-pressured, cross-system, and managed through individual knowledge rather than a governed, orchestrated response. Exceptions surface unpredictably. Key-person dependency is high.
 
@@ -81,7 +81,7 @@ Source: Portfolio & FAO AI Workshop synthesis document","AIENG-860","https://ifl
 - What would an ""orchestrated response playbook"" need to include to be genuinely useful vs. just another checklist?
 
 Source: Portfolio & FAO AI Workshop synthesis document","AIENG-861","https://ifl.atlassian.net/browse/AIENG-861"
-"4","Portfolio & FAO","Weekly Cash Rate Publication","High","Ryan McCulloch","Unified Data Platform; Copilot; Jira","Anomaly detection; Reconciliation & matching; Reporting automation","A routine but high-consequence process with no systematic validation. Automated sourcing, validation and audit trail — a well-scoped, low-ambiguity early win.","## Problem
+"4","Portfolio & FAO","Automation Tooling (e.g. ROVO)","Weekly Cash Rate Publication","High","Endorsed","Ryan McCulloch","Unified Data Platform; Copilot; Jira","Anomaly detection; Reconciliation & matching; Reporting automation","A routine but high-consequence process with no systematic validation. Automated sourcing, validation and audit trail — a well-scoped, low-ambiguity early win.","## Problem
 
 **Core problem:** A routine but high-consequence process — publication errors have outsized downstream impact on calculations and client-facing outputs. Manual preparation, inconsistent data sourcing, no systematic validation.
 
@@ -104,7 +104,7 @@ Source: Portfolio & FAO AI Workshop synthesis document","AIENG-861","https://ifl
 - Are there any edge cases (e.g., RBA publishes outside normal schedule, rate unchanged for extended period) that the automation would need to handle?
 
 Source: Portfolio & FAO AI Workshop synthesis document","AIENG-862","https://ifl.atlassian.net/browse/AIENG-862"
-"5","Portfolio & FAO","Portfolio Reporting","High","Ryan McCulloch","Unified Data Platform; Copilot; Jira","Anomaly detection; Reconciliation & matching; Reporting automation","Free skilled PMO staff from Jira extraction, status compilation and deck prep. Narrative generation from structured data, plus risk/dependency surfacing — governance of AI output matters.","## Problem
+"5","Portfolio & FAO","Automation Tooling (e.g. ROVO)","Portfolio Reporting","High","Endorsed","Ryan McCulloch","Unified Data Platform; Copilot; Jira","Anomaly detection; Reconciliation & matching; Reporting automation","Free skilled PMO staff from Jira extraction, status compilation and deck prep. Narrative generation from structured data, plus risk/dependency surfacing — governance of AI output matters.","## Problem
 
 **Core problem:** Skilled Portfolio and PMO staff spend disproportionate time on structured but manual work — Jira extraction, status compilation, deck preparation, stakeholder communications. Strategic oversight is crowded out by reporting mechanics.
 
@@ -130,7 +130,7 @@ Source: Portfolio & FAO AI Workshop synthesis document","AIENG-862","https://ifl
 - What is the current Copilot licence situation — are all relevant staff enabled?
 
 Source: Portfolio & FAO AI Workshop synthesis document","AIENG-863","https://ifl.atlassian.net/browse/AIENG-863"
-"6","Finance","Document & Data Ingestion (IDP)","High","Andrew Smouha; Tammy Yu; Margarita Proctor","Unified Data Platform; Copilot; ServiceNow","Document extraction; Anomaly detection; Reconciliation & matching; Reporting automation","Skilled time is consumed before value-adding work begins because data is locked in unstructured formats — ~116 contractor invoices/month, Tax PDFs, revenue exports. The most proven AI application in financial services.","## Problem
+"6","Finance","Invoice & PDF Extraction","Document & Data Ingestion (IDP)","High","Prioritised","Andrew Smouha; Tammy Yu; Margarita Proctor","Unified Data Platform; Copilot; ServiceNow","Document extraction; Anomaly detection; Reconciliation & matching; Reporting automation","Skilled time is consumed before value-adding work begins because data is locked in unstructured formats — ~116 contractor invoices/month, Tax PDFs, revenue exports. The most proven AI application in financial services.","## Problem
 
 Skilled time is being consumed *before* any value-adding work begins because data is locked in unstructured formats. Specific instances:
 - **FBP**: ~116 contractor invoices/month extracted manually from Zycus — resource names, periods, PO numbers, amounts
@@ -169,7 +169,7 @@ Document extraction / intelligent document processing (IDP) is one of the most p
 - Is Copilot usage formally approved, or is it ad hoc individual use?
 
 Source: Finance AI Workshop synthesis document","AIENG-864","https://ifl.atlassian.net/browse/AIENG-864"
-"7","Finance","Pattern-Based Variance Analysis","High","Kristen Holmes","Unified Data Platform; Copilot; ServiceNow","Document extraction; Anomaly detection; Reconciliation & matching; Reporting automation","The monthly comparison re-investigates the same root causes every cycle. Anomaly detection with automated triage — flag knowns, escalate unknowns.","## Problem
+"7","Finance","Finance Payments & Reconciliations","Pattern-Based Variance Analysis","High","Endorsed","Kristen Holmes","Unified Data Platform; Copilot; ServiceNow","Document extraction; Anomaly detection; Reconciliation & matching; Reporting automation","The monthly comparison re-investigates the same root causes every cycle. Anomaly detection with automated triage — flag knowns, escalate unknowns.","## Problem
 
 The Revenue Payments monthly comparison process re-investigates the same root causes every cycle — month-length effects, known licensee patterns, product structure changes. Same issue exists in FBP (invoice matching) and Tax (R&D/CAPEX trends in the GL). Expert time is spent confirming the *expected* rather than identifying the *unexpected*.
 
@@ -193,7 +193,7 @@ Anomaly detection and pattern recognition with automated triage — flag knowns,
 - What would ""good"" look like to you — what would you want the AI to do vs. keep doing yourself?
 
 Source: Finance AI Workshop synthesis document","AIENG-865","https://ifl.atlassian.net/browse/AIENG-865"
-"8","Finance","Financial Control Risk in Payments","High","Kristen Holmes","Unified Data Platform; Copilot; ServiceNow","Document extraction; Anomaly detection; Reconciliation & matching; Reporting automation","The Revenue Payments comparison is a financial control, not just efficiency. Automated validation, formula-integrity checking and audit-trail strengthening — a compliance case.","## Problem
+"8","Finance","Finance Payments & Reconciliations","Financial Control Risk in Payments","High","Endorsed","Kristen Holmes","Unified Data Platform; Copilot; ServiceNow","Document extraction; Anomaly detection; Reconciliation & matching; Reporting automation","The Revenue Payments comparison is a financial control, not just efficiency. Automated validation, formula-integrity checking and audit-trail strengthening — a compliance case.","## Problem
 
 The Revenue Payments comparison is a **financial control**, not just an efficiency exercise. Over/under-payments to licensees carry financial and compliance exposure. The current architecture — manual Excel formulas, column alignment checks, individual vigilance — is fragile for a process of this consequence.
 
@@ -206,7 +206,7 @@ Automated validation, formula integrity checking, and end-to-end audit trail str
 No deep-dive questions captured in the workshop materials for this area.
 
 Source: Finance AI Workshop synthesis document","AIENG-866","https://ifl.atlassian.net/browse/AIENG-866"
-"9","Finance","Cross-System Reconciliation & Matching","High","Rhett Harris; Adeline Tan","Unified Data Platform; Copilot; ServiceNow","Document extraction; Anomaly detection; Reconciliation & matching; Reporting automation","Data from disconnected systems (Zycus, Workday, Hub24, EDW, Compass…) is manually assembled and reconciled. Fuzzy matching with exception-only human review.","## Problem
+"9","Finance","Finance Payments & Reconciliations","Cross-System Reconciliation & Matching","High","Endorsed","Rhett Harris; Adeline Tan","Unified Data Platform; Copilot; ServiceNow","Document extraction; Anomaly detection; Reconciliation & matching; Reporting automation","Data from disconnected systems (Zycus, Workday, Hub24, EDW, Compass…) is manually assembled and reconciled. Fuzzy matching with exception-only human review.","## Problem
 
 Data from disconnected systems (Zycus, Workday, ServiceNow, ASIS, TAS, Hub24, EDW, Compass, SuperB, STAR, Unison) must be manually assembled, cleaned, and reconciled. Errors concentrate here. Specific instances:
 - FBP invoice-to-project tracker matching
@@ -227,7 +227,7 @@ Fuzzy matching, cross-system reconciliation agents, exception-only human review.
 - What does ""repeatability of prompts/outputs"" mean in practice — are you looking for deterministic outputs, or structured prompts with consistent methodology?
 
 Source: Finance AI Workshop synthesis document","AIENG-867","https://ifl.atlassian.net/browse/AIENG-867"
-"10","Finance","Classification Against Known Rules","High","Tammy Yu","Unified Data Platform; Copilot; ServiceNow","Document extraction; Anomaly detection; Reconciliation & matching; Reporting automation","Rule-based logic (cost-centre reclass, R&D/CAPEX, stamp duty) is applied manually because it lives in people's heads. Encode the rules; surface edge cases only.","## Problem
+"10","Finance","Finance Payments & Reconciliations","Classification Against Known Rules","High","Endorsed","Tammy Yu","Unified Data Platform; Copilot; ServiceNow","Document extraction; Anomaly detection; Reconciliation & matching; Reporting automation","Rule-based logic (cost-centre reclass, R&D/CAPEX, stamp duty) is applied manually because it lives in people's heads. Encode the rules; surface edge cases only.","## Problem
 
 A consistent pattern across all teams: known, rule-based classification logic is applied manually every cycle because it's undocumented and lives in people's heads.
 - FBP → cost centre reclassification via manual journals
@@ -244,7 +244,7 @@ Rules encoding + classification models. Automate the routine; surface edge cases
 No deep-dive questions captured in the workshop materials for this area.
 
 Source: Finance AI Workshop synthesis document","AIENG-868","https://ifl.atlassian.net/browse/AIENG-868"
-"11","Finance","High-Volume Mailbox & Admin","Medium-High","Tammy Yu","Unified Data Platform; Copilot; ServiceNow","Document extraction; Anomaly detection; Reconciliation & matching; Reporting automation","A large, pattern-heavy Tax inbox — government requests, access management, 400+ trust forms. Email triage, routing and draft-response generation.","## Problem
+"11","Finance","Automation Tooling (e.g. ROVO)","High-Volume Mailbox & Admin","Medium-High","Endorsed","Tammy Yu","Unified Data Platform; Copilot; ServiceNow","Document extraction; Anomaly detection; Reconciliation & matching; Reporting automation","A large, pattern-heavy Tax inbox — government requests, access management, 400+ trust forms. Email triage, routing and draft-response generation.","## Problem
 
 Tax team handles a large, pattern-heavy email inbox: government department requests, access management, tax advice queries, trust form administration (400+ forms). Some are unique, most are pattern-based. Filing, categorisation, and routing are currently manual.
 
@@ -257,7 +257,7 @@ Email triage/classification, auto-routing, draft response generation, checklist 
 No deep-dive questions captured in the workshop materials for this area.
 
 Source: Finance AI Workshop synthesis document","AIENG-869","https://ifl.atlassian.net/browse/AIENG-869"
-"12","Finance","Reporting Pack Preparation & Assurance","Medium-High","Andrew Smouha","Unified Data Platform; Copilot; ServiceNow","Document extraction; Anomaly detection; Reconciliation & matching; Reporting automation","P&P PowerPoint packs on ever-earlier deadlines. Auto-populate structured slides and cross-check numbers against source under time pressure.","## Problem
+"12","Finance","Board & Committee Documents & Reports","Reporting Pack Preparation & Assurance","Medium-High","Endorsed","Andrew Smouha","Unified Data Platform; Copilot; ServiceNow","Document extraction; Anomaly detection; Reconciliation & matching; Reporting automation","P&P PowerPoint packs on ever-earlier deadlines. Auto-populate structured slides and cross-check numbers against source under time pressure.","## Problem
 
 Finance P&P prepares PowerPoint packs on a cyclical basis with deadlines that are continuously moving earlier. Manual population of numbers and commentary, plus cross-checking against source data, introduces error risk under time pressure.
 
@@ -276,7 +276,7 @@ Auto-population of structured slides from data sources; automated cross-checking
 - Is there an existing template/master slide deck that governs the structure?
 
 Source: Finance AI Workshop synthesis document","AIENG-870","https://ifl.atlassian.net/browse/AIENG-870"
-"13","Finance","FBI: ASX Asset Allocation, FUMA & BI","Medium-High","Rhett Harris; Lisa Walters","Unified Data Platform; Copilot; ServiceNow","Document extraction; Anomaly detection; Reconciliation & matching; Reporting automation","Research agents for ASX classification where Morningstar is unavailable, FUMA commentary, NL querying of Power BI, and BO → Looker migration assistance.","## Problem
+"13","Finance","Automation Tooling (e.g. ROVO)","FBI: ASX Asset Allocation, FUMA & BI","Medium-High","Endorsed","Rhett Harris; Lisa Walters","Unified Data Platform; Copilot; ServiceNow","Document extraction; Anomaly detection; Reconciliation & matching; Reporting automation","Research agents for ASX classification where Morningstar is unavailable, FUMA commentary, NL querying of Power BI, and BO → Looker migration assistance.","## Problem
 
 Finance BI (FBI) team spends significant time on:
 - ASX asset classification where Morningstar data is unavailable (manual internet research and assessment)
@@ -310,7 +310,7 @@ Research agents (web + internal), automated anomaly detection and business comme
 - What's the current follow-up process when staff don't submit on time?
 
 Source: Finance AI Workshop synthesis document","AIENG-871","https://ifl.atlassian.net/browse/AIENG-871"
-"14","Legal & CoSec","Institutional Memory & Historical Retrieval","High","Sharyn Cowley; Ben Spencer","Diligent; Copilot; SharePoint; Jira","RAG & knowledge retrieval; Workflow automation; Document extraction","The most consistently named pain point. RAG over a curated, access-controlled corpus of board papers, minutes and policies — returning verbatim references and source links, not generative summaries. The Telstra ‘director's library’ is the reference.","## Problem
+"14","Legal & CoSec","Self-Service Knowledge Bases","Institutional Memory & Historical Retrieval","High","Endorsed","Sharyn Cowley; Ben Spencer","Diligent; Copilot; SharePoint; Jira","RAG & knowledge retrieval; Workflow automation; Document extraction","The most consistently named pain point. RAG over a curated, access-controlled corpus of board papers, minutes and policies — returning verbatim references and source links, not generative summaries. The Telstra ‘director's library’ is the reference.","## Problem
 
 The single most consistently named pain point across all three sources. Historical board and committee papers exist but are not usable at speed. Directors and senior staff manually reconstruct context, precedent, and prior rationale — a time-consuming, inconsistent, and error-prone process. The workshop confirmed this as the primary use case, with the Telstra ""director's library"" cited as a comparable reference.
 
@@ -344,7 +344,7 @@ Retrieval-augmented generation (RAG) over a curated, access-controlled document 
 - What are the implications of the SharePoint migration for document access and tooling?
 
 Source: Legal & CoSec AI Workshop synthesis document","AIENG-872","https://ifl.atlassian.net/browse/AIENG-872"
-"15","Legal & CoSec","Director Preparation & Meeting Readiness","High","Sharyn Cowley","Diligent; Copilot; SharePoint; Jira","RAG & knowledge retrieval; Workflow automation; Document extraction","Fast, reliable answers to policy, precedent and prior-decision questions. A narrow factual Q&A tool with very low error tolerance that must return references, not synthetic conclusions.","## Problem
+"15","Legal & CoSec","Self-Service Knowledge Bases","Director Preparation & Meeting Readiness","High","Endorsed","Sharyn Cowley","Diligent; Copilot; SharePoint; Jira","RAG & knowledge retrieval; Workflow automation; Document extraction","Fast, reliable answers to policy, precedent and prior-decision questions. A narrow factual Q&A tool with very low error tolerance that must return references, not synthetic conclusions.","## Problem
 
 Directors need fast, reliable answers to questions like: *What is our policy on X? When was this approved? What decisions have been made on this topic?* The workshop specifically named policy lookup, risk identification, sample questions for upcoming papers, and board pack summarisation as desired capabilities.
 
@@ -361,7 +361,7 @@ A narrow, factual Q&A tool scoped to approved documents (board papers, minutes, 
 - How do you currently prepare for meetings — what's your process, and where does it break down?
 
 Source: Legal & CoSec AI Workshop synthesis document","AIENG-873","https://ifl.atlassian.net/browse/AIENG-873"
-"16","Legal & CoSec","Board Paper Quality & Compliance Checking","Medium-High","Sharyn Cowley; Ken Chan","Diligent; Copilot; SharePoint; Jira","RAG & knowledge retrieval; Workflow automation; Document extraction","Paper quality is variable and problems are caught late. A diagnostic pass against the gold-standard template for completeness, resolutions, conflicts and risks — not a rewriter.","## Problem
+"16","Legal & CoSec","Board & Committee Documents & Reports","Board Paper Quality & Compliance Checking","Medium-High","Endorsed","Sharyn Cowley; Ken Chan","Diligent; Copilot; SharePoint; Jira","RAG & knowledge retrieval; Workflow automation; Document extraction","Paper quality is variable and problems are caught late. A diagnostic pass against the gold-standard template for completeness, resolutions, conflicts and risks — not a rewriter.","## Problem
 
 Paper quality is variable and problems are caught late — at the review and challenge stage rather than at drafting. The workshop identified a gap between the current ""glorified spell check"" and a structured tool that checks for: template completeness, correct resolution drafting, clarity and readability, conflicts of interest disclosures, and risks sections. The board may reject papers with errors, meaning the cost of late-stage failures is high.
 
@@ -374,7 +374,7 @@ A document compliance checker run against the gold-standard template before pape
 No deep-dive questions captured in the workshop materials for this area.
 
 Source: Legal & CoSec AI Workshop synthesis document","AIENG-874","https://ifl.atlassian.net/browse/AIENG-874"
-"17","Legal & CoSec","CoSec Workflow Automation","Medium","Joseph Volpe","Diligent; Copilot; SharePoint; Jira","RAG & knowledge retrieval; Workflow automation; Document extraction","Auto-generate agendas from work plans, flow plan changes through to agendas, send chasers and automate checklists. Lower AI sophistication; high value from consistency.","## Problem
+"17","Legal & CoSec","Automation Tooling (e.g. ROVO)","CoSec Workflow Automation","Medium","Endorsed","Joseph Volpe","Diligent; Copilot; SharePoint; Jira","RAG & knowledge retrieval; Workflow automation; Document extraction","Auto-generate agendas from work plans, flow plan changes through to agendas, send chasers and automate checklists. Lower AI sophistication; high value from consistency.","## Problem
 
 Significant CoSec time is spent on recurring administrative tasks: drafting work plans, creating agendas from work plans, sending pre- and post-meeting chasers, and maintaining Excel checklists. The workshop noted that work plans should auto-generate draft agendas, and that changes to a plan should flow through to the agenda — a classic structured workflow problem.
 
@@ -392,7 +392,7 @@ Workflow automation and templated generation — agendas from work plans, chaser
 - Are joint papers (shared across companies) a significant volume, and how are they currently managed?
 
 Source: Legal & CoSec AI Workshop synthesis document","AIENG-875","https://ifl.atlassian.net/browse/AIENG-875"
-"18","Legal & CoSec","ToR Compliance Monitoring","Medium-High","Ken Chan; Rowena Zhang","Diligent; Copilot; SharePoint; Jira","RAG & knowledge retrieval; Workflow automation; Document extraction","No systematic mechanism checks whether agendas and papers meet Terms of Reference. A database-backed agent per entity/committee surfaces gaps automatically.","## Problem
+"18","Legal & CoSec","APRA Prudential Review Support","ToR Compliance Monitoring","Medium-High","Prioritised","Ken Chan; Rowena Zhang","Diligent; Copilot; SharePoint; Jira","RAG & knowledge retrieval; Workflow automation; Document extraction","No systematic mechanism checks whether agendas and papers meet Terms of Reference. A database-backed agent per entity/committee surfaces gaps automatically.","## Problem
 
 The function oversees 5 committees across approximately 4 companies (soon 3), with 5–8 meetings each — roughly 20 entity/committee combinations. Each committee has a ToR, and there is currently no systematic mechanism to check whether agendas and papers are meeting ToR obligations. One ToR clause may map to multiple committees and papers (e.g. cyber security, AI governance).
 
@@ -405,7 +405,7 @@ Structured mapping and monitoring — agendas and papers assessed against ToR re
 No deep-dive questions captured in the workshop materials for this area.
 
 Source: Legal & CoSec AI Workshop synthesis document","AIENG-876","https://ifl.atlassian.net/browse/AIENG-876"
-"19","Legal & CoSec","Repeat Question Handling","Medium","Sharyn Cowley","Diligent; Copilot; SharePoint; Jira","RAG & knowledge retrieval; Workflow automation; Document extraction","The same questions are answered repeatedly from knowledge that exists but isn't accessible. An attributed Q&A layer returns authoritative, consistent answers.","## Problem
+"19","Legal & CoSec","Self-Service Knowledge Bases","Repeat Question Handling","Medium","Endorsed","Sharyn Cowley","Diligent; Copilot; SharePoint; Jira","RAG & knowledge retrieval; Workflow automation; Document extraction","The same questions are answered repeatedly from knowledge that exists but isn't accessible. An attributed Q&A layer returns authoritative, consistent answers.","## Problem
 
 The same questions are answered repeatedly, drawing on knowledge that exists but isn't accessible. This creates reactive demand on senior staff and introduces inconsistency in how institutional knowledge is conveyed.
 
@@ -418,7 +418,7 @@ A structured knowledge base or Q&A layer that returns authoritative, attributed 
 No deep-dive questions captured in the workshop materials for this area.
 
 Source: Legal & CoSec AI Workshop synthesis document","AIENG-877","https://ifl.atlassian.net/browse/AIENG-877"
-"20","Legal & CoSec","Post-Decision Tracking & Accountability","Medium","Rowena Zhang","Diligent; Copilot; SharePoint; Jira","RAG & knowledge retrieval; Workflow automation; Document extraction","Actions from board/committee decisions aren't systematically tracked. A lightweight AI-assisted layer over a structured data model (Atlas/Jira today).","## Problem
+"20","Legal & CoSec","Automation Tooling (e.g. ROVO)","Post-Decision Tracking & Accountability","Medium","Endorsed","Rowena Zhang","Diligent; Copilot; SharePoint; Jira","RAG & knowledge retrieval; Workflow automation; Document extraction","Actions from board/committee decisions aren't systematically tracked. A lightweight AI-assisted layer over a structured data model (Atlas/Jira today).","## Problem
 
 Actions and outcomes from board and committee decisions are not systematically tracked. This closes the accountability loop poorly and makes it difficult to assess whether prior decisions are being implemented. Atlas and Jira were named as current tools that are not user-friendly.
 
@@ -431,7 +431,7 @@ Lightweight action tracking with visibility dashboards, automated follow-up prom
 No deep-dive questions captured in the workshop materials for this area.
 
 Source: Legal & CoSec AI Workshop synthesis document","AIENG-878","https://ifl.atlassian.net/browse/AIENG-878"
-"21","Superannuation","Governance Coordination","Medium-High","Kale McNamee","Unified Data Platform; Genesys; Atlas GRC; Copilot","Reporting automation; Anomaly detection; Compliance monitoring; Sentiment & call analysis; RAG & knowledge retrieval","No single source of truth for obligations, agendas or actions across CoSec entities. Obligation extraction, calendar/agenda assembly, meeting-summary generation and action-tracking nudges.","## Problem
+"21","Superannuation","Automation Tooling (e.g. ROVO)","Governance Coordination","Medium-High","Endorsed","Kale McNamee","Unified Data Platform; Genesys; Atlas GRC; Copilot","Reporting automation; Anomaly detection; Compliance monitoring; Sentiment & call analysis; RAG & knowledge retrieval","No single source of truth for obligations, agendas or actions across CoSec entities. Obligation extraction, calendar/agenda assembly, meeting-summary generation and action-tracking nudges.","## Problem
 
 - No single source of truth for obligations, meeting schedules, agenda items, or action tracking across multiple CoSec entities and boards
 - Information lives in inboxes and inconsistently in HQ (the intranet/Confluence instance)
@@ -461,7 +461,7 @@ Source: Legal & CoSec AI Workshop synthesis document","AIENG-878","https://ifl.a
 - What is the OMI (Operational Management Insights) tool Ben is checking — and could it serve as a foundation?
 
 Source: Superannuation AI Workshop synthesis document","AIENG-879","https://ifl.atlassian.net/browse/AIENG-879"
-"22","Superannuation","Executive (CEO) Reporting","High","Kale McNamee","Unified Data Platform; Genesys; Atlas GRC; Copilot","Reporting automation; Anomaly detection; Compliance monitoring; Sentiment & call analysis; RAG & knowledge retrieval","CEO reporting draws on Marketing, NPS, Folio, Atlas and Investment data with no common schema. A structured synthesis layer produces a reviewable draft for a senior analyst to refine.","## Problem
+"22","Superannuation","Board & Committee Documents & Reports","Executive (CEO) Reporting","High","Endorsed","Kale McNamee","Unified Data Platform; Genesys; Atlas GRC; Copilot","Reporting automation; Anomaly detection; Compliance monitoring; Sentiment & call analysis; RAG & knowledge retrieval","CEO reporting draws on Marketing, NPS, Folio, Atlas and Investment data with no common schema. A structured synthesis layer produces a reviewable draft for a senior analyst to refine.","## Problem
 
 - MT CEO reporting draws on multiple qualitative and quantitative sources (Marketing, NPS, Folio, Atlas, Investment Super data) with no common schema
 - Senior/skilled people are assembling reports rather than interpreting them
@@ -474,7 +474,7 @@ Source: Superannuation AI Workshop synthesis document","AIENG-879","https://ifl.
 No deep-dive questions captured in the workshop materials for this area.
 
 Source: Superannuation AI Workshop synthesis document","AIENG-880","https://ifl.atlassian.net/browse/AIENG-880"
-"23","Superannuation","SS&C Oversight","Medium-High","Kale McNamee","Unified Data Platform; Genesys; Atlas GRC; Copilot","Reporting automation; Anomaly detection; Compliance monitoring; Sentiment & call analysis; RAG & knowledge retrieval","Directors retain liability but lose real-time data post-October cutover. Baseline modelling, anomaly/drift detection, RAG status tracking and tone monitoring of SS&C comms as an early-warning signal.","## Problem
+"23","Superannuation","AI Model Testing / QA","SS&C Oversight","Medium-High","Prioritised","Kale McNamee","Unified Data Platform; Genesys; Atlas GRC; Copilot","Reporting automation; Anomaly detection; Compliance monitoring; Sentiment & call analysis; RAG & knowledge retrieval","Directors retain liability but lose real-time data post-October cutover. Baseline modelling, anomaly/drift detection, RAG status tracking and tone monitoring of SS&C comms as an early-warning signal.","## Problem
 
 - 1,300 staff outsourced to SS&C (US provider, Blue Door); IFL directors retain liability but are losing real-time data access post-October cutover
 - Data is a mix of structured and unstructured, high volume, and arrives with lag
@@ -487,7 +487,7 @@ Source: Superannuation AI Workshop synthesis document","AIENG-880","https://ifl.
 No deep-dive questions captured in the workshop materials for this area.
 
 Source: Superannuation AI Workshop synthesis document","AIENG-881","https://ifl.atlassian.net/browse/AIENG-881"
-"24","Superannuation","Compliance Monitoring of Advice Calls","High","Hamish Martin","Unified Data Platform; Genesys; Atlas GRC; Copilot","Reporting automation; Anomaly detection; Compliance monitoring; Sentiment & call analysis; RAG & knowledge retrieval","Only ~5% of 25,000 calls/year are reviewed manually. AI transcription and analysis, compliance scoring, real-time flagging, file-note auto-generation and NPS verbatim theme extraction.","## Problem
+"24","Superannuation","Call Recording Analysis","Compliance Monitoring of Advice Calls","High","Prioritised","Hamish Martin","Unified Data Platform; Genesys; Atlas GRC; Copilot","Reporting automation; Anomaly detection; Compliance monitoring; Sentiment & call analysis; RAG & knowledge retrieval","Only ~5% of 25,000 calls/year are reviewed manually. AI transcription and analysis, compliance scoring, real-time flagging, file-note auto-generation and NPS verbatim theme extraction.","## Problem
 
 - 25,000 calls/year (~150M words) — only ~5% currently reviewed
 - Manual listening model means coverage is inherently partial and retrospective
@@ -522,7 +522,7 @@ Source: Superannuation AI Workshop synthesis document","AIENG-881","https://ifl.
 - What are the current data residency and sovereignty requirements — are there restrictions on where member call data can be processed?
 
 Source: Superannuation AI Workshop synthesis document","AIENG-882","https://ifl.atlassian.net/browse/AIENG-882"
-"25","Technology","Information Assembly & Manual Reconstruction","High","Gaye Mackay; Lucien Barbus","ServiceNow; Copilot; SuccessFactors; Unified Data Platform","Document extraction; Anomaly detection; Workflow automation; RAG & knowledge retrieval","The most pervasive pattern — skilled people finding and assembling information rather than acting. Incident timelines, 300–500 changes/month, SOC2/ISO reports and threat models. Summarisation and structured extraction.","## Problem
+"25","Technology","ITSM / ITIL & Cyber Monitoring","Information Assembly & Manual Reconstruction","High","Prioritised","Gaye Mackay; Lucien Barbus","ServiceNow; Copilot; SuccessFactors; Unified Data Platform","Document extraction; Anomaly detection; Workflow automation; RAG & knowledge retrieval","The most pervasive pattern — skilled people finding and assembling information rather than acting. Incident timelines, 300–500 changes/month, SOC2/ISO reports and threat models. Summarisation and structured extraction.","## Problem
 
 **Affects:** Service Desk, Major Incident Management, Change Management, Cyber Design & Assurance, TPRM/Assurance  
 
@@ -549,7 +549,7 @@ The single most pervasive pattern across all inputs: skilled people spending sig
 - Who are the primary stakeholders receiving updates during major incidents, and what level of detail do they need?
 
 Source: Technology AI Workshop synthesis document","AIENG-883","https://ifl.atlassian.net/browse/AIENG-883"
-"26","Technology","Pattern Recognition Across Historical Data","High","Jason Koh; Gaye Mackay","ServiceNow; Copilot; SuccessFactors; Unified Data Platform","Document extraction; Anomaly detection; Workflow automation; RAG & knowledge retrieval","Data in ServiceNow, Wiz and CrowdStrike isn't activated to prevent recurrence. Semantic search over history, risk scoring and change-to-incident correlation.","## Problem
+"26","Technology","ITSM / ITIL & Cyber Monitoring","Pattern Recognition Across Historical Data","High","Prioritised","Jason Koh; Gaye Mackay","ServiceNow; Copilot; SuccessFactors; Unified Data Platform","Document extraction; Anomaly detection; Workflow automation; RAG & knowledge retrieval","Data in ServiceNow, Wiz and CrowdStrike isn't activated to prevent recurrence. Semantic search over history, risk scoring and change-to-incident correlation.","## Problem
 
 **Affects:** Major Incident Management, Change Management, Cyber Design & Assurance  
 
@@ -586,7 +586,7 @@ Data exists in ServiceNow, Wiz, and CrowdStrike but is not being systematically 
 - What input artefacts are typically required to produce a threat model today?
 
 Source: Technology AI Workshop synthesis document","AIENG-884","https://ifl.atlassian.net/browse/AIENG-884"
-"27","Technology","Repetitive Low-Complexity Demand","Medium-High","Gaye Mackay","ServiceNow; Copilot; SuccessFactors; Unified Data Platform","Document extraction; Anomaly detection; Workflow automation; RAG & knowledge retrieval","Work reaching skilled teams that shouldn't — password resets, no-security-bearing changes, incomplete submissions. Intelligent triage, deflection and completeness screening (bots fail ~80% today).","## Problem
+"27","Technology","ITSM / ITIL & Cyber Monitoring","Repetitive Low-Complexity Demand","Medium-High","Prioritised","Gaye Mackay","ServiceNow; Copilot; SuccessFactors; Unified Data Platform","Document extraction; Anomaly detection; Workflow automation; RAG & knowledge retrieval","Work reaching skilled teams that shouldn't — password resets, no-security-bearing changes, incomplete submissions. Intelligent triage, deflection and completeness screening (bots fail ~80% today).","## Problem
 
 **Affects:** Service Desk, Cyber Design & Assurance (change review queue), Internal Controls Assurance  
 
@@ -620,7 +620,7 @@ Work is landing on skilled teams that either shouldn't reach them at all, or cou
 - What environments need to be kept in sync (dev/test/prod/cloud)? Where do baselines drift most?
 
 Source: Technology AI Workshop synthesis document","AIENG-885","https://ifl.atlassian.net/browse/AIENG-885"
-"28","Technology","Asset & Owner Discovery (CMDB Gap)","Medium-High","Jason Koh","ServiceNow; Copilot; SuccessFactors; Unified Data Platform","Document extraction; Anomaly detection; Workflow automation; RAG & knowledge retrieval","Teams can't quickly determine who owns an affected app when a vulnerability lands. Entity resolution and ownership inference from telemetry to speed remediation.","## Problem
+"28","Technology","ITSM / ITIL & Cyber Monitoring","Asset & Owner Discovery (CMDB Gap)","Medium-High","Prioritised","Jason Koh","ServiceNow; Copilot; SuccessFactors; Unified Data Platform","Document extraction; Anomaly detection; Workflow automation; RAG & knowledge retrieval","Teams can't quickly determine who owns an affected app when a vulnerability lands. Entity resolution and ownership inference from telemetry to speed remediation.","## Problem
 
 **Affects:** Cyber Design & Assurance primarily; ripple effect across Incident Management and Change  
 
@@ -637,7 +637,7 @@ When a vulnerability or zero-day is identified, the team often cannot quickly de
 No deep-dive questions captured in the workshop materials for this area.
 
 Source: Technology AI Workshop synthesis document","AIENG-886","https://ifl.atlassian.net/browse/AIENG-886"
-"29","Technology","Technology Governance & Knowledge","Medium","Damien O'Donnell; Amanda Thongvilu","ServiceNow; Copilot; SuccessFactors; Unified Data Platform","Document extraction; Anomaly detection; Workflow automation; RAG & knowledge retrieval","No maintained source of truth for tech decisions or patterns; architect tenure is low. Knowledge-base generation and decision-record surfacing from HR/project data.","## Problem
+"29","Technology","Self-Service Knowledge Bases","Technology Governance & Knowledge","Medium","Endorsed","Damien O'Donnell; Amanda Thongvilu","ServiceNow; Copilot; SuccessFactors; Unified Data Platform","Document extraction; Anomaly detection; Workflow automation; RAG & knowledge retrieval","No maintained source of truth for tech decisions or patterns; architect tenure is low. Knowledge-base generation and decision-record surfacing from HR/project data.","## Problem
 
 **Affects:** Architecture (Damien/Amanda), Service Management, Onboarding  
 
@@ -660,7 +660,7 @@ No accessible, maintained single source of truth for technology decisions, archi
 - How many architects are currently in the team, and what is the typical tenure?
 
 Source: Technology AI Workshop synthesis document","AIENG-887","https://ifl.atlassian.net/browse/AIENG-887"
-"30","Technology","Vendor & Third-Party Risk","Medium-High","Lucien Barbus","ServiceNow; Copilot; SuccessFactors; Unified Data Platform","Document extraction; Anomaly detection; Workflow automation; RAG & knowledge retrieval","Manual review of SOC2/ISO/pen-test docs, no detection of silently-enabled vendor AI, and a heavily manual SPA process. Document analysis, web-scanning agents and AI-assisted risk classification.","## Problem
+"30","Technology","ITSM / ITIL & Cyber Monitoring","Vendor & Third-Party Risk","Medium-High","Prioritised","Lucien Barbus","ServiceNow; Copilot; SuccessFactors; Unified Data Platform","Document extraction; Anomaly detection; Workflow automation; RAG & knowledge retrieval","Manual review of SOC2/ISO/pen-test docs, no detection of silently-enabled vendor AI, and a heavily manual SPA process. Document analysis, web-scanning agents and AI-assisted risk classification.","## Problem
 
 **Affects:** TPRM (Lucien Barbus), AI Governance (Lucien), 1st Line Technology Risk  
 
@@ -687,7 +687,7 @@ A cluster of related problems around assessing external parties:
 - What system(s) does the SPA process currently run through?
 
 Source: Technology AI Workshop synthesis document","AIENG-888","https://ifl.atlassian.net/browse/AIENG-888"
-"31","Technology","Legacy App & Test Automation","Medium","Geoff Grace","ServiceNow; Copilot; SuccessFactors; Unified Data Platform","Document extraction; Anomaly detection; Workflow automation; RAG & knowledge retrieval","A small team supports 20–30 apps with legacy Delphi (ISIS/ASIS) on a 6-week regression cycle. AI-assisted test generation and potential code migration.","## Problem
+"31","Technology","Engineering Automation (Coding, Testing)","Legacy App & Test Automation","Medium","Prioritised","Geoff Grace","ServiceNow; Copilot; SuccessFactors; Unified Data Platform","Document extraction; Anomaly detection; Workflow automation; RAG & knowledge retrieval","A small team supports 20–30 apps with legacy Delphi (ISIS/ASIS) on a 6-week regression cycle. AI-assisted test generation and potential code migration.","## Problem
 
 **Affects:** Geoff Grace's team  
 
@@ -709,7 +709,7 @@ A more technically specific problem: a small team (6–7 people) supporting 20�
 - What is the team's current skill level with Python, cloud-native tooling, or AI-assisted development?
 
 Source: Technology AI Workshop synthesis document","AIENG-889","https://ifl.atlassian.net/browse/AIENG-889"
-"32","People & Culture","Hiring Approval Fragmentation","Medium-High","Aylwin Pang","SuccessFactors; Copilot; Unified Data Platform","Document extraction; Workflow automation; Compliance monitoring; Sentiment & call analysis","Approvals migrated out of SuccessFactors into email because approvers lack context. A decision-support layer surfacing role context, AI approval summaries and nudges to unblock stalled workflows.","## Problem
+"32","People & Culture","Insignia Staff Services Automation","Hiring Approval Fragmentation","Medium-High","Prioritised","Aylwin Pang","SuccessFactors; Copilot; Unified Data Platform","Document extraction; Workflow automation; Compliance monitoring; Sentiment & call analysis","Approvals migrated out of SuccessFactors into email because approvers lack context. A decision-support layer surfacing role context, AI approval summaries and nudges to unblock stalled workflows.","## Problem
 
 The approval process has migrated out of SuccessFactors and into email. Approvers lack the contextual information needed to make confident in-system decisions (headcount rollups, financial impact, benchmarking status, JD completeness), so they default to email — creating double-handling, audit trail fragility, and data integrity risk. TA cannot post a role until all online approvals are formalised, meaning even ""approved"" roles sit idle while paperwork catches up. Errors force a full process restart.
 
@@ -730,7 +730,7 @@ Decision-support layer surfacing role context to approvers; AI-generated approva
 - What are the IT and access constraints for surfacing financial/headcount data to approvers in real time?
 
 Source: People & Culture AI Workshop synthesis document","AIENG-890","https://ifl.atlassian.net/browse/AIENG-890"
-"33","People & Culture","Goal Setting Quality & Cascading","Medium","Justin Liu","SuccessFactors; Copilot; Unified Data Platform","Document extraction; Workflow automation; Compliance monitoring; Sentiment & call analysis","Managers lack tools to translate objectives into well-formed goals; P&R spends time correcting them. Drafting scaffolding and quality screening — but the EA restricts AI employment decisions, so scope carefully.","## Problem
+"33","People & Culture","Insignia Staff Services Automation","Goal Setting Quality & Cascading","Medium","Prioritised","Justin Liu","SuccessFactors; Copilot; Unified Data Platform","Document extraction; Workflow automation; Compliance monitoring; Sentiment & call analysis","Managers lack tools to translate objectives into well-formed goals; P&R spends time correcting them. Drafting scaffolding and quality screening — but the EA restricts AI employment decisions, so scope carefully.","## Problem
 
 Managers lack the tools to translate organisational objectives into well-formed individual goals. P&R spends significant time reviewing, challenging, and correcting low-quality submissions. The problem compounds downstream: poor goals degrade the integrity of year-end assessments, remuneration decisions, and performance conversations. Note: the Enterprise Agreement explicitly restricts using AI to make future employment decisions — scope must be carefully defined.
 
@@ -743,7 +743,7 @@ AI-assisted goal drafting scaffolding for managers; automated quality screening 
 No deep-dive questions captured in the workshop materials for this area.
 
 Source: People & Culture AI Workshop synthesis document","AIENG-891","https://ifl.atlassian.net/browse/AIENG-891"
-"34","People & Culture","JD & Remuneration Benchmarking","Medium-High","Justin Liu","SuccessFactors; Copilot; Unified Data Platform","Document extraction; Workflow automation; Compliance monitoring; Sentiment & call analysis","Matching JDs to pay levels is manual pattern-matching. AI-assisted JD drafting/quality assessment and automated market benchmarking, with role-based framing.","## Problem
+"34","People & Culture","Automated Role Documents","JD & Remuneration Benchmarking","Medium-High","Prioritised","Justin Liu","SuccessFactors; Copilot; Unified Data Platform","Document extraction; Workflow automation; Compliance monitoring; Sentiment & call analysis","Matching JDs to pay levels is manual pattern-matching. AI-assisted JD drafting/quality assessment and automated market benchmarking, with role-based framing.","## Problem
 
 Matching JDs to remuneration levels is largely manual, pattern-matching work consuming specialist P&R capacity. JD quality is inconsistent and acts as an upstream blocker in both the hiring approval process and pay decisions.
 
@@ -765,7 +765,7 @@ AI-assisted JD drafting and quality assessment; automated benchmarking compariso
 - Are salary and bonus budgets set in a system or in spreadsheets — and who in Finance or the business has visibility of this data?
 
 Source: People & Culture AI Workshop synthesis document","AIENG-892","https://ifl.atlassian.net/browse/AIENG-892"
-"35","People & Culture","HRSS Transactional Volume","High","Shelley Weeramantry","SuccessFactors; Copilot; Unified Data Platform","Document extraction; Workflow automation; Compliance monitoring; Sentiment & call analysis","High-volume repeatable work — letters, forms, contingent-worker assignment, repeat queries. Self-serve Q&A chatbot, letter generation, contract-clause extraction and intelligent form routing.","## Problem
+"35","People & Culture","Insignia Staff Services Automation","HRSS Transactional Volume","High","Prioritised","Shelley Weeramantry","SuccessFactors; Copilot; Unified Data Platform","Document extraction; Workflow automation; Compliance monitoring; Sentiment & call analysis","High-volume repeatable work — letters, forms, contingent-worker assignment, repeat queries. Self-serve Q&A chatbot, letter generation, contract-clause extraction and intelligent form routing.","## Problem
 
 High-volume, repeatable work consuming generalist capacity: letter generation, form handling (COH, OT requests), contingent worker module assignment, cost centre changes, workflow follow-up, contract clause checking, and answering repeat queries that could be self-served. MyInsignia is outdated (last updated 2008; $8M replacement quote flagged).
 
@@ -788,7 +788,7 @@ Self-serve Q&A / HR chatbot for repeat queries; automated letter generation; AI-
 - What is the realistic replacement plan for MyInsignia, and is there a budget conversation happening?
 
 Source: People & Culture AI Workshop synthesis document","AIENG-893","https://ifl.atlassian.net/browse/AIENG-893"
-"36","People & Culture","WR Document Processing & Case Management","Medium-High","Anna Zantuck","SuccessFactors; Copilot; Unified Data Platform","Document extraction; Workflow automation; Compliance monitoring; Sentiment & call analysis","WR consumes large volumes of legal updates and grievance documentation. AI summarisation, investigation-report drafting and case-management workflow support.","## Problem
+"36","People & Culture","Insignia Staff Services Automation","WR Document Processing & Case Management","Medium-High","Prioritised","Anna Zantuck","SuccessFactors; Copilot; Unified Data Platform","Document extraction; Workflow automation; Compliance monitoring; Sentiment & call analysis","WR consumes large volumes of legal updates and grievance documentation. AI summarisation, investigation-report drafting and case-management workflow support.","## Problem
 
 WR consumes large volumes of legal updates and employee grievance documentation. Summarisation is manual. Case management processes are complex and time-consuming, with downstream risk if not managed rigorously.
 
@@ -801,7 +801,7 @@ AI summarisation of legal updates and grievance documents; AI-assisted investiga
 No deep-dive questions captured in the workshop materials for this area.
 
 Source: People & Culture AI Workshop synthesis document","AIENG-894","https://ifl.atlassian.net/browse/AIENG-894"
-"37","People & Culture","Payroll Reconciliation & Compliance","Medium-High","Shelley Weeramantry","SuccessFactors; Copilot; Unified Data Platform","Document extraction; Workflow automation; Compliance monitoring; Sentiment & call analysis","Manual variance analysis and cross-system reconciliation carry direct financial and regulatory consequence. Automated variance detection frees capacity for governance.","## Problem
+"37","People & Culture","Insignia Staff Services Automation","Payroll Reconciliation & Compliance","Medium-High","Prioritised","Shelley Weeramantry","SuccessFactors; Copilot; Unified Data Platform","Document extraction; Workflow automation; Compliance monitoring; Sentiment & call analysis","Manual variance analysis and cross-system reconciliation carry direct financial and regulatory consequence. Automated variance detection frees capacity for governance.","## Problem
 
 Manual pay variance analysis, deduction disbursement, reconciliation between SuccessFactors timesheets and workforce planning systems, and manual verification of pay changes all consume payroll capacity. Errors carry direct financial and regulatory consequences. The team describes manual work as eating into time that should be spent on governance.
 
@@ -814,7 +814,7 @@ Automated variance detection and flagging; cross-system reconciliation; AI-assis
 No deep-dive questions captured in the workshop materials for this area.
 
 Source: People & Culture AI Workshop synthesis document","AIENG-895","https://ifl.atlassian.net/browse/AIENG-895"
-"38","People & Culture","Visa Auditing & Compliance Tracking","Medium","Shelley Weeramantry","SuccessFactors; Copilot; Unified Data Platform","Document extraction; Workflow automation; Compliance monitoring; Sentiment & call analysis","Tracked via spreadsheet with state-based restrictions and high compliance risk. Automated expiry monitoring, state-restriction matching and audit trails.","## Problem
+"38","People & Culture","Insignia Staff Services Automation","Visa Auditing & Compliance Tracking","Medium","Prioritised","Shelley Weeramantry","SuccessFactors; Copilot; Unified Data Platform","Document extraction; Workflow automation; Compliance monitoring; Sentiment & call analysis","Tracked via spreadsheet with state-based restrictions and high compliance risk. Automated expiry monitoring, state-restriction matching and audit trails.","## Problem
 
 Currently tracked via spreadsheet with state-based restrictions (address vs. restriction mapping). High compliance risk, manual process, incomplete coverage.
 
@@ -827,7 +827,7 @@ Automated visa expiry monitoring; state-restriction matching; audit trail genera
 No deep-dive questions captured in the workshop materials for this area.
 
 Source: People & Culture AI Workshop synthesis document","AIENG-896","https://ifl.atlassian.net/browse/AIENG-896"
-"39","People & Culture","Compliance Learning Management","Medium-High","Natalie Hunt","SuccessFactors; Copilot; Unified Data Platform","Document extraction; Workflow automation; Compliance monitoring; Sentiment & call analysis","Manual course uploads, allocation and follow-ups consume Learning's design capacity. Role/cohort assignment, SME reminders and completion tracking (APRA/FAR exposure).","## Problem
+"39","People & Culture","Insignia Staff Services Automation","Compliance Learning Management","Medium-High","Prioritised","Natalie Hunt","SuccessFactors; Copilot; Unified Data Platform","Document extraction; Workflow automation; Compliance monitoring; Sentiment & call analysis","Manual course uploads, allocation and follow-ups consume Learning's design capacity. Role/cohort assignment, SME reminders and completion tracking (APRA/FAR exposure).","## Problem
 
 Manual course uploads, manual allocation, no automated follow-ups, no SME reminders, manual MMS extensions. The Learning team's design capability is being consumed by compliance administration. HRSS lacks job family and cohort tags, blocking intelligent allocation. APRA/FAR compliance exposure is real and named.
 
@@ -850,7 +850,7 @@ Automated compliance assignment by role/cohort (once HRSS tags are in place); SM
 - What is the AI Governance Council's current position on employee data use for AI — and has OD engaged with them on any of the use cases described?
 
 Source: People & Culture AI Workshop synthesis document","AIENG-897","https://ifl.atlassian.net/browse/AIENG-897"
-"40","People & Culture","Critical Role & Succession Visibility","High","Natalie Hunt","SuccessFactors; Copilot; Unified Data Platform","Document extraction; Workflow automation; Compliance monitoring; Sentiment & call analysis","No live talent-data layer; succession relies on manual entry and stale slide packs. Critical-role identification, bench-strength scoring and concentration-risk surfacing (APRA/FAR).","## Problem
+"40","People & Culture","Insignia Staff Services Automation","Critical Role & Succession Visibility","High","Prioritised","Natalie Hunt","SuccessFactors; Copilot; Unified Data Platform","Document extraction; Workflow automation; Compliance monitoring; Sentiment & call analysis","No live talent-data layer; succession relies on manual entry and stale slide packs. Critical-role identification, bench-strength scoring and concentration-risk surfacing (APRA/FAR).","## Problem
 
 No live, authoritative talent data layer. Succession and critical-role analysis relies on manual data entry by leaders, spreadsheet-based collation, and 15+ slide packs built for discrete forums. Data is stale at point of presentation. APRA/FAR creates a named external accountability mechanism. Who the key influencers are in the organisation is not well understood.
 
@@ -863,7 +863,7 @@ Critical role identification agent; bench strength and succession gap scoring; c
 No deep-dive questions captured in the workshop materials for this area.
 
 Source: People & Culture AI Workshop synthesis document","AIENG-898","https://ifl.atlassian.net/browse/AIENG-898"
-"41","People & Culture","Employee Engagement & Sentiment","Medium","Natalie Hunt","SuccessFactors; Copilot; Unified Data Platform","Document extraction; Workflow automation; Compliance monitoring; Sentiment & call analysis","Survey logistics, analysis and action planning are all manual and repeat year on year. Continuous sentiment analysis, action-plan generation and D&I analytics uplift.","## Problem
+"41","People & Culture","Insignia Staff Services Automation","Employee Engagement & Sentiment","Medium","Prioritised","Natalie Hunt","SuccessFactors; Copilot; Unified Data Platform","Document extraction; Workflow automation; Compliance monitoring; Sentiment & call analysis","Survey logistics, analysis and action planning are all manual and repeat year on year. Continuous sentiment analysis, action-plan generation and D&I analytics uplift.","## Problem
 
 Everything is manual — survey logistics, insight analysis, action planning. Insights are not translating into action; action plans are rebuilt from scratch each cycle with no quality tracking or root-cause alignment. Same themes repeat year-on-year. The team wants something better than annual/pulse surveys — burn-out check-ins, theme tracking, systemic issue identification. D&I maturity is low (gender-only currently); ambition is to move beyond this.
 
@@ -876,7 +876,7 @@ Continuous sentiment analysis (beyond survey); AI-assisted action plan generatio
 No deep-dive questions captured in the workshop materials for this area.
 
 Source: People & Culture AI Workshop synthesis document","AIENG-899","https://ifl.atlassian.net/browse/AIENG-899"
-"42","Risk","Fraud — Reactive Detection","High","Bhathiya Ekanayake","Atlas GRC; Copilot; Unified Data Platform","Anomaly detection; Reporting automation; RAG & knowledge retrieval; Regulatory horizon scanning; Compliance monitoring","No continuous visibility over login, device or cross-account patterns — detection depends on the business escalating first. Continuous behavioural baselines, anomaly scoring and automated triage (Elastic/ML in flight; data-lake join is the blocker).","## Problem
+"42","Risk","Fraud Signal Monitoring","Fraud — Reactive Detection","High","Parked","Bhathiya Ekanayake","Atlas GRC; Copilot; Unified Data Platform","Anomaly detection; Reporting automation; RAG & knowledge retrieval; Regulatory horizon scanning; Compliance monitoring","No continuous visibility over login, device or cross-account patterns — detection depends on the business escalating first. Continuous behavioural baselines, anomaly scoring and automated triage (Elastic/ML in flight; data-lake join is the blocker).","## Problem
 
 The fraud team has no continuous visibility over login behaviour, device signals, infrastructure anomalies, or cross-account patterns. Detection is entirely dependent on the business escalating a concern first. This is structurally incompatible with the threat types that matter most — coordinated attacks, credential stuffing, and account takeover — which are specifically designed to evade casual human observation.
 
@@ -899,7 +899,7 @@ Continuous behavioural baseline modelling, anomaly scoring, and automated triage
 - Who owns the data lake on each side of the join, and are they already engaged?
 
 Source: Risk AI Workshop synthesis document","AIENG-900","https://ifl.atlassian.net/browse/AIENG-900"
-"43","Risk","CRO Reporting at Scale","High","Joshua Kay","Atlas GRC; Copilot; Unified Data Platform","Anomaly detection; Reporting automation; RAG & knowledge retrieval; Regulatory horizon scanning; Compliance monitoring","60+ governance reports a year, each with manual extraction, template rebuilding and Line 1/Line 2 reconciliation under tight deadlines. Pipeline automation plus LLM-assisted drafting and consistency checking.","## Problem
+"43","Risk","Board & Committee Documents & Reports","CRO Reporting at Scale","High","Endorsed","Joshua Kay","Atlas GRC; Copilot; Unified Data Platform","Anomaly detection; Reporting automation; RAG & knowledge retrieval; Regulatory horizon scanning; Compliance monitoring","60+ governance reports a year, each with manual extraction, template rebuilding and Line 1/Line 2 reconciliation under tight deadlines. Pipeline automation plus LLM-assisted drafting and consistency checking.","## Problem
 
 60+ governance reports annually, each requiring manual data extraction from misaligned sources, template rebuilding, parallel Group/entity drafting, and manual Line 1/Line 2 reconciliation — all under tight deadlines and with high error risk precisely when review capacity is lowest.
 
@@ -924,7 +924,7 @@ Pipeline automation for data pull and population; LLM-assisted drafting and cons
 - Is there appetite to pilot report automation on a lower-stakes subsidiary report before applying it to Group CRO output?
 
 Source: Risk AI Workshop synthesis document","AIENG-901","https://ifl.atlassian.net/browse/AIENG-901"
-"44","Risk","Conduct / NFR Coordination","Medium-High","Carolyn Morris-Webb","Atlas GRC; Copilot; Unified Data Platform","Anomaly detection; Reporting automation; RAG & knowledge retrieval; Regulatory horizon scanning; Compliance monitoring","Recurring obligations (AMM, register of duties) run by hand — matching ~50 Responsible Persons against 1,000+ attendees. Workflow automation plus semantic analysis of 20,000+ conduct items for early warning.","## Problem
+"44","Risk","Automation Tooling (e.g. ROVO)","Conduct / NFR Coordination","Medium-High","Endorsed","Carolyn Morris-Webb","Atlas GRC; Copilot; Unified Data Platform","Anomaly detection; Reporting automation; RAG & knowledge retrieval; Regulatory horizon scanning; Compliance monitoring","Recurring obligations (AMM, register of duties) run by hand — matching ~50 Responsible Persons against 1,000+ attendees. Workflow automation plus semantic analysis of 20,000+ conduct items for early warning.","## Problem
 
 Recurring obligations (Annual Member Meeting tracking, register of duties, Risk Excellence Forum inputs) are managed entirely by hand: templated individual emails, manual matching of ~50 Responsible Persons against live lists of 1,000+ attendees, spreadsheet-based tracking, and manual escalation. This recurs every year with no process improvement.
 
@@ -945,7 +945,7 @@ Recurring obligations (Annual Member Meeting tracking, register of duties, Risk 
 - Is there a preference for a smaller/local model for sensitive data, and is that technically feasible in the current environment?
 
 Source: Risk AI Workshop synthesis document","AIENG-902","https://ifl.atlassian.net/browse/AIENG-902"
-"45","Risk","Regulatory Horizon Scanning","High","Dianne Weinstein","Atlas GRC; Copilot; Unified Data Platform","Anomaly detection; Reporting automation; RAG & knowledge retrieval; Regulatory horizon scanning; Compliance monitoring","100+ sources consume 1.5–2 days/week and still aren't done consistently. Automated ingestion and deduplication, LLM summarisation by vertical, and 12–18 month horizon prediction.","## Problem
+"45","Risk","Regulatory Horizon Scanning","Regulatory Horizon Scanning","High","Parked","Dianne Weinstein","Atlas GRC; Copilot; Unified Data Platform","Anomaly detection; Reporting automation; RAG & knowledge retrieval; Regulatory horizon scanning; Compliance monitoring","100+ sources consume 1.5–2 days/week and still aren't done consistently. Automated ingestion and deduplication, LLM summarisation by vertical, and 12–18 month horizon prediction.","## Problem
 
 Monitoring 100+ sources (APRA, ASIC, AUSTRAC, RBA, Treasury, CFR, CDR, law firms, industry bodies) currently consumes 1.5–2 days per week — and even then is not done consistently. The effort is almost entirely spent on reading, deduplication, and copy-pasting rather than materiality assessment or executive advice. A Copilot-based solution is in development but progress is slow.
 
@@ -969,7 +969,7 @@ Automated ingestion and deduplication across the full source list (RSS feeds, ne
 - Ben's team was mentioned as a potential source of support — what is the specific ask, and has it been formalised?
 
 Source: Risk AI Workshop synthesis document","AIENG-903","https://ifl.atlassian.net/browse/AIENG-903"
-"46","Risk","Risk Management Knowledge Base","Medium-High","Nia Reen","Atlas GRC; Copilot; Unified Data Platform","Anomaly detection; Reporting automation; RAG & knowledge retrieval; Regulatory horizon scanning; Compliance monitoring","A framework knowledge base to surface patterns and practical guidance across policies. RAG over policy/framework docs with a useful — not generic — ‘I don't know’ fallback.","## Problem
+"46","Risk","Self-Service Knowledge Bases","Risk Management Knowledge Base","Medium-High","Endorsed","Nia Reen","Atlas GRC; Copilot; Unified Data Platform","Anomaly detection; Reporting automation; RAG & knowledge retrieval; Regulatory horizon scanning; Compliance monitoring","A framework knowledge base to surface patterns and practical guidance across policies. RAG over policy/framework docs with a useful — not generic — ‘I don't know’ fallback.","## Problem
 
 Working with Ben's team on a Risk Management framework knowledge base that can be applied across policies to surface patterns and practical guidance. Related to Dianne's work. Broader potential as an internal intelligence layer across the Risk function.
 
@@ -987,7 +987,7 @@ RAG (retrieval-augmented generation) over policy and framework documents; agenti
 - What is the current state of the work with Ben — is there a working prototype, and what are the gaps?
 
 Source: Risk AI Workshop synthesis document","AIENG-904","https://ifl.atlassian.net/browse/AIENG-904"
-"47","Strategy & Innovation","Knowledge Fragmentation & Retrieval","High","Ryan Wherrett","Copilot; SharePoint; Jira; Unified Data Platform","RAG & knowledge retrieval; Document extraction; Reporting automation","Practitioners hunt across SharePoint, Teams, Outlook, Jira/Confluence and ServiceNow with no central source of truth. RAG and semantic search across M365, plus ‘who knows what’ directories.","## Problem
+"47","Strategy & Innovation","Self-Service Knowledge Bases","Knowledge Fragmentation & Retrieval","High","Endorsed","Ryan Wherrett","Copilot; SharePoint; Jira; Unified Data Platform","RAG & knowledge retrieval; Document extraction; Reporting automation","Practitioners hunt across SharePoint, Teams, Outlook, Jira/Confluence and ServiceNow with no central source of truth. RAG and semantic search across M365, plus ‘who knows what’ directories.","## Problem
 
 **Summary:** Skilled practitioners are spending significant time hunting for information across SharePoint, Teams, Outlook, Jira/Confluence, and ServiceNow — often resorting to messaging colleagues directly. No central source of truth exists; knowledge is fragmented across 3x3 legacy company structures.
 
@@ -1006,7 +1006,7 @@ High. Retrieval-Augmented Generation (RAG) over internal document stores, semant
 - Would you trust AI-retrieved information enough to use it directly in analysis, or would you always verify at source? What would need to be true for you to trust it?
 
 Source: Strategy & Innovation AI Workshop synthesis document","AIENG-905","https://ifl.atlassian.net/browse/AIENG-905"
-"48","Strategy & Innovation","Competitive & External Intelligence","High","Richard Seung; Jim Gionis","Copilot; SharePoint; Jira; Unified Data Platform","RAG & knowledge retrieval; Document extraction; Reporting automation","Manual, unreliable benchmarking (a fees exercise got 2/9 correct). Automated monitoring pipelines and LLM synthesis of public competitor data on a board-useful cadence.","## Problem
+"48","Strategy & Innovation","Competitor Intelligence","Competitive & External Intelligence","High","Prioritised","Richard Seung; Jim Gionis","Copilot; SharePoint; Jira; Unified Data Platform","RAG & knowledge retrieval; Document extraction; Reporting automation","Manual, unreliable benchmarking (a fees exercise got 2/9 correct). Automated monitoring pipelines and LLM synthesis of public competitor data on a board-useful cadence.","## Problem
 
 **Summary:** Manual, ad-hoc benchmarking of competitors across public sources (filings, news, analyst reports). Current efforts are unreliable (noted: ""how to get more than 2/9 correct""), incomplete, and not delivered on a cadence useful to trustee boards.
 
@@ -1025,7 +1025,7 @@ High. Automated monitoring pipelines, LLM-assisted synthesis of public competito
 - Who is the internal owner/audience for competitive reports — is it this team, the trustee board, exec, or all three?
 
 Source: Strategy & Innovation AI Workshop synthesis document","AIENG-906","https://ifl.atlassian.net/browse/AIENG-906"
-"49","Strategy & Innovation","Planning, Scorecards & Reporting","High","Ryan Wherrett","Copilot; SharePoint; Jira; Unified Data Platform","RAG & knowledge retrieval; Document extraction; Reporting automation","Quarterly/annual scorecards are slow because data gathering is unstructured. AI first-draft narratives and auto-population from approved sources — FY26 scorecards are live now.","## Problem
+"49","Strategy & Innovation","Board & Committee Documents & Reports","Planning, Scorecards & Reporting","High","Endorsed","Ryan Wherrett","Copilot; SharePoint; Jira; Unified Data Platform","RAG & knowledge retrieval; Document extraction; Reporting automation","Quarterly/annual scorecards are slow because data gathering is unstructured. AI first-draft narratives and auto-population from approved sources — FY26 scorecards are live now.","## Problem
 
 **Summary:** Quarterly and annual scorecard production is time-intensive — primarily because data gathering from across divisions is slow and unstructured. FY26 scorecards and FY27 business planning are live right now.
 
@@ -1043,7 +1043,7 @@ High. AI-assisted first-draft generation for scorecard narratives and planning c
 - For FY27 business planning — what does the exec connect session require that currently has to be manually assembled?
 
 Source: Strategy & Innovation AI Workshop synthesis document","AIENG-907","https://ifl.atlassian.net/browse/AIENG-907"
-"50","Strategy & Innovation","Unstructured-to-Structured Conversion","High","Ryan Wherrett","Copilot; SharePoint; Jira; Unified Data Platform","RAG & knowledge retrieval; Document extraction; Reporting automation","Documents, emails and briefs must be manually converted to model-ready formats before analysis. Document parsing, entity extraction and LLM-assisted normalisation.","## Problem
+"50","Strategy & Innovation","Automation Tooling (e.g. ROVO)","Unstructured-to-Structured Conversion","High","Endorsed","Ryan Wherrett","Copilot; SharePoint; Jira; Unified Data Platform","RAG & knowledge retrieval; Document extraction; Reporting automation","Documents, emails and briefs must be manually converted to model-ready formats before analysis. Document parsing, entity extraction and LLM-assisted normalisation.","## Problem
 
 **Summary:** Raw inputs — documents, emails, briefs, meeting outputs — must be manually converted into model-ready, structured formats before any analysis can begin. Double cost: waiting time + processing time.
 
@@ -1059,7 +1059,7 @@ High. Document parsing, entity extraction, LLM-assisted data normalisation.
 - Are there data inputs that come from external parties (consultants, advisors, regulators) that are particularly hard to standardise?
 
 Source: Strategy & Innovation AI Workshop synthesis document","AIENG-908","https://ifl.atlassian.net/browse/AIENG-908"
-"51","Strategy & Innovation","Low-Value Production Work","Medium","Richard Seung","Copilot; SharePoint; Jira; Unified Data Platform","RAG & knowledge retrieval; Document extraction; Reporting automation","PowerPoint formatting and admin impose disproportionate context-switching cost. AI-assisted deck drafting and formatting automation via Copilot.","## Problem
+"51","Strategy & Innovation","Automation Tooling (e.g. ROVO)","Low-Value Production Work","Medium","Endorsed","Richard Seung","Copilot; SharePoint; Jira; Unified Data Platform","RAG & knowledge retrieval; Document extraction; Reporting automation","PowerPoint formatting and admin impose disproportionate context-switching cost. AI-assisted deck drafting and formatting automation via Copilot.","## Problem
 
 **Summary:** PowerPoint formatting, margin alignment, and general admin consume context-switching cost disproportionate to the time taken. Interrupts deep focus required for strategy work.
 
@@ -1072,7 +1072,7 @@ Medium. AI-assisted deck drafting, formatting automation via M365 Copilot, templ
 No deep-dive questions captured in the workshop materials for this area.
 
 Source: Strategy & Innovation AI Workshop synthesis document","AIENG-909","https://ifl.atlassian.net/browse/AIENG-909"
-"52","Strategy & Innovation","Calendar Coordination","Medium-Low","Richard Seung","Copilot; SharePoint; Jira; Unified Data Platform","RAG & knowledge retrieval; Document extraction; Reporting automation","Finding availability, chasing acceptances and rescheduling. High feasibility via Copilot scheduling assistants but lower strategic leverage.","## Problem
+"52","Strategy & Innovation","Automation Tooling (e.g. ROVO)","Calendar Coordination","Medium-Low","Endorsed","Richard Seung","Copilot; SharePoint; Jira; Unified Data Platform","RAG & knowledge retrieval; Document extraction; Reporting automation","Finding availability, chasing acceptances and rescheduling. High feasibility via Copilot scheduling assistants but lower strategic leverage.","## Problem
 
 **Summary:** Finding availability, chasing acceptances, rescheduling when key stakeholders can't attend. Recurring friction for a team doing stakeholder-intensive structured problem solving.
 
@@ -1085,7 +1085,7 @@ Medium-Low. High feasibility via M365 Copilot / Scheduling assistants, but lower
 No deep-dive questions captured in the workshop materials for this area.
 
 Source: Strategy & Innovation AI Workshop synthesis document","AIENG-910","https://ifl.atlassian.net/browse/AIENG-910"
-"53","Strategy & Innovation","Meeting Capture & Synthesis","Medium","Ryan Wherrett","Copilot; SharePoint; Jira; Unified Data Platform","RAG & knowledge retrieval; Document extraction; Reporting automation","Meeting notes aren't systematically captured and transcription is culturally under-adopted. Targeted synthesis for specific meeting types with human review.","## Problem
+"53","Strategy & Innovation","Automation Tooling (e.g. ROVO)","Meeting Capture & Synthesis","Medium","Endorsed","Ryan Wherrett","Copilot; SharePoint; Jira; Unified Data Platform","RAG & knowledge retrieval; Document extraction; Reporting automation","Meeting notes aren't systematically captured and transcription is culturally under-adopted. Targeted synthesis for specific meeting types with human review.","## Problem
 
 **Summary:** Meeting notes are not systematically captured. Teams transcription feature exists but is culturally under-adopted. Institutional knowledge from meetings is lost or siloed in personal notes.
 
@@ -1101,7 +1101,7 @@ Medium. Targeted AI-assisted synthesis (not blanket transcription) for specific 
 - Are there any external or legal constraints on recording meetings with certain stakeholders (e.g. M&A counterparties, regulators)?
 
 Source: Strategy & Innovation AI Workshop synthesis document","AIENG-911","https://ifl.atlassian.net/browse/AIENG-911"
-"54","Wrap","The Data Assembly Tax","High","Jane Sharp; Yenly Lim","Genesys; Atlas GRC; Unified Data Platform","Reconciliation & matching; Anomaly detection; Reporting automation; Sentiment & call analysis; Compliance monitoring","Sales, Governance and Operations all pay to extract, reconcile and assemble data from disconnected systems (Rocket, Genesys, Atlas, ASIS, Hub24, Macquarie, Morningstar). Sales runs ~10 days; the Governance tool takes a full month.","## Problem
+"54","Wrap","Wrap Reconciliations","The Data Assembly Tax","High","Parked","Jane Sharp; Yenly Lim","Genesys; Atlas GRC; Unified Data Platform","Reconciliation & matching; Anomaly detection; Reporting automation; Sentiment & call analysis; Compliance monitoring","Sales, Governance and Operations all pay to extract, reconcile and assemble data from disconnected systems (Rocket, Genesys, Atlas, ASIS, Hub24, Macquarie, Morningstar). Sales runs ~10 days; the Governance tool takes a full month.","## Problem
 
 **The Data Assembly Tax** — This is the dominant, cross-cutting problem. Sales, Governance and Operations are all paying a version of the same cost: skilled analysts spending the majority of their time extracting, reconciling and manually assembling data from disconnected systems (Rocket, Genesys, Atlas, ASIS, Hub24, Macquarie, Morningstar, external PDS docs) rather than using it. The Sales monthly cycle runs ~10 business days. Governance's fund status tool takes a full month to update quarterly. Operations runs resource planning entirely by hand. This is fundamentally a data architecture problem being absorbed by reporting teams.
 
@@ -1113,7 +1113,7 @@ Source: Strategy & Innovation AI Workshop synthesis document","AIENG-911","https
 - How much of the Sales reporting work depends on UDP availability? What's the current UDP timeline for the relevant fields?
 
 Source: Wrap AI Workshop synthesis document","AIENG-912","https://ifl.atlassian.net/browse/AIENG-912"
-"55","Wrap","Regulatory & Compliance Risk from Manual Collation","Medium-High","Kylie Nolan","Genesys; Atlas GRC; Unified Data Platform","Reconciliation & matching; Anomaly detection; Reporting automation; Sentiment & call analysis; Compliance monitoring","Multi-source manual collation risks miscategorisation; Governance manually monitors TMD compliance and adviser patterns. Reduce the unquantified anomaly-to-identification lag.","## Problem
+"55","Wrap","Wrap Reconciliations","Regulatory & Compliance Risk from Manual Collation","Medium-High","Parked","Kylie Nolan","Genesys; Atlas GRC; Unified Data Platform","Reconciliation & matching; Anomaly detection; Reporting automation; Sentiment & call analysis; Compliance monitoring","Multi-source manual collation risks miscategorisation; Governance manually monitors TMD compliance and adviser patterns. Reduce the unquantified anomaly-to-identification lag.","## Problem
 
 **Regulatory and Compliance Risk from Manual Collation** — The Sales weekly flow report explicitly flags that multi-source manual collation risks miscategorisation or missed items. Governance is manually monitoring TMD compliance, adviser transaction patterns and fund performance. The lag between an anomaly occurring and being identified is an unquantified but real regulatory exposure. This is underacknowledged in current framing.
 
@@ -1126,7 +1126,7 @@ Source: Wrap AI Workshop synthesis document","AIENG-912","https://ifl.atlassian.
 - What validation steps exist today, and who owns them? Would automation need to preserve those steps or could it replace them?
 
 Source: Wrap AI Workshop synthesis document","AIENG-913","https://ifl.atlassian.net/browse/AIENG-913"
-"56","Wrap","Operational Error Volume & Legacy Constraints","Medium-High","Kristen Loveridge; Ryan Miranda","Genesys; Atlas GRC; Unified Data Platform","Reconciliation & matching; Anomaly detection; Reporting automation; Sentiment & call analysis; Compliance monitoring","80–100 incidents/month from manual errors, with volume growing 20–30% YoY. The legacy Delphi platform actively enables errors; only ~25% of work is automated.","## Problem
+"56","Wrap","Automation Tooling (e.g. ROVO)","Operational Error Volume & Legacy Constraints","Medium-High","Endorsed","Kristen Loveridge; Ryan Miranda","Genesys; Atlas GRC; Unified Data Platform","Reconciliation & matching; Anomaly detection; Reporting automation; Sentiment & call analysis; Compliance monitoring","80–100 incidents/month from manual errors, with volume growing 20–30% YoY. The legacy Delphi platform actively enables errors; only ~25% of work is automated.","## Problem
 
 **Operational Error Volume and Legacy System Constraints** — Operations is generating 80–100 incidents per month from manual data processing errors, with transaction volume growing 20–30% YoY under cost pressure. The legacy Delphi-based platform actively enables errors (wrong withdrawals, duplicate direct debits) that shouldn't be possible. Only ~25% of work is currently digital/automated.
 
@@ -1139,7 +1139,7 @@ Source: Wrap AI Workshop synthesis document","AIENG-913","https://ifl.atlassian.
 - What is the current cost of the 80–100 monthly incidents in FTE remediation hours?
 
 Source: Wrap AI Workshop synthesis document","AIENG-914","https://ifl.atlassian.net/browse/AIENG-914"
-"57","Wrap","Call Record & Member Intelligence","High","Kristen Loveridge","Genesys; Atlas GRC; Unified Data Platform","Reconciliation & matching; Anomaly detection; Reporting automation; Sentiment & call analysis; Compliance monitoring","Operations, Product Dev and Digital Experience independently identified call analysis — a shared, unbuilt capability. Genesys is already in place; sentiment analysis recurs across teams.","## Problem
+"57","Wrap","Call Recording Analysis","Call Record & Member Intelligence","High","Prioritised","Kristen Loveridge","Genesys; Atlas GRC; Unified Data Platform","Reconciliation & matching; Anomaly detection; Reporting automation; Sentiment & call analysis; Compliance monitoring","Operations, Product Dev and Digital Experience independently identified call analysis — a shared, unbuilt capability. Genesys is already in place; sentiment analysis recurs across teams.","## Problem
 
 **Call Record and Member Intelligence** — Three teams (Operations, Product Development, Digital Experience) have independently identified call record analysis as a priority, for different purposes. This convergence points to a shared, unbuilt capability. Similarly, sentiment analysis appears across Operations (NPS verbatim), Marketing (comms segmentation) and Digital Experience (CC feedback) — all expressions of the same underlying need.
 
@@ -1148,7 +1148,7 @@ Source: Wrap AI Workshop synthesis document","AIENG-914","https://ifl.atlassian.
 No deep-dive questions captured in the workshop materials for this area.
 
 Source: Wrap AI Workshop synthesis document","AIENG-915","https://ifl.atlassian.net/browse/AIENG-915"
-"58","Wrap","Fragmented Strategy & Blank-Cell Teams","Medium","Brad Chu; Matthew Sutton","Genesys; Atlas GRC; Unified Data Platform","Reconciliation & matching; Anomaly detection; Reporting automation; Sentiment & call analysis; Compliance monitoring","Custody, Strategy and Product have no identified use cases — likely the conversation hasn't happened. Surface latent problems before active teams duplicate effort.","## Problem
+"58","Wrap","Automation Tooling (e.g. ROVO)","Fragmented Strategy & Blank-Cell Teams","Medium","Endorsed","Brad Chu; Matthew Sutton","Genesys; Atlas GRC; Unified Data Platform","Reconciliation & matching; Anomaly detection; Reporting automation; Sentiment & call analysis; Compliance monitoring","Custody, Strategy and Product have no identified use cases — likely the conversation hasn't happened. Surface latent problems before active teams duplicate effort.","## Problem
 
 **Fragmented Strategy and Blank-Cell Teams** — Custody, Strategy and Product have no identified AI use cases. This doesn't mean no opportunity exists — it likely means the right conversation hasn't happened yet. Without shared infrastructure thinking, teams that *are* active risk duplicating effort and building incompatible tools.
 
@@ -1162,7 +1162,7 @@ Source: Wrap AI Workshop synthesis document","AIENG-915","https://ifl.atlassian.
 - Settlement, reconciliation and exception management in custody operations are typical high-volume, pattern-rich workflows — are any of those currently running manual review processes?
 
 Source: Wrap AI Workshop synthesis document","AIENG-916","https://ifl.atlassian.net/browse/AIENG-916"
-"59","Super to Retirement","The Advice Gap & Unmet Member Needs","High","Craig Weber","Wealth Central; xPlan; Copilot","Compliance monitoring; Document extraction; Regulatory horizon scanning; RAG & knowledge retrieval; Sentiment & call analysis","1,000 outcomes/year vs a 100,000 target — a redesign problem first. AI ‘help me decide’ journeys in the MLC app at low cost; the existing Money View tool is too data-heavy. Redesign must precede scale.","## Problem
+"59","Super to Retirement","Automation Tooling (e.g. ROVO)","The Advice Gap & Unmet Member Needs","High","Endorsed","Craig Weber","Wealth Central; xPlan; Copilot","Compliance monitoring; Document extraction; Regulatory horizon scanning; RAG & knowledge retrieval; Sentiment & call analysis","1,000 outcomes/year vs a 100,000 target — a redesign problem first. AI ‘help me decide’ journeys in the MLC app at low cost; the existing Money View tool is too data-heavy. Redesign must precede scale.","## Problem
 
 The current run-rate of **1,000 digital general advice outcomes per year** against a target of **100,000** is not a scaling problem — it is a redesign problem first. Fifty percent of Master Trust members have unmet advice needs. AI can power ""help me decide"" journeys in the MLC app at low cost, without requiring an adviser for engagement. However, the existing tool (MLC Money View) is too data-heavy and produces too many outputs, causing confusion and inaction. Redesign must precede scale.
 
@@ -1175,7 +1175,7 @@ The current run-rate of **1,000 digital general advice outcomes per year** again
 - How are AI-generated outputs (e.g., SOA drafts, prospect briefs) reviewed and approved before reaching the client? What is the human-in-the-loop design?
 
 Source: Super to Retirement AI Workshop synthesis document","AIENG-917","https://ifl.atlassian.net/browse/AIENG-917"
-"60","Super to Retirement","SOA Production Bottleneck","High","Cat Drew; Renee Howie","Wealth Central; xPlan; Copilot","Compliance monitoring; Document extraction; Regulatory horizon scanning; RAG & knowledge retrieval; Sentiment & call analysis","Advice production takes 6–8 weeks and ~20 adviser hours per file; the target is 2 hours. AI generates compliance-ready first drafts from fact-find data, turning paraplanning into a quality check.","## Problem
+"60","Super to Retirement","SOA Production","SOA Production Bottleneck","High","Funded","Cat Drew; Renee Howie","Wealth Central; xPlan; Copilot","Compliance monitoring; Document extraction; Regulatory horizon scanning; RAG & knowledge retrieval; Sentiment & call analysis","Advice production takes 6–8 weeks and ~20 adviser hours per file; the target is 2 hours. AI generates compliance-ready first drafts from fact-find data, turning paraplanning into a quality check.","## Problem
 
 End-to-end advice production currently takes **6–8 weeks and ~20 adviser hours per file**. The target is an SOA in **2 hours**. AI can generate compliance-ready first drafts from structured fact-find data, with the adviser reviewing, editing, and approving in a single workflow. The paraplanning step is the largest single cost in advice production — AI converts paraplanning from a production step to a quality-check.
 
@@ -1184,7 +1184,7 @@ End-to-end advice production currently takes **6–8 weeks and ~20 adviser hours
 No deep-dive questions captured in the workshop materials for this area.
 
 Source: Super to Retirement AI Workshop synthesis document","AIENG-918","https://ifl.atlassian.net/browse/AIENG-918"
-"61","Super to Retirement","Prospect Identification & Lead Scoring","Medium-High","Brett Mitchell","Wealth Central; xPlan; Copilot","Compliance monitoring; Document extraction; Regulatory horizon scanning; RAG & knowledge retrieval; Sentiment & call analysis","Growth is reactive with no data-led prospecting despite rich lifecycle data (inheritance, retirement, redundancy). AI scoring surfaces warm leads with context-rich briefings, targeting a 3× conversion rate.","## Problem
+"61","Super to Retirement","Automation Tooling (e.g. ROVO)","Prospect Identification & Lead Scoring","Medium-High","Endorsed","Brett Mitchell","Wealth Central; xPlan; Copilot","Compliance monitoring; Document extraction; Regulatory horizon scanning; RAG & knowledge retrieval; Sentiment & call analysis","Growth is reactive with no data-led prospecting despite rich lifecycle data (inheritance, retirement, redundancy). AI scoring surfaces warm leads with context-rich briefings, targeting a 3× conversion rate.","## Problem
 
 New client growth is reactive and adviser-dependent with no data-led prospecting. Insignia holds rich lifecycle data (balance milestones, life-event signals — inheritance, retirement, redundancy) but has no system to act on it. AI prospect scoring can surface warm leads to advisers with context-rich briefings and suggested openers, targeting a **3× lead-to-conversion rate**.
 
@@ -1193,7 +1193,7 @@ New client growth is reactive and adviser-dependent with no data-led prospecting
 No deep-dive questions captured in the workshop materials for this area.
 
 Source: Super to Retirement AI Workshop synthesis document","AIENG-919","https://ifl.atlassian.net/browse/AIENG-919"
-"62","Super to Retirement","Super-to-Retirement ‘Brain’","High","Ashton Jones; Scott Manson","Wealth Central; xPlan; Copilot","Compliance monitoring; Document extraction; Regulatory horizon scanning; RAG & knowledge retrieval; Sentiment & call analysis","The intervention window is narrow and currently missed. An AI ‘brain’ combines lifecycle data with Scott's four-outcome model to deliver proactive, personalised nudges without an adviser at every touchpoint.","## Problem
+"62","Super to Retirement","Automation Tooling (e.g. ROVO)","Super-to-Retirement ‘Brain’","High","Endorsed","Ashton Jones; Scott Manson","Wealth Central; xPlan; Copilot","Compliance monitoring; Document extraction; Regulatory horizon scanning; RAG & knowledge retrieval; Sentiment & call analysis","The intervention window is narrow and currently missed. An AI ‘brain’ combines lifecycle data with Scott's four-outcome model to deliver proactive, personalised nudges without an adviser at every touchpoint.","## Problem
 
 Members don't care about retirement and then suddenly do — the window for proactive intervention is narrow and currently missed. The workshop identified a need for an AI-powered ""brain"" that combines:
 - Data ingestion from IFL's lifecycle data advantage (super, investment, insurance, advice, tax)
@@ -1221,7 +1221,7 @@ The D-MET (Digital Member Experience Transformation) program underpins this but 
 - Is there a plan to acquire or infer financial data beyond the super/IFL ecosystem (e.g., Experian data, open banking)? What are the consent and privacy implications?
 
 Source: Super to Retirement AI Workshop synthesis document","AIENG-920","https://ifl.atlassian.net/browse/AIENG-920"
-"63","Super to Retirement","Member Consent & Data Reach","High","Brett Mitchell","Wealth Central; xPlan; Copilot","Compliance monitoring; Document extraction; Regulatory horizon scanning; RAG & knowledge retrieval; Sentiment & call analysis","Insignia can communicate with only 40% of members. AI personalisation must be preceded by a consent and privacy strategy — the D-MET consolidated privacy statement is a binding dependency.","## Problem
+"63","Super to Retirement","Automation Tooling (e.g. ROVO)","Member Consent & Data Reach","High","Endorsed","Brett Mitchell","Wealth Central; xPlan; Copilot","Compliance monitoring; Document extraction; Regulatory horizon scanning; RAG & knowledge retrieval; Sentiment & call analysis","Insignia can communicate with only 40% of members. AI personalisation must be preceded by a consent and privacy strategy — the D-MET consolidated privacy statement is a binding dependency.","## Problem
 
 Insignia can currently only communicate with **40% of members**. AI-powered engagement must be preceded by a consent and privacy strategy. The D-MET team is working on a consolidated privacy statement, but this is a binding dependency for any AI-led personalisation at scale.
 
@@ -1235,7 +1235,7 @@ Insignia can currently only communicate with **40% of members**. AI-powered enga
 - What does ""success"" look like for the 1:1 intra-fund advice 10× target? How many adviser minutes per outcome at scale?
 
 Source: Super to Retirement AI Workshop synthesis document","AIENG-921","https://ifl.atlassian.net/browse/AIENG-921"
-"64","Super to Retirement","General vs Personal Advice Boundary","Medium-High","Craig Weber","Wealth Central; xPlan; Copilot","Compliance monitoring; Document extraction; Regulatory horizon scanning; RAG & knowledge retrieval; Sentiment & call analysis","A three-tier framework — Help, Guidance, Advice — with the challenge of delivering value without crossing regulatory lines. AI must operate cleanly within each tier.","## Problem
+"64","Super to Retirement","Automation Tooling (e.g. ROVO)","General vs Personal Advice Boundary","Medium-High","Endorsed","Craig Weber","Wealth Central; xPlan; Copilot","Compliance monitoring; Document extraction; Regulatory horizon scanning; RAG & knowledge retrieval; Sentiment & call analysis","A three-tier framework — Help, Guidance, Advice — with the challenge of delivering value without crossing regulatory lines. AI must operate cleanly within each tier.","## Problem
 
 The workshop surfaced a three-tier framework — **Help** (factual Q&A, no guardrails), **Guidance** (intrafund, rule-based, general advice with disclaimers), and **Advice** (SOA/ROA, personal, regulated) — and the challenge of delivering value across all three without inadvertently crossing regulatory lines. AI needs to be designed to operate cleanly within each tier and avoid triggering personal advice obligations unintentionally.
 
@@ -1248,7 +1248,7 @@ The workshop surfaced a three-tier framework — **Help** (factual Q&A, no guard
 - How are AI-generated compliance outputs being tested for accuracy and regulatory compliance before deployment?
 
 Source: Super to Retirement AI Workshop synthesis document","AIENG-922","https://ifl.atlassian.net/browse/AIENG-922"
-"65","Super to Retirement","Adviser Productivity & Capacity","High","Renee Howie","Wealth Central; xPlan; Copilot","Compliance monitoring; Document extraction; Regulatory horizon scanning; RAG & knowledge retrieval; Sentiment & call analysis","Advisers spend 60% of time on non-client admin; the FY30 target of 150 clients (from 96) needs a 46% capacity lift. Co-pilot tools for file notes, scheduling, compliance and rebalance alerts.","## Problem
+"65","Super to Retirement","Automation Tooling (e.g. ROVO)","Adviser Productivity & Capacity","High","Endorsed","Renee Howie","Wealth Central; xPlan; Copilot","Compliance monitoring; Document extraction; Regulatory horizon scanning; RAG & knowledge retrieval; Sentiment & call analysis","Advisers spend 60% of time on non-client admin; the FY30 target of 150 clients (from 96) needs a 46% capacity lift. Co-pilot tools for file notes, scheduling, compliance and rebalance alerts.","## Problem
 
 Advisers currently spend **60% of their time on non-client-facing administration**. The FY30 target of 150 clients per adviser (up from 96 today) requires a 46% capacity increase — unachievable at current admin burden. AI co-pilot tools targeting file notes, review scheduling, compliance reporting, and rebalance alerts can reclaim this time.
 
@@ -1257,7 +1257,7 @@ Advisers currently spend **60% of their time on non-client-facing administration
 No deep-dive questions captured in the workshop materials for this area.
 
 Source: Super to Retirement AI Workshop synthesis document","AIENG-923","https://ifl.atlassian.net/browse/AIENG-923"
-"66","Super to Retirement","Product Menu Simplification","Medium","Ashton Jones","Wealth Central; xPlan; Copilot","Compliance monitoring; Document extraction; Regulatory horizon scanning; RAG & knowledge retrieval; Sentiment & call analysis","Issuers can adjust cohort-level options without it being personal advice. AI determines appropriate cohort defaults, reducing member cognitive burden.","## Problem
+"66","Super to Retirement","Automation Tooling (e.g. ROVO)","Product Menu Simplification","Medium","Endorsed","Ashton Jones","Wealth Central; xPlan; Copilot","Compliance monitoring; Document extraction; Regulatory horizon scanning; RAG & knowledge retrieval; Sentiment & call analysis","Issuers can adjust cohort-level options without it being personal advice. AI determines appropriate cohort defaults, reducing member cognitive burden.","## Problem
 
 Ashton Jones raised an underutilised lever: product issuers can adjust what options are presented to members (investment menus, insurance, drawdown) at a cohort level without it constituting personal advice. AI could determine appropriate cohort-level defaults, reducing the cognitive burden on members without triggering advice obligations.
 
@@ -1266,7 +1266,7 @@ Ashton Jones raised an underutilised lever: product issuers can adjust what opti
 No deep-dive questions captured in the workshop materials for this area.
 
 Source: Super to Retirement AI Workshop synthesis document","AIENG-924","https://ifl.atlassian.net/browse/AIENG-924"
-"67","Super to Retirement","Interoperability of Engines","Medium-High","Cat Drew","Wealth Central; xPlan; Copilot","Compliance monitoring; Document extraction; Regulatory horizon scanning; RAG & knowledge retrieval; Sentiment & call analysis","No single source of truth across calculators, the brain, Wealth Central and xPlan — a risk of conflicting advice. AI architecture decisions here are foundational.","## Problem
+"67","Super to Retirement","Automation Tooling (e.g. ROVO)","Interoperability of Engines","Medium-High","Endorsed","Cat Drew","Wealth Central; xPlan; Copilot","Compliance monitoring; Document extraction; Regulatory horizon scanning; RAG & knowledge retrieval; Sentiment & call analysis","No single source of truth across calculators, the brain, Wealth Central and xPlan — a risk of conflicting advice. AI architecture decisions here are foundational.","## Problem
 
 There is no single source of truth or unified advice engine. Calculators, tools, the ""brain,"" and advice platforms (Wealth Central, xPlan) are fragmented. The workshop raised concern about ""a cloud of different tools and engines"" and the risk of multiple systems providing conflicting advice. AI architecture decisions here are foundational.
 
@@ -1281,7 +1281,7 @@ The workshop surfaced strong concern about ""a cloud of different tools and engi
 No deep-dive questions captured in the workshop materials for this area.
 
 Source: Super to Retirement AI Workshop synthesis document","AIENG-925","https://ifl.atlassian.net/browse/AIENG-925"
-"68","Super to Retirement","Regulatory Compliance Embedding","High","Craig Weber","Wealth Central; xPlan; Copilot","Compliance monitoring; Document extraction; Regulatory horizon scanning; RAG & knowledge retrieval; Sentiment & call analysis","AI must embed compliance in real time, not just automate delivery. Only 12 of 23 licensees have AI fairness policies — Insignia needs to be ahead of the curve.","## Problem
+"68","Super to Retirement","AI Model Testing / QA","Regulatory Compliance Embedding","High","Prioritised","Craig Weber","Wealth Central; xPlan; Copilot","Compliance monitoring; Document extraction; Regulatory horizon scanning; RAG & knowledge retrieval; Sentiment & call analysis","AI must embed compliance in real time, not just automate delivery. Only 12 of 23 licensees have AI fairness policies — Insignia needs to be ahead of the curve.","## Problem
 
 ASIC enforcement is escalating. AI must not just automate advice delivery — it must embed compliance in real time. Only 12 of 23 licensees have AI fairness policies; Insignia needs to be ahead of this curve to avoid regulatory overreach risk as it scales AI capabilities.
 
@@ -1294,7 +1294,7 @@ ASIC enforcement is escalating. AI must not just automate advice delivery — it
 - What is the AML/CTF implication of AI-assisted advice implementation, and is there a compliance sign-off process for new AI capabilities?
 
 Source: Super to Retirement AI Workshop synthesis document","AIENG-926","https://ifl.atlassian.net/browse/AIENG-926"
-"69","Advice","Paraplanning Throughput","High","Daniel Russell; Joey Sorensen","Wealth Central; xPlan; Copilot","Document extraction; Compliance monitoring; Workflow automation; RAG & knowledge retrieval","The dominant bottleneck. Structure the upstream advice request so inputs are reliable, then generate SOA drafts, strategy narratives and justification sections from clean inputs. Data quality is the biggest blocker — AI won't help until inputs are consistent.","## Problem
+"69","Advice","SOA Production","Paraplanning Throughput","High","Funded","Daniel Russell; Joey Sorensen","Wealth Central; xPlan; Copilot","Document extraction; Compliance monitoring; Workflow automation; RAG & knowledge retrieval","The dominant bottleneck. Structure the upstream advice request so inputs are reliable, then generate SOA drafts, strategy narratives and justification sections from clean inputs. Data quality is the biggest blocker — AI won't help until inputs are consistent.","## Problem
 
 *Workshop priority: Highest*
 
@@ -1314,7 +1314,7 @@ The dominant bottleneck in the advice value chain. Paraplanners draft largely fr
 - How does the upcoming Dynamics 365 CRM change the data available to paraplanners? Is there a date and a data model for what will be accessible?
 
 Source: Advice AI Workshop synthesis document","AIENG-927","https://ifl.atlassian.net/browse/AIENG-927"
-"70","Advice","CGT Calculations","High","Daniel Russell","Wealth Central; xPlan; Copilot","Document extraction; Compliance monitoring; Workflow automation; RAG & knowledge retrieval","Mechanically simple but error-prone: manual transposition from PDFs into spreadsheets creates asymmetric client-detriment risk. OCR/document parsing plus automated calculation and a formatted review output — a well-scoped problem.","## Problem
+"70","Advice","CGT Calculation","CGT Calculations","High","Parked","Daniel Russell","Wealth Central; xPlan; Copilot","Document extraction; Compliance monitoring; Workflow automation; RAG & knowledge retrieval","Mechanically simple but error-prone: manual transposition from PDFs into spreadsheets creates asymmetric client-detriment risk. OCR/document parsing plus automated calculation and a formatted review output — a well-scoped problem.","## Problem
 
 *Workshop priority: High*
 
@@ -1332,7 +1332,7 @@ A mechanically simple but error-prone process where manual transposition from PD
 - Are the spreadsheet templates standardised or does each planner have their own format?
 
 Source: Advice AI Workshop synthesis document","AIENG-928","https://ifl.atlassian.net/browse/AIENG-928"
-"71","Advice","Advice Assurance / Compliance","Medium","Alex Brown; Daniel Russell","Wealth Central; xPlan; Copilot","Document extraction; Compliance monitoring; Workflow automation; RAG & knowledge retrieval","Compliance operates as a post-production rework trigger, not a live gate. AI-assisted inline compliance prompting during drafting would shift this structurally — dependent on the Dynamics 365 platform (EOY).","## Problem
+"71","Advice","Advisor Efficiency Tools","Advice Assurance / Compliance","Medium","Endorsed","Alex Brown; Daniel Russell","Wealth Central; xPlan; Copilot","Document extraction; Compliance monitoring; Workflow automation; RAG & knowledge retrieval","Compliance operates as a post-production rework trigger, not a live gate. AI-assisted inline compliance prompting during drafting would shift this structurally — dependent on the Dynamics 365 platform (EOY).","## Problem
 
 *Workshop priority: Medium*
 
@@ -1347,7 +1347,7 @@ Compliance currently operates as a post-production rework trigger rather than a 
 - Are there existing rules or decision trees that define what compliance requirements apply to a given type of advice? If so, where do they live?
 
 Source: Advice AI Workshop synthesis document","AIENG-929","https://ifl.atlassian.net/browse/AIENG-929"
-"72","Advice","Meeting Documents — Pre / Post","Medium","Joey Sorensen; Daniel Russell","Wealth Central; xPlan; Copilot","Document extraction; Compliance monitoring; Workflow automation; RAG & knowledge retrieval","Pre-meeting prep and post-meeting file notes follow predictable structures but consume adviser time. Pull CRM context for prep and merge FinTalkr output into paraplanning-ready notes.","## Problem
+"72","Advice","Advisor Efficiency Tools","Meeting Documents — Pre / Post","Medium","Endorsed","Joey Sorensen; Daniel Russell","Wealth Central; xPlan; Copilot","Document extraction; Compliance monitoring; Workflow automation; RAG & knowledge retrieval","Pre-meeting prep and post-meeting file notes follow predictable structures but consume adviser time. Pull CRM context for prep and merge FinTalkr output into paraplanning-ready notes.","## Problem
 
 *Workshop priority: Medium*
 
@@ -1363,7 +1363,7 @@ Pre-meeting preparation (agendas, slides, client summaries) and post-meeting fil
 - What's the current split between FinTalkr users and non-users in the team — and what are the barriers to broader adoption?
 
 Source: Advice AI Workshop synthesis document","AIENG-930","https://ifl.atlassian.net/browse/AIENG-930"
-"73","Advice","Repetitive Admin — Forms, Data, Onboarding","High","Brooke West","Wealth Central; xPlan; Copilot","Document extraction; Compliance monitoring; Workflow automation; RAG & knowledge retrieval","Platform form completion is the single highest source of implementation errors — staff re-enter data that already exists in the SOA and CRM. Event-triggered, rules-based workflows: strong automation candidates even before AI.","## Problem
+"73","Advice","Automation Tooling (e.g. ROVO)","Repetitive Admin — Forms, Data, Onboarding","High","Endorsed","Brooke West","Wealth Central; xPlan; Copilot","Document extraction; Compliance monitoring; Workflow automation; RAG & knowledge retrieval","Platform form completion is the single highest source of implementation errors — staff re-enter data that already exists in the SOA and CRM. Event-triggered, rules-based workflows: strong automation candidates even before AI.","## Problem
 
 *Workshop priority: High*
 
@@ -1381,7 +1381,7 @@ Platform form completion is identified as the single highest source of implement
 - Are there specific practices that have developed good manual workarounds that could serve as a template for automation design?
 
 Source: Advice AI Workshop synthesis document","AIENG-931","https://ifl.atlassian.net/browse/AIENG-931"
-"74","Asset Management","Portfolio Exposure Monitoring","High","Alex Leung","Atlas GRC; Copilot; SharePoint","Document extraction; Anomaly detection; RAG & knowledge retrieval; Reporting automation; Reconciliation & matching","A manually assembled Excel dashboard drawing from THOR, Hephaestus, accounting DBs and emailed reports — two people maintain it and ~10 teams have the same problem. Automate the pipeline with anomaly alerting on a $100bn portfolio.","## Problem
+"74","Asset Management","Automation Tooling (e.g. ROVO)","Portfolio Exposure Monitoring","High","Endorsed","Alex Leung","Atlas GRC; Copilot; SharePoint","Document extraction; Anomaly detection; RAG & knowledge retrieval; Reporting automation; Reconciliation & matching","A manually assembled Excel dashboard drawing from THOR, Hephaestus, accounting DBs and emailed reports — two people maintain it and ~10 teams have the same problem. Automate the pipeline with anomaly alerting on a $100bn portfolio.","## Problem
 
 **Manual, fragmented portfolio exposure monitoring** *(Alex Leung)*
 The portfolio exposure monitoring file is a manually assembled Excel dashboard drawing from THOR, Hephaestus, accounting databases, and emailed reports. Updates are mostly weekly but sometimes daily. Two people maintain it, and roughly ten investment teams have a version of the same problem. The absence of automation creates operational risk (stale or incorrectly mapped data), limits time-series analysis, and constrains the quality of investment decision-making at the scale of a $100bn AUM portfolio.
@@ -1404,7 +1404,7 @@ The portfolio exposure monitoring file is a manually assembled Excel dashboard d
 - What volume of contentious resolutions are processed annually, and what is the typical turnaround time expected?
 
 Source: Asset Management AI Workshop synthesis document","AIENG-932","https://ifl.atlassian.net/browse/AIENG-932"
-"75","Asset Management","Fragmented Data Sourcing (FUM / flows / performance)","High","Julius Boess","Atlas GRC; Copilot; SharePoint","Document extraction; Anomaly detection; RAG & knowledge retrieval; Reporting automation; Reconciliation & matching","Product manually collates FUM, flows, performance, SAA/AA, fees and adviser data from systems owned by different teams — a missing shared data layer rather than isolated problems.","## Problem
+"75","Asset Management","Automation Tooling (e.g. ROVO)","Fragmented Data Sourcing (FUM / flows / performance)","High","Endorsed","Julius Boess","Atlas GRC; Copilot; SharePoint","Document extraction; Anomaly detection; RAG & knowledge retrieval; Reporting automation; Reconciliation & matching","Product manually collates FUM, flows, performance, SAA/AA, fees and adviser data from systems owned by different teams — a missing shared data layer rather than isolated problems.","## Problem
 
 **Fragmented data sourcing — FUM, flows, and performance** *(Julius Boess)*
 Product consumes FUM, flows, performance, SAA/AA, fees, and adviser data from multiple systems owned by different teams. Collation is manual and recurring. This same problem pattern appears across Product, Investment Operations, and the investment team — suggesting a shared data layer is missing rather than a series of isolated problems.
@@ -1414,7 +1414,7 @@ Product consumes FUM, flows, performance, SAA/AA, fees, and adviser data from mu
 No deep-dive questions captured in the workshop materials for this area.
 
 Source: Asset Management AI Workshop synthesis document","AIENG-933","https://ifl.atlassian.net/browse/AIENG-933"
-"76","Asset Management","PE & Alts Document Retrieval","High","Brandon Spencer","Atlas GRC; Copilot; SharePoint","Document extraction; Anomaly detection; RAG & knowledge retrieval; Reporting automation; Reconciliation & matching","630 investment lines across 130+ MFA-protected portals; ~8,000 manual downloads at ~10 minutes each. A 4-month POC covers 25 portals but isn't production-ready — a compliance risk as well as efficiency.","## Problem
+"76","Asset Management","PE & Alternatives Portfolio Document Retrieval","PE & Alts Document Retrieval","High","Parked","Brandon Spencer","Atlas GRC; Copilot; SharePoint","Document extraction; Anomaly detection; RAG & knowledge retrieval; Reporting automation; Reconciliation & matching","630 investment lines across 130+ MFA-protected portals; ~8,000 manual downloads at ~10 minutes each. A 4-month POC covers 25 portals but isn't production-ready — a compliance risk as well as efficiency.","## Problem
 
 **PE & Alts Fund Manager document retrieval** *(Brandon Spencer)*
 630 investment lines across 130+ managers with MFA-protected portals. Currently ~8,000 manual document downloads, each taking approximately 10 minutes. A partial automation POC has been running for four months and covers 25 portals — but is resource-constrained and not yet production-ready. This is a compliance risk as well as an efficiency issue: documents supporting NAV calculations and investor reporting are currently slow to retrieve.
@@ -1432,7 +1432,7 @@ Source: Asset Management AI Workshop synthesis document","AIENG-933","https://if
 - Can you quantify the time cost more precisely: 8,000 downloads × 10 minutes = ~1,300 hours annually. Does that match your experience, and what proportion of that is pure retrieval vs. data entry vs. validation?
 
 Source: Asset Management AI Workshop synthesis document","AIENG-934","https://ifl.atlassian.net/browse/AIENG-934"
-"77","Asset Management","PE & Alts Data Extraction","Medium-High","Brandon Spencer","Atlas GRC; Copilot; SharePoint","Document extraction; Anomaly detection; RAG & knowledge retrieval; Reporting automation; Reconciliation & matching","Capital contributions, distributions, fees and valuations are manually keyed into fund accounting. Automated extraction runs 85–90% accurate; format inconsistency and image PDFs need human-in-the-loop validation.","## Problem
+"77","Asset Management","PE & Alternatives Portfolio Document Retrieval","PE & Alts Data Extraction","Medium-High","Parked","Brandon Spencer","Atlas GRC; Copilot; SharePoint","Document extraction; Anomaly detection; RAG & knowledge retrieval; Reporting automation; Reconciliation & matching","Capital contributions, distributions, fees and valuations are manually keyed into fund accounting. Automated extraction runs 85–90% accurate; format inconsistency and image PDFs need human-in-the-loop validation.","## Problem
 
 **PE & Alts data extraction from unlisted investment documents** *(Brandon Spencer)*
 Beyond retrieval, extracted data (capital contributions, distributions, fees, valuations, investor balances) must be manually keyed into the fund accounting system. Industry benchmarks suggest 85–90% accuracy from automated extraction; however, format inconsistency and image-based PDFs are specific constraints. Human-in-the-loop validation is required.
@@ -1442,7 +1442,7 @@ Beyond retrieval, extracted data (capital contributions, distributions, fees, va
 No deep-dive questions captured in the workshop materials for this area.
 
 Source: Asset Management AI Workshop synthesis document","AIENG-935","https://ifl.atlassian.net/browse/AIENG-935"
-"78","Asset Management","IMA & Legal Document Management","Medium-High","Tian Yi Chen","Atlas GRC; Copilot; SharePoint","Document extraction; Anomaly detection; RAG & knowledge retrieval; Reporting automation; Reconciliation & matching","IMAs, guidelines and fee letters sit in a shared drive and a complex Excel DMS with no way to query across them (e.g. ‘which mandates restrict this stock?’). Errors carry material compliance consequences.","## Problem
+"78","Asset Management","PE & Alternatives Portfolio Document Retrieval","IMA & Legal Document Management","Medium-High","Parked","Tian Yi Chen","Atlas GRC; Copilot; SharePoint","Document extraction; Anomaly detection; RAG & knowledge retrieval; Reporting automation; Reconciliation & matching","IMAs, guidelines and fee letters sit in a shared drive and a complex Excel DMS with no way to query across them (e.g. ‘which mandates restrict this stock?’). Errors carry material compliance consequences.","## Problem
 
 **IMA and legal document management** *(Tian Yi Chen)*
 IMAs, guidelines, and fee letters are stored in a shared drive and registered in a complex Excel DMS (multiple tabs, thousands of rows). Documents vary in format — some PDFs are text-based, some are image-scanned. There is no systematic way to query across documents (e.g. ""which mandates restrict exposure to this stock?""), which means mandate monitoring relies on individual expertise and manual document review. Errors have material compliance consequences.
@@ -1462,7 +1462,7 @@ IMAs, guidelines, and fee letters are stored in a shared drive and registered in
 - What happens when a request arrives after hours — is there a backlog process, and is 24-hour SLA formally documented?
 
 Source: Asset Management AI Workshop synthesis document","AIENG-936","https://ifl.atlassian.net/browse/AIENG-936"
-"79","Asset Management","RCR / PDS Disclosure Workflow","Medium-High","Julius Boess","Atlas GRC; Copilot; SharePoint","Document extraction; Anomaly detection; RAG & knowledge retrieval; Reporting automation; Reconciliation & matching","80+ disclosure documents exported from Objective Keystone as PDFs and manually mapped to an Excel template over a one-week cycle. An API into Keystone has not been assessed.","## Problem
+"79","Asset Management","Automation Tooling (e.g. ROVO)","RCR / PDS Disclosure Workflow","Medium-High","Endorsed","Julius Boess","Atlas GRC; Copilot; SharePoint","Document extraction; Anomaly detection; RAG & knowledge retrieval; Reporting automation; Reconciliation & matching","80+ disclosure documents exported from Objective Keystone as PDFs and manually mapped to an Excel template over a one-week cycle. An API into Keystone has not been assessed.","## Problem
 
 **Regulatory disclosure workflow — RCR/PDS process** *(Julius Boess)*
 80+ disclosure documents must be exported from Objective Keystone as PDFs, each field manually mapped to an Excel template. The full cycle takes one week and carries meaningful human error risk. An API into Objective Keystone has not been assessed.
@@ -1482,7 +1482,7 @@ Source: Asset Management AI Workshop synthesis document","AIENG-936","https://if
 - Is there an existing data warehouse or BI layer that these could feed into, or would a new one need to be established?
 
 Source: Asset Management AI Workshop synthesis document","AIENG-937","https://ifl.atlassian.net/browse/AIENG-937"
-"80","Asset Management","Market & Manager Intelligence","High","Gareth Abley","Atlas GRC; Copilot; SharePoint","Document extraction; Anomaly detection; RAG & knowledge retrieval; Reporting automation; Reconciliation & matching","No always-on capability to monitor 20+ managers and 400+ positions. Gareth runs a personal ChatGPT alert as a workaround — a portfolio-specific structured daily briefing is the target.","## Problem
+"80","Asset Management","Competitor Intelligence","Market & Manager Intelligence","High","Prioritised","Gareth Abley","Atlas GRC; Copilot; SharePoint","Document extraction; Anomaly detection; RAG & knowledge retrieval; Reporting automation; Reconciliation & matching","No always-on capability to monitor 20+ managers and 400+ positions. Gareth runs a personal ChatGPT alert as a workaround — a portfolio-specific structured daily briefing is the target.","## Problem
 
 **Market and manager monitoring** *(Gareth Abley)*
 The investment team has no systematic, always-on capability to monitor 20+ alternative managers, 400+ underlying positions, and broader market/macro developments. Gareth Abley is currently running a personal ChatGPT daily alert as a workaround — a strong signal of unmet demand. The desired capability is a portfolio-specific, structured daily briefing covering manager news, personnel changes, industry developments, and emerging opportunities.
@@ -1500,7 +1500,7 @@ The investment team has no systematic, always-on capability to monitor 20+ alter
 - What does ""commercialising niche capabilities in alternatives/PE/infrastructure"" mean concretely — is there a product or client-facing use case in scope?
 
 Source: Asset Management AI Workshop synthesis document","AIENG-938","https://ifl.atlassian.net/browse/AIENG-938"
-"81","Asset Management","Transition Planning & Scenario Modelling","Medium-High","Jurgen Steiner","Atlas GRC; Copilot; SharePoint","Document extraction; Anomaly detection; RAG & knowledge retrieval; Reporting automation; Reconciliation & matching","Transition plans are built manually in Excel from investment papers and mandates, each scenario a near-full reconstruction. A parameterised modelling problem, distinct from document intelligence.","## Problem
+"81","Asset Management","Automation Tooling (e.g. ROVO)","Transition Planning & Scenario Modelling","Medium-High","Endorsed","Jurgen Steiner","Atlas GRC; Copilot; SharePoint","Document extraction; Anomaly detection; RAG & knowledge retrieval; Reporting automation; Reconciliation & matching","Transition plans are built manually in Excel from investment papers and mandates, each scenario a near-full reconstruction. A parameterised modelling problem, distinct from document intelligence.","## Problem
 
 **Transition planning and scenario modelling** *(Jurgen Steiner)*
 Transition plans — covering investment manager changes, strategy changes, and structural changes — are built manually in Excel from investment papers and mandate documents. Each scenario variant requires near-full reconstruction. The process is slow, fragile, and carries downstream risk (incorrect tax planning, operational breaks, infeasible implementation paths). This is structurally different from the other problems: it is a parameterised modelling problem rather than a document intelligence problem.
@@ -1517,7 +1517,7 @@ Transition plans — covering investment manager changes, strategy changes, and 
 - Are there existing transition plan examples (appropriately sanitised) that could serve as training data or template references?
 
 Source: Asset Management AI Workshop synthesis document","AIENG-939","https://ifl.atlassian.net/browse/AIENG-939"
-"82","Asset Management","Trusted / Private AI Environment","High","Alex Leung; Tian Yi Chen","Atlas GRC; Copilot; SharePoint","Document extraction; Anomaly detection; RAG & knowledge retrieval; Reporting automation; Reconciliation & matching","The most consequential constraint: without a governed private environment (e.g. Azure OpenAI), all high-sensitivity work — due diligence, proxy voting, IMA review — stays out of reach. CGI Glass Lewis IP must stay in-boundary.","## Problem
+"82","Asset Management","Automation Tooling (e.g. ROVO)","Trusted / Private AI Environment","High","Endorsed","Alex Leung; Tian Yi Chen","Atlas GRC; Copilot; SharePoint","Document extraction; Anomaly detection; RAG & knowledge retrieval; Reporting automation; Reconciliation & matching","The most consequential constraint: without a governed private environment (e.g. Azure OpenAI), all high-sensitivity work — due diligence, proxy voting, IMA review — stays out of reach. CGI Glass Lewis IP must stay in-boundary.","## Problem
 
 **Absence of a trusted/private AI environment** *(Alex Leung, Tian Yi Chen)*
 The single most consequential constraint across the investment function. Without a governed, private AI environment (e.g. Azure OpenAI private deployment or equivalent), all high-sensitivity workflows — due diligence, proxy voting, IMA review, manager research — remain outside the reach of AI tooling. The CGI Glass Lewis contractual terms add a specific legal dimension: their research must not leave the MLCAM boundary.
@@ -1536,7 +1536,7 @@ The single most consequential constraint across the investment function. Without
 - Is Claude or Anthropic's API available through an approved vendor list, or would it require a new procurement process?
 
 Source: Asset Management AI Workshop synthesis document","AIENG-940","https://ifl.atlassian.net/browse/AIENG-940"
-"83","Asset Management","Proxy Voting & Corporate Actions","Medium-High","Alex Leung; Chris Solofa","Atlas GRC; Copilot; SharePoint","Document extraction; Anomaly detection; RAG & knowledge retrieval; Reporting automation; Reconciliation & matching","A clearly specified workflow (CGI Glass Lewis research + principles template → recommendation → routing to Investment Services) that is undocumented and time-consuming. AI-assisted drafting once a trusted environment exists.","## Problem
+"83","Asset Management","Automation Tooling (e.g. ROVO)","Proxy Voting & Corporate Actions","Medium-High","Endorsed","Alex Leung; Chris Solofa","Atlas GRC; Copilot; SharePoint","Document extraction; Anomaly detection; RAG & knowledge retrieval; Reporting automation; Reconciliation & matching","A clearly specified workflow (CGI Glass Lewis research + principles template → recommendation → routing to Investment Services) that is undocumented and time-consuming. AI-assisted drafting once a trusted environment exists.","## Problem
 
 **Proxy voting and corporate actions** *(Alex Leung, Tian Yi Chen)*
 A clearly specified workflow: CGI Glass Lewis research + internal principles template → analyst writes recommendation → routed to Chris Solofa / Investment Services. Currently undocumented, inconsistent in quality, and time-consuming. Has a specific data sovereignty constraint (CGI Glass Lewis IP must not leave MLCAM). A strong candidate for AI-assisted drafting once a trusted environment is in place.
@@ -1549,7 +1549,7 @@ A clearly specified workflow: CGI Glass Lewis research + internal principles tem
 - What is the acceptable turnaround time for contested resolutions from your team's perspective?
 
 Source: Asset Management AI Workshop synthesis document","AIENG-941","https://ifl.atlassian.net/browse/AIENG-941"
-"84","Asset Management","Personal Trading Pre-Approvals","Medium","Tian Yi Chen","Atlas GRC; Copilot; SharePoint","Document extraction; Anomaly detection; RAG & knowledge retrieval; Reporting automation; Reconciliation & matching","Two staff process 5–10 largely rules-based requests a day against an Atlas restrictions list, on a 24-hour SLA. Low-discretion — a strong automation candidate.","## Problem
+"84","Asset Management","Personal Trading Pre-Approvals","Personal Trading Pre-Approvals","Medium","Prioritised","Tian Yi Chen","Atlas GRC; Copilot; SharePoint","Document extraction; Anomaly detection; RAG & knowledge retrieval; Reporting automation; Reconciliation & matching","Two staff process 5–10 largely rules-based requests a day against an Atlas restrictions list, on a 24-hour SLA. Low-discretion — a strong automation candidate.","## Problem
 
 **Personal trading pre-approvals** *(Tian Yi Chen)*
 Two staff process 5–10 pre-approval requests per day against a restrictions list in the Atlas system. The logic is largely rules-based. SLA is 24 hours (internally targeting 1 hour). No errors to date, but the risk is real and the task is low-discretion — a strong automation candidate.
@@ -1559,7 +1559,7 @@ Two staff process 5–10 pre-approval requests per day against a restrictions li
 No deep-dive questions captured in the workshop materials for this area.
 
 Source: Asset Management AI Workshop synthesis document","AIENG-942","https://ifl.atlassian.net/browse/AIENG-942"
-"85","Customer","Website Content Production","High","Glen Johnson","SharePoint; Copilot; Jira; Unified Data Platform","Document extraction; RAG & knowledge retrieval; Reporting automation; Compliance monitoring; Workflow automation","Audits, migration, copy and SEO consume the team while thousands of PDS PDFs stay inaccessible to customers. Content-audit automation, PDF-to-web extraction and AI-assisted copy with quality scoring.","## Problem
+"85","Customer","Brand Variants for Content & Tone","Website Content Production","High","Prioritised","Glen Johnson","SharePoint; Copilot; Jira; Unified Data Platform","Document extraction; RAG & knowledge retrieval; Reporting automation; Compliance monitoring; Workflow automation","Audits, migration, copy and SEO consume the team while thousands of PDS PDFs stay inaccessible to customers. Content-audit automation, PDF-to-web extraction and AI-assisted copy with quality scoring.","## Problem
 
 #### 01 · Website Content Production
 The team is consumed by audits, migration planning, copy generation, and SEO reviews, leaving no capacity to pursue high-value content strategy or understand customer intent. Thousands of PDFs (PDS documents) remain inaccessible to customers. The window for a well-structured new website is closing while the team is still doing foundational work.
@@ -1582,7 +1582,7 @@ Content audit automation, PDF-to-web extraction, AI-assisted copy generation, SE
 - Is there a GEO (Generative Engine Optimisation) strategy forming, or is this still exploratory? What would a structured experiment look like?
 
 Source: Customer AI Workshop synthesis document","AIENG-943","https://ifl.atlassian.net/browse/AIENG-943"
-"86","Customer","Multi-Brand Communications","High","Angela Maxwell; Brittany Kettlewell","SharePoint; Copilot; Jira; Unified Data Platform","Document extraction; RAG & knowledge retrieval; Reporting automation; Compliance monitoring; Workflow automation","One communication becomes four brand variants (MLC, Plum, ANZ, IOOF), each with its own briefing, QA and compliance cycle. A prompt-driven brand-adaptation layer applies per-brand rules to a master at scale.","## Problem
+"86","Customer","Brand Variants for Content & Tone","Multi-Brand Communications","High","Prioritised","Angela Maxwell; Brittany Kettlewell","SharePoint; Copilot; Jira; Unified Data Platform","Document extraction; RAG & knowledge retrieval; Reporting automation; Compliance monitoring; Workflow automation","One communication becomes four brand variants (MLC, Plum, ANZ, IOOF), each with its own briefing, QA and compliance cycle. A prompt-driven brand-adaptation layer applies per-brand rules to a master at scale.","## Problem
 
 #### 02 · Multi-Brand Communications
 A single communication is currently adapted into four brand variants (MLC, Plum, ANZ, IOOF), each requiring its own briefing, QA, compliance review, and formatting cycle. The structural overhead compounds as brand rationalisation continues.
@@ -1616,7 +1616,7 @@ Brand adaptation layer — prompt-driven workflows that apply per-brand tone, st
 - What AI tools has the brand team already evaluated (e.g., Adobe Firefly, Smart.ly, Keystone Objective) — what has been ruled out and why?
 
 Source: Customer AI Workshop synthesis document","AIENG-944","https://ifl.atlassian.net/browse/AIENG-944"
-"87","Customer","Compliance & Tone QA","Medium-High","Anna Vracar; Brittany Kettlewell","SharePoint; Copilot; Jira; Unified Data Platform","Document extraction; RAG & knowledge retrieval; Reporting automation; Compliance monitoring; Workflow automation","Proofreading for tone, accuracy and compliance is a hidden throughput tax that grows with volume. Shift-left compliance in drafting prompts plus automated tone checking (Redmarker.ai piloted).","## Problem
+"87","Customer","Brand Variants for Content & Tone","Compliance & Tone QA","Medium-High","Prioritised","Anna Vracar; Brittany Kettlewell","SharePoint; Copilot; Jira; Unified Data Platform","Document extraction; RAG & knowledge retrieval; Reporting automation; Compliance monitoring; Workflow automation","Proofreading for tone, accuracy and compliance is a hidden throughput tax that grows with volume. Shift-left compliance in drafting prompts plus automated tone checking (Redmarker.ai piloted).","## Problem
 
 #### 03 · Compliance & Tone QA
 Proofreading and rewriting for tone, accuracy, and compliance is a hidden throughput tax that grows linearly with content volume. The brand tone of voice initiative (owned by Brittany Kettlewell) is in-scope to FY27 Q1 but not yet embedded into production workflows. System-generated communications (e.g., death claims, exception letters) also lack consistent tone standards.
@@ -1635,7 +1635,7 @@ Shift-left compliance (embedding guidelines into drafting prompts), automated to
 - What is the relationship between the Redmarker.ai work and Brittany's tone of voice project — are they being designed to work together?
 
 Source: Customer AI Workshop synthesis document","AIENG-945","https://ifl.atlassian.net/browse/AIENG-945"
-"88","Customer","Data Operations","Medium-High","Zarko Palavra","SharePoint; Copilot; Jira; Unified Data Platform","Document extraction; RAG & knowledge retrieval; Reporting automation; Compliance monitoring; Workflow automation","Campaign data prep is bespoke per brief with no reusable pipelines; 7 registries and 12 systems feed consent alone. Intelligent brief interpretation, source triangulation and reusable pipeline templates.","## Problem
+"88","Customer","Automation Tooling (e.g. ROVO)","Data Operations","Medium-High","Endorsed","Zarko Palavra","SharePoint; Copilot; Jira; Unified Data Platform","Document extraction; RAG & knowledge retrieval; Reporting automation; Compliance monitoring; Workflow automation","Campaign data prep is bespoke per brief with no reusable pipelines; 7 registries and 12 systems feed consent alone. Intelligent brief interpretation, source triangulation and reusable pipeline templates.","## Problem
 
 #### 04 · Data Operations
 Campaign data preparation is entirely bespoke per brief — no reusable pipelines, limited automation, poor observability, and difficult audit trails. Seven registries and 12 systems are involved in marketing consent alone. Stakeholder handoffs are complex and largely manual.
@@ -1658,7 +1658,7 @@ Intelligent data brief interpretation, automated data source triangulation, reus
 - What predictive models are currently in production — what data do they depend on, and how often are they retrained?
 
 Source: Customer AI Workshop synthesis document","AIENG-946","https://ifl.atlassian.net/browse/AIENG-946"
-"89","Customer","Campaign Reporting","Medium-High","Angela Maxwell","SharePoint; Copilot; Jira; Unified Data Platform","Document extraction; RAG & knowledge retrieval; Reporting automation; Compliance monitoring; Workflow automation","Engagement data arrives quarterly by email with no real-time single-customer view — optimisation windows pass. Natural-language performance synthesis and automated multi-source ingestion.","## Problem
+"89","Customer","Automation Tooling (e.g. ROVO)","Campaign Reporting","Medium-High","Endorsed","Angela Maxwell","SharePoint; Copilot; Jira; Unified Data Platform","Document extraction; RAG & knowledge retrieval; Reporting automation; Compliance monitoring; Workflow automation","Engagement data arrives quarterly by email with no real-time single-customer view — optimisation windows pass. Natural-language performance synthesis and automated multi-source ingestion.","## Problem
 
 #### 05 · Campaign Reporting
 The team receives engagement data quarterly by email and cannot access a real-time single customer view or multi-channel engagement picture. By the time reports are ready, optimisation windows have passed. The issue is data accessibility and synthesis — the data exists but is not usable at speed.
@@ -1672,7 +1672,7 @@ Natural-language campaign performance synthesis, automated multi-source data ing
 No deep-dive questions captured in the workshop materials for this area.
 
 Source: Customer AI Workshop synthesis document","AIENG-947","https://ifl.atlassian.net/browse/AIENG-947"
-"90","Customer","Delivery Reporting","Medium-High","Lee-Ann Buckley","SharePoint; Copilot; Jira; Unified Data Platform","Document extraction; RAG & knowledge retrieval; Reporting automation; Compliance monitoring; Workflow automation","Engineers and leads act as a human reporting layer, translating Jira into business language across forums. A conversational interface over Jira/Confluence and automated weekly delivery briefs.","## Problem
+"90","Customer","Automation Tooling (e.g. ROVO)","Delivery Reporting","Medium-High","Endorsed","Lee-Ann Buckley","SharePoint; Copilot; Jira; Unified Data Platform","Document extraction; RAG & knowledge retrieval; Reporting automation; Compliance monitoring; Workflow automation","Engineers and leads act as a human reporting layer, translating Jira into business language across forums. A conversational interface over Jira/Confluence and automated weekly delivery briefs.","## Problem
 
 #### 06 · Delivery Reporting
 Engineers, delivery leads, BAs, and architects are acting as a human reporting layer — producing status updates, translating Jira data into business language, and answering the same questions across multiple forums. As the portfolio grows, this problem scales linearly. There is a subtle risk that teams begin to optimise for reporting quality over delivery outcomes.
@@ -1695,7 +1695,7 @@ Conversational interface over Jira/Confluence for self-serve delivery intelligen
 - What are the translation rules for converting Jira status signals into executive language — is there a shared glossary, or is this currently in people's heads?
 
 Source: Customer AI Workshop synthesis document","AIENG-948","https://ifl.atlassian.net/browse/AIENG-948"
-"91","Customer","Developer QA & Observability","Medium-High","Matthew Gould","SharePoint; Copilot; Jira; Unified Data Platform","Document extraction; RAG & knowledge retrieval; Reporting automation; Compliance monitoring; Workflow automation","Engineers spend time on unit tests, CI/CD debugging and audit trails rather than features. AI-assisted test generation, Playwright E2E automation and CI/CD debugging.","## Problem
+"91","Customer","AI Model Testing / QA","Developer QA & Observability","Medium-High","Prioritised","Matthew Gould","SharePoint; Copilot; Jira; Unified Data Platform","Document extraction; RAG & knowledge retrieval; Reporting automation; Compliance monitoring; Workflow automation","Engineers spend time on unit tests, CI/CD debugging and audit trails rather than features. AI-assisted test generation, Playwright E2E automation and CI/CD debugging.","## Problem
 
 #### 07 · Developer QA & Observability
 Engineers are spending meaningful time on unit test authorship, CI/CD debugging, application error debugging, and managing audit trails — none of which advances feature delivery. The current WIP (DMET website rebuild, agentic search integration, Jenkins-to-GitHub Actions migration, Elastic observability uplift) is high-complexity and highly interdependent. Manual testing is a direct risk to go-live confidence.
@@ -1718,7 +1718,7 @@ AI-assisted unit test generation (GitHub Copilot, Claude Code), Playwright MCP f
 - Are there any security or data sensitivity constraints that apply to code being sent to AI tools (e.g., no customer data in prompts)?
 
 Source: Customer AI Workshop synthesis document","AIENG-949","https://ifl.atlassian.net/browse/AIENG-949"
-"92","Customer","Corporate Affairs & Institutional Memory","High","Jaimie Hoy","SharePoint; Copilot; Jira; Unified Data Platform","Document extraction; RAG & knowledge retrieval; Reporting automation; Compliance monitoring; Workflow automation","A growing archive of submissions and briefings spread across SharePoint and email; new content means manually searching to avoid contradicting prior positions. RAG with cited source attribution.","## Problem
+"92","Customer","Automation Tooling (e.g. ROVO)","Corporate Affairs & Institutional Memory","High","Endorsed","Jaimie Hoy","SharePoint; Copilot; Jira; Unified Data Platform","Document extraction; RAG & knowledge retrieval; Reporting automation; Compliance monitoring; Workflow automation","A growing archive of submissions and briefings spread across SharePoint and email; new content means manually searching to avoid contradicting prior positions. RAG with cited source attribution.","## Problem
 
 #### 08 · Corporate Affairs & Institutional Memory
 The Government & Corporate Affairs team maintains a large and growing archive of submissions, briefings, speaking notes, media releases, and consultation responses — spread across SharePoint and email. Producing new content requires manually searching this archive to avoid contradicting prior positions. The risk of misrepresentation is real and growing. The team already uses AI for low-risk drafts, but without structured retrieval, AI-assisted drafting cannot reliably reflect organisational memory.

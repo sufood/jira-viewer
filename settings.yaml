@@ -1,12 +1,12 @@
 header:
   company: Insignia Financial
   title: AI Strategy Value Realisation
-  intro: Thirteen enterprise workshops · 25 Sprint 1 initiatives. Switch lenses above. In this view, click
-    any division to fan out its cards — problem areas, AI-fit, the people engaged, gaps and next steps.
+  intro: In this view, click any division to fan out its cards — problem areas, AI-fit, the people engaged,
+    gaps and next steps.
 hub:
   name: AI Strategy
   tagline: Enterprise-wide AI strategy programme — March 2026
-  url: https://ifl.atlassian.net/jira/software/c/projects/AIENG/boards/4552
+  url: https://ifl.atlassian.net/jira/software/c/projects/AITR/boards/6393
 legend:
   title: AI-fit rating
   levels:
@@ -100,3 +100,22 @@ divisions:
     background: The Customer division — content & communications, data & reporting, and technology & institutional
       knowledge. Four active brands (MLC, Plum, ANZ, IOOF) multiply every communication, UDP harmonisation
       is still elementary, and multiple teams are already running AI experiments with no shared governance.
+# Kanban structure for the on-card progress marker.
+#   board   — Agile board id; its column order defines `stages` (import reads it).
+#   stages  — ordered pipeline columns; the app draws one stepper segment each.
+#   swimlanes — query-lane rules, first match wins (top-down). `jql` reconstructs
+#     lane membership on import (Jira's API doesn't expose query-swimlane JQL);
+#     `colour` tints the stepper. The lane with no `jql` is the catch-all default.
+kanban:
+  board: 6393
+  stages: [IDEAS, INTAKE, DISCOVER, TRIAGE & ROUTE, DESIGN, BUILD, MEASURE, DONE]
+  swimlanes:
+  - name: Expedite
+    jql: priority = Highest
+    colour: '#e3a24b'
+  - name: Blocked
+    jql: flagged is not EMPTY
+    colour: '#c0504d'
+  - name: Everything Else
+    jql: null
+    colour: '#8a94a2'
