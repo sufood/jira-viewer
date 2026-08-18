@@ -158,7 +158,7 @@ with no target, or `make help`, prints the list.
 | `make seed` | Seed `initiatives.csv` / `settings.yaml` / `people.csv` from the app | `python3 src/export_tabs.py` |
 | `make push` | Create Jira issues for blank CSV rows — **prompts `y/N` (default N) before writing to Jira**; `YES=1` skips it (needs `.env`) | `python3 src/jira_sync.py push` |
 | `make pull` | Refresh the stories CSV from linked Jira issues — **prompts before overwriting existing values**; `YES=1` skips it (needs `.env`) | `python3 src/jira_sync.py pull` |
-| `make import` | Read **all** issues in a project/JQL into a CSV (`PROJECT=…` / `CSV=…` / `BOARD=…`; needs `.env`) | `python3 src/jira_sync.py import …` |
+| `make import` | Read **all** issues in one or more projects/JQL into a CSV (`PROJECT=AITR` or `PROJECT=AITR,AIENG` / `CSV=…` / `BOARD=…`; needs `.env`) | `python3 src/jira_sync.py import …` |
 | `make clean` | Remove generated build outputs (assembled bundle, regenerated/locked HTML, `divisions*.csv`, error PNGs, `__pycache__`, `.pytest_cache`) | shell `rm` |
 | `make engine-extract` | Maintenance: re‑vendor `src/engine/` from a bundle (runtime/fonts changed) | `python3 src/decompose_bundle.py` |
 | `make apply` | Low‑level: patch `src/strategy-map.src.html` into the existing bundle **in place** (normal edits use `make build`) | `python3 src/apply_source.py` |
@@ -370,6 +370,16 @@ have no context block, only those two content columns are known, so:
 - `--ai-fit LEVEL` (optional, e.g. `Medium`) gives foreign rows a defined legend colour on the map.
 
 `Jira Key` / `Jira URL` are filled for every row, so a subsequent `pull` keeps the CSV in sync.
+`--project` takes one key or several — `--project AITR,AIENG`, or the flag
+repeated. Several keys become `project in (AITR, AIENG)`; every key is checked
+for visibility before the import runs, and all unreachable ones are reported
+together. `push` still targets exactly one project, so `JIRA_PROJECT_KEY` must
+name a single key.
+
+With several projects there is no "first board on the project", so the board is
+resolved as `--board`, then `kanban.board` in `settings.yaml`, then the first
+board on the first key.
+
 Also accepts `--jql "…"` (overrides `--project` for subsets/components/labels),
 `-v/--verbose`, `--csv PATH`, `--ca-bundle PATH`.
 

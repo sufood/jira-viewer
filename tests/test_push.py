@@ -1,3 +1,5 @@
+import pytest
+
 import jira_sync
 
 
@@ -139,3 +141,18 @@ def test_push_verify_confirms_created_issue(tmp_path):
                                 assign=False, verify=True, verbose=False)
     assert result["created"] == 1
     assert fake.got == ["ABC-1"]      # --verify actually fetched the issue back
+
+
+# ---- push targets exactly one project -------------------------------------
+
+def test_push_rejects_a_comma_separated_project_key():
+    """import may span projects; push creates issues, so it needs exactly one.
+    A comma in JIRA_PROJECT_KEY must fail loudly, not create issues in a
+    project literally named 'AITR,AIENG'."""
+    with pytest.raises(SystemExit) as e:
+        jira_sync.single_project_key("AITR,AIENG")
+    assert "AITR,AIENG" in str(e.value)
+
+
+def test_single_project_key_passes_a_lone_key_through():
+    assert jira_sync.single_project_key(" AITR ") == "AITR"

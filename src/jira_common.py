@@ -554,31 +554,42 @@ def connect_and_preflight(project_key, issue_type, require_create=False):
     """Build a Jira client from env and run preflight checks: auth → project
     visible → issue type available, and (when require_create, i.e. for push)
     → Create Issues permission. Pass issue_type=None to skip the issue-type
-    check (read-only flows don't create issues). Returns the connected Jira
+    check (read-only flows don't create issues). `project_key` may be a single
+    key or a list of keys (import can span several projects); every key is
+    checked and ALL invisible ones are reported together, so a multi-key typo
+    costs one round trip rather than one per key. Returns the connected Jira
     client. Raises SystemExit with an actionable message on any failure."""
     jira = connect()
+    keys = project_key if isinstance(project_key, list) else [project_key]
 
-    project = jira.check_project(project_key)
-    if project is None:
+    projects, missing = [], []
+    for key in keys:
+        project = jira.check_project(key)
+        (projects if project is not None else missing).append(project or key)
+    if missing:
         visible = ", ".join(p["key"] for p in jira.list_projects()) or "(none)"
-        sys.exit(f"ERROR: project {project_key!r} not visible. "
-                 f"Projects you can see: {visible}")
-    type_names = [t["name"] for t in project.get("issueTypes", [])]
-    if issue_type and type_names and issue_type not in type_names:
-        sys.exit(f"ERROR: project has no {issue_type!r} issue type. "
-                 f"Available: {', '.join(type_names)}")
-    suffix = f" (issue type {issue_type})" if issue_type else ""
-    print(f"Target project: {project['key']} — {project['name']}{suffix}")
+        label = "project" if len(missing) == 1 else "projects"
+        sys.exit(f"ERROR: {label} {', '.join(repr(m) for m in missing)} not "
+                 f"visible. Projects you can see: {visible}")
+
+    for project in projects:
+        type_names = [t["name"] for t in project.get("issueTypes", [])]
+        if issue_type and type_names and issue_type not in type_names:
+            sys.exit(f"ERROR: project {project['key']} has no {issue_type!r} "
+                     f"issue type. Available: {', '.join(type_names)}")
+        suffix = f" (issue type {issue_type})" if issue_type else ""
+        print(f"Target project: {project['key']} — {project['name']}{suffix}")
 
     if require_create:
-        can_create = jira.can_create_issues(project_key)
-        if can_create is False:
-            sys.exit(f"ERROR: your user lacks 'Create Issues' permission in "
-                     f"{project_key}. Ask the project admin to grant it "
-                     f"(Project settings → Permissions).")
-        if can_create is None:
-            print("  warning: could not verify Create Issues permission; "
-                  "continuing")
-        else:
-            print("Create Issues permission: yes")
+        for project in projects:
+            can_create = jira.can_create_issues(project["key"])
+            if can_create is False:
+                sys.exit(f"ERROR: your user lacks 'Create Issues' permission "
+                         f"in {project['key']}. Ask the project admin to grant "
+                         f"it (Project settings → Permissions).")
+            if can_create is None:
+                print(f"  warning: could not verify Create Issues permission "
+                      f"in {project['key']}; continuing")
+            else:
+                print(f"Create Issues permission in {project['key']}: yes")
     return jira

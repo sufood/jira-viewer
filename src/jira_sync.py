@@ -34,6 +34,22 @@ DEFAULT_SWIMLANES = [
 ]
 
 
+def parse_project_keys(value):
+    """Normalise --project into an ordered list of keys. Accepts a single key,
+    a comma-separated string, or a list of either (argparse `append`). Strips
+    whitespace, drops empties, and de-duplicates keeping first-seen order."""
+    if not value:
+        return []
+    parts = value if isinstance(value, list) else [value]
+    keys = []
+    for part in parts:
+        for key in str(part).split(","):
+            key = key.strip()
+            if key and key not in keys:
+                keys.append(key)
+    return keys
+
+
 def load_swimlanes(settings_path):
     """kanban.swimlanes from settings.yaml when PyYAML + the file are present,
     else the built-in defaults. Keeps push/pull free of a hard YAML dependency
@@ -48,6 +64,33 @@ def load_swimlanes(settings_path):
         data = yaml.safe_load(f) or {}
     lanes = (data.get("kanban") or {}).get("swimlanes")
     return lanes or DEFAULT_SWIMLANES
+
+
+def single_project_key(value):
+    """The one project key push/pull operate on. `import` may span several
+    projects, but push CREATES issues, so a comma here is a configuration
+    error rather than a list to iterate over."""
+    keys = parse_project_keys(value)
+    if len(keys) > 1:
+        sys.exit(f"JIRA_PROJECT_KEY={value!r} names several projects "
+                 f"({', '.join(keys)}). push and pull target exactly one; "
+                 f"use `import --project {','.join(keys)}` to span projects.")
+    return keys[0] if keys else ""
+
+
+def load_board(settings_path):
+    """kanban.board from settings.yaml, or None. Import needs this because
+    "the first board on the project" has no meaning once several projects are
+    imported together, so an explicitly configured board wins over discovery."""
+    try:
+        import yaml
+    except ImportError:
+        return None
+    if not settings_path or not os.path.exists(settings_path):
+        return None
+    with open(settings_path, encoding="utf-8") as f:
+        data = yaml.safe_load(f) or {}
+    return (data.get("kanban") or {}).get("board")
 
 
 def load_defaults(settings_path):
@@ -317,11 +360,15 @@ def run_import(jira, csv_path, project_key, jql, default_division,
     # `query` is the issue search (verbatim raw JQL, or project + default order);
     # `scope` is the same filter WITHOUT any ORDER BY, so it can be AND-composed
     # with each swimlane's JQL.
+    keys = parse_project_keys(project_key)
     if jql:
         query = jql
         scope = re.split(r"\s+ORDER\s+BY\s+", jql, maxsplit=1, flags=re.I)[0]
     else:
-        scope = f"project = {project_key}"
+        # One key keeps the simpler `project = KEY`; several become an IN
+        # clause. Both are parenthesised before lane JQL is AND-ed on below.
+        scope = (f"project = {keys[0]}" if len(keys) == 1
+                 else f"project in ({', '.join(keys)})")
         query = f"{scope} ORDER BY key ASC"
     print(f"JQL: {query}")
 
@@ -330,7 +377,8 @@ def run_import(jira, csv_path, project_key, jql, default_division,
     # semantics). Both are skipped when kanban=False.
     columns, lane_sets, default_lane = None, [], ""
     if kanban:
-        board_id = board or (jira.find_board(project_key) if project_key else None)
+        board_id = (board or load_board(settings_path)
+                    or (jira.find_board(keys[0]) if keys else None))
         if board_id:
             columns = jira.board_config(board_id)
             if columns:
@@ -340,8 +388,9 @@ def run_import(jira, csv_path, project_key, jql, default_division,
                 print(f"  warning: board {board_id} configuration unreadable; "
                       f"Stage falls back to raw status names")
         else:
-            print("  notice: no board id (pass --board or set kanban.board in "
-                  "settings.yaml); Stage falls back to raw status names")
+            print("  notice: no board id (pass --board, set kanban.board in "
+                  "settings.yaml, or check the project has a board); Stage "
+                  "falls back to raw status names")
         swimlanes = load_swimlanes(settings_path)
         default_lane = next((l["name"] for l in swimlanes if not l.get("jql")),
                             swimlanes[-1]["name"] if swimlanes else "")
@@ -432,8 +481,9 @@ def main():
     p_push.add_argument("--verify", action="store_true",
                         help="GET each created issue back to confirm it exists")
     p_import.add_argument(
-        "--project", metavar="KEY",
-        help="project key to import, e.g. AITR (default: JIRA_PROJECT_KEY)")
+        "--project", metavar="KEYS", action="append",
+        help="project key(s) to import, e.g. AITR or AITR,AIENG; repeat the "
+             "flag for the same effect (default: JIRA_PROJECT_KEY)")
     p_import.add_argument(
         "--jql", metavar="QUERY",
         help="raw JQL, overrides --project (e.g. 'project = AITR AND "
@@ -447,11 +497,13 @@ def main():
         help="optional default AI-fit for imported rows (e.g. Medium)")
     p_import.add_argument(
         "--board", type=int, metavar="ID",
-        help="Agile board id for Stage mapping (default: first board on the "
-             "project). Its column order becomes the kanban stages.")
+        help="Agile board id for Stage mapping (default: kanban.board in "
+             "settings.yaml, else the first board on the first project). Its "
+             "column order becomes the kanban stages.")
     p_import.add_argument(
         "--settings", default="settings.yaml", metavar="PATH",
-        help="settings.yaml to read kanban.swimlanes from (default: settings.yaml)")
+        help="settings.yaml to read kanban.board / kanban.swimlanes from "
+             "(default: settings.yaml)")
     p_import.add_argument(
         "--no-kanban", action="store_true",
         help="skip Stage/Swimlane capture (issues only)")
@@ -483,16 +535,17 @@ def main():
         # --project then JIRA_PROJECT_KEY. Import reads issues, so it needs auth
         # (and project visibility when a key is used) but no create permission
         # or a particular issue type.
-        import_key = args.project or os.environ.get("JIRA_PROJECT_KEY")
-        if not import_key and not args.jql:
-            sys.exit("import needs --project KEY or --jql QUERY "
+        import_keys = parse_project_keys(
+            args.project or os.environ.get("JIRA_PROJECT_KEY"))
+        if not import_keys and not args.jql:
+            sys.exit("import needs --project KEY[,KEY...] or --jql QUERY "
                      "(or JIRA_PROJECT_KEY in .env).")
-        if import_key:
-            jira = jc.connect_and_preflight(import_key, None,
+        if import_keys:
+            jira = jc.connect_and_preflight(import_keys, None,
                                             require_create=False)
         else:
             jira = jc.connect()
-        res = run_import(jira, args.csv, import_key, args.jql,
+        res = run_import(jira, args.csv, import_keys, args.jql,
                          default_division=args.division,
                          default_ai_fit=args.ai_fit,
                          dry_run=args.dry_run, verbose=args.verbose,
@@ -502,6 +555,7 @@ def main():
 
     if not os.environ.get("JIRA_PROJECT_KEY"):
         sys.exit('JIRA_PROJECT_KEY not set (env or .env).')
+    project_key = single_project_key(project_key)
 
     jira = jc.connect_and_preflight(project_key, issue_type,
                                     require_create=(args.cmd == "push"))

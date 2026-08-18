@@ -76,7 +76,7 @@ push:  ## Create Jira issues for blank CSV rows (prompts first; YES=1 to skip)
 pull:  ## Refresh the stories CSV from linked Jira issues (prompts before overwriting; YES=1 to skip)
 	$(PYTHON) src/jira_sync.py pull $(if $(YES),--yes,)
 
-import:  ## Read all issues in a project/JQL into a CSV (set CSV=… PROJECT=… BOARD=…)
+import:  ## Read all issues in a project/JQL into a CSV (set CSV=… PROJECT=… BOARD=…; PROJECT takes AITR or AITR,AIENG)
 	$(PYTHON) src/jira_sync.py import $(if $(PROJECT),--project "$(PROJECT)",) $(if $(CSV),--csv "$(CSV)",) $(if $(BOARD),--board "$(BOARD)",)
 
 # Low-level maintenance (rarely needed now that `build` assembles from source):

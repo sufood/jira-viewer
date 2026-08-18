@@ -1,3 +1,5 @@
+import pytest
+
 import jira_sync
 import jira_common as jc
 
@@ -219,3 +221,143 @@ def test_import_stage_falls_back_to_raw_status_without_board():
     row = jc.read_csv(csv_path)[0]
     assert row["Stage"] == "Doing"                # raw status name
     assert row["Swimlane"] == "Everything Else"   # no lane matched
+
+
+# ---- multi-project import: key parsing ------------------------------------
+
+def test_parse_project_keys_splits_on_comma():
+    assert jira_sync.parse_project_keys("AITR,AIENG") == ["AITR", "AIENG"]
+
+
+def test_parse_project_keys_accepts_a_list_from_a_repeated_flag():
+    assert jira_sync.parse_project_keys(["AITR", "AIENG"]) == ["AITR", "AIENG"]
+
+
+def test_parse_project_keys_strips_blanks_and_dedupes_preserving_order():
+    assert jira_sync.parse_project_keys(
+        [" AITR , , AIENG ", "AITR"]) == ["AITR", "AIENG"]
+
+
+def test_parse_project_keys_of_nothing_is_empty():
+    assert jira_sync.parse_project_keys(None) == []
+    assert jira_sync.parse_project_keys("") == []
+
+
+# ---- multi-project import: JQL scope --------------------------------------
+
+def test_import_builds_in_clause_for_several_projects():
+    fake = _FakeSearchJira([])
+    jira_sync.run_import(fake, "unused.csv", ["AITR", "AIENG"], None,
+                         default_division="N/A", default_ai_fit="",
+                         dry_run=True, verbose=False, kanban=False)
+    assert fake.jql == "project in (AITR, AIENG) ORDER BY key ASC"
+
+
+def test_import_single_key_in_a_list_still_uses_equals():
+    """One key keeps the simpler `project = KEY` form."""
+    fake = _FakeSearchJira([])
+    jira_sync.run_import(fake, "unused.csv", ["AITR"], None,
+                         default_division="N/A", default_ai_fit="",
+                         dry_run=True, verbose=False, kanban=False)
+    assert fake.jql == "project = AITR ORDER BY key ASC"
+
+
+def test_import_swimlane_search_composes_against_multi_project_scope(tmp_path):
+    """Lane JQL is AND-ed onto the parenthesised multi-project scope."""
+    seen = []
+
+    class LaneSpyJira(_FakeKanbanJira):
+        def search_issues(self, jql, fields, page_size=100):
+            seen.append(jql)
+            return _FakeKanbanJira.search_issues(self, jql, fields, page_size)
+
+    jira_sync.run_import(LaneSpyJira(), tmp_path / "out.csv",
+                         ["AITR", "AIENG"], None,
+                         default_division="N/A", default_ai_fit="",
+                         dry_run=False, verbose=False,
+                         settings_path="no-such-settings.yaml", kanban=True)
+    assert ("(project in (AITR, AIENG)) AND (priority = Highest)") in seen
+
+
+# ---- multi-project import: board resolution -------------------------------
+
+class _BoardSpyJira(_FakeKanbanJira):
+    """Records which board id was configured and which key find_board saw."""
+    def __init__(self):
+        self.board_asked = None
+        self.find_board_key = None
+
+    def find_board(self, project_key):
+        self.find_board_key = project_key
+        return 6393
+
+    def board_config(self, board_id):
+        self.board_asked = board_id
+        return self.columns
+
+
+def test_import_board_falls_back_to_settings_kanban_board(tmp_path):
+    settings = tmp_path / "settings.yaml"
+    settings.write_text("kanban:\n  board: 4242\n", encoding="utf-8")
+    fake = _BoardSpyJira()
+    jira_sync.run_import(fake, tmp_path / "out.csv", ["AITR", "AIENG"], None,
+                         default_division="N/A", default_ai_fit="",
+                         dry_run=False, verbose=False,
+                         settings_path=str(settings), kanban=True)
+    assert fake.board_asked == 4242
+    assert fake.find_board_key is None       # never asked Jira to discover one
+
+
+def test_import_explicit_board_beats_settings(tmp_path):
+    settings = tmp_path / "settings.yaml"
+    settings.write_text("kanban:\n  board: 4242\n", encoding="utf-8")
+    fake = _BoardSpyJira()
+    jira_sync.run_import(fake, tmp_path / "out.csv", ["AITR"], None,
+                         default_division="N/A", default_ai_fit="",
+                         dry_run=False, verbose=False, board=99,
+                         settings_path=str(settings), kanban=True)
+    assert fake.board_asked == 99
+
+
+def test_import_board_discovery_uses_the_first_key(tmp_path):
+    """No --board and no settings board -> discover from the first key only."""
+    fake = _BoardSpyJira()
+    jira_sync.run_import(fake, tmp_path / "out.csv", ["AITR", "AIENG"], None,
+                         default_division="N/A", default_ai_fit="",
+                         dry_run=False, verbose=False,
+                         settings_path="no-such-settings.yaml", kanban=True)
+    assert fake.find_board_key == "AITR"
+
+
+# ---- multi-project import: preflight --------------------------------------
+
+class _PreflightJira:
+    """Sees AITR and WRAP; AIENG and NOPE are invisible."""
+    visible = {"AITR": {"key": "AITR", "name": "AI Triage", "issueTypes": []},
+               "WRAP": {"key": "WRAP", "name": "Wrap", "issueTypes": []}}
+
+    def check_project(self, key):
+        return self.visible.get(key)
+
+    def list_projects(self):
+        return [{"key": k} for k in self.visible]
+
+
+def test_preflight_accepts_a_list_and_checks_every_key(monkeypatch, capsys):
+    monkeypatch.setattr(jc, "connect", lambda: _PreflightJira())
+    jc.connect_and_preflight(["AITR", "WRAP"], None)
+    out = capsys.readouterr().out
+    assert "AITR" in out and "WRAP" in out
+
+
+def test_preflight_reports_every_invisible_key_at_once(monkeypatch):
+    monkeypatch.setattr(jc, "connect", lambda: _PreflightJira())
+    with pytest.raises(SystemExit) as e:
+        jc.connect_and_preflight(["AITR", "AIENG", "NOPE"], None)
+    msg = str(e.value)
+    assert "AIENG" in msg and "NOPE" in msg          # both, not just the first
+
+
+def test_preflight_still_accepts_a_bare_string_key(monkeypatch):
+    monkeypatch.setattr(jc, "connect", lambda: _PreflightJira())
+    assert jc.connect_and_preflight("AITR", None) is not None

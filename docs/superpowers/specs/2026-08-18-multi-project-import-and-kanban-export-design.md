@@ -103,13 +103,12 @@ is division-level, where stage has no meaning.
 
 ### Implementation note
 
-`src/strategy-map.src.html` is the extracted runtime-form source of a
-single-file `dc-runtime` bundle that stores the app HTML in two forms. After
-editing it, run `python3 src/apply_source.py` (note: `python3`, not `python`) to
-write the runtime form to the template block and sync `__PRISTINE_HTML`. Verify
-with the **full** `python3 -m pytest tests/ -q` — `test_regenerate` and
-`test_lock` are the real guards; the fast integrity test alone can pass while
-the bundle is broken.
+`src/strategy-map.src.html` is the editable source of the single-file
+`dc-runtime` bundle. After editing it, run `python3 src/build_bundle.py`
+(`make bundle`) to reassemble the bundle from `src/engine/` plus the source —
+there is no `apply` step in the current build. Verify with the **full**
+`python3 -m pytest tests/ -q`; the bundle is a generated, gitignored artifact,
+so it must be assembled before the suite will run at all.
 
 ## Non-goals
 

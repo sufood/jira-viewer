@@ -3021,9 +3021,9 @@ class Component extends DCLogic {
       const lines = []; let n = 0;
       d.departments.forEach((dep) => dep.opportunities.forEach((o) => {
         n++;
-        lines.push([n, dep.name, o.initiative || "", o.title, o.fit, o.status || "", (o.people || []).join("; "), (dep.systems || []).join("; "), (dep.themes || []).join("; "), o.summary, o.description || "", o.jiraKey || "", o.jiraUrl || ""]);
+        lines.push([n, dep.name, o.initiative || "", o.title, o.fit, o.status || "", (o.people || []).join("; "), (dep.systems || []).join("; "), (dep.themes || []).join("; "), o.summary, o.description || "", o.jiraKey || "", o.jiraUrl || "", o.stage || "", o.swimlane || ""]);
       }));
-      return this.downloadCsv("insignia-division-stories.csv", ["#", "Division", "Initiative", "Opportunity", "AI-fit", "Status", "Key people", "Systems", "Themes", "Summary", "Description", "Jira Key", "Jira URL"], lines);
+      return this.downloadCsv("insignia-division-stories.csv", ["#", "Division", "Initiative", "Opportunity", "AI-fit", "Status", "Key people", "Systems", "Themes", "Summary", "Description", "Jira Key", "Jira URL", "Stage", "Swimlane"], lines);
     }
     const lines = d.initiatives.map((it) => {
       const cat = d.initiativeCategories[it.cat]; const q = this.quadrant(it); const un = this.unitNames(it.units);
