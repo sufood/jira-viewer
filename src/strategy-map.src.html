@@ -1169,14 +1169,9 @@
   <!-- Fan-out cards -->
   <div style="position: absolute; inset: 0; z-index: 4; pointer-events: none;">
     <sc-for list="{{ cards }}" as="card" hint-placeholder-count="0">
-      <div sc-camel-on-click="{{ card.open }}" style="position: absolute; box-sizing: border-box; overflow: hidden; transform: translate(-50%,-50%); pointer-events: auto; cursor: pointer; background: linear-gradient(180deg, #faf6ee 0%, #f1eadb 100%); border-radius: 11px; padding: 12px 13px 13px; box-shadow: 0 14px 32px rgba(0,0,0,0.42); border: 1px solid rgba(0,0,0,0.06); animation: cardIn 0.36s cubic-bezier(0.22,1,0.36,1) backwards; animation-delay: {{ card.delay }}s; transition: box-shadow 0.16s, filter 0.16s; left: {{ card.left }}px; top: {{ card.top }}px; width: {{ card.w }}px; height: {{ card.h }}px; {{ card.dim }}" style-hover="box-shadow: 0 20px 44px rgba(0,0,0,0.55); filter: brightness(1.03);">
+      <div sc-camel-on-click="{{ card.open }}" style="position: absolute; box-sizing: border-box; overflow: hidden; transform: translate(-50%,-50%); pointer-events: auto; cursor: pointer; background: linear-gradient(180deg, #faf6ee 0%, #f1eadb 100%); border-radius: 11px; padding: 12px 13px 13px; box-shadow: 0 14px 32px rgba(0,0,0,0.42); border: 1px solid rgba(0,0,0,0.06); animation: cardIn 0.36s cubic-bezier(0.22,1,0.36,1) backwards; animation-delay: {{ card.delay }}s; transition: box-shadow 0.16s, filter 0.16s; left: {{ card.left }}px; top: {{ card.top }}px; width: {{ card.w }}px; height: {{ card.h }}px;" style-hover="box-shadow: 0 20px 44px rgba(0,0,0,0.55); filter: brightness(1.03);">
         <div style="position: absolute; top: 0; left: 14px; right: 14px; height: 3px; border-radius: 0 0 3px 3px; background: {{ card.accent }};"></div>
-        <sc-if value="{{ card.showStatus }}" hint-placeholder-val="{{ false }}">
-          <div style="position: absolute; top: 9px; right: 11px; display: inline-flex; align-items: center; background: {{ card.statusColor }}; padding: 2px 8px; border-radius: 20px; box-shadow: 0 1px 2px rgba(0,0,0,0.18);">
-            <span style="font-size: 8px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: #fff;">{{ card.statusLabel }}</span>
-          </div>
-        </sc-if>
-        <div style="font-size: 9px; letter-spacing: 0.13em; text-transform: uppercase; font-weight: 700; color: {{ card.accent }}; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: {{ card.kickerPad }};">{{ card.kicker }}</div>
+        <div style="font-size: 9px; letter-spacing: 0.13em; text-transform: uppercase; font-weight: 700; color: {{ card.accent }}; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ card.kicker }}</div>
         <div data-fit="1" data-full="{{ card.title }}" style="font-family: 'Newsreader', serif; font-weight: 500; font-size: 14.5px; line-height: 1.18; color: #1a2436; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{ card.title }}</div>
         <sc-if value="{{ card.showTldr }}" hint-placeholder-val="{{ false }}">
           <div data-fit="1" data-full="{{ card.tldr }}" style="margin-top: 7px; font-size: 11px; line-height: 1.42; color: #4d5867; display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; -webkit-line-clamp: {{ card.clamp }};">{{ card.tldr }}</div>
@@ -1191,25 +1186,9 @@
           <div style="margin-top: 8px; display: inline-flex; align-items: center; gap: 6px; font-size: 10.5px; font-weight: 700; letter-spacing: 0.04em; color: {{ card.accent }};">Details<span style="font-size: 12px;">→</span></div>
         </sc-if>
         <sc-if value="{{ card.showBadge }}" hint-placeholder-val="{{ false }}">
-          <div sc-camel-on-click="{{ card.openPriority }}" title="Open in Priority →" style="cursor: pointer; display: inline-flex; align-items: center; gap: 6px; margin-top: 9px; background: rgba(0,0,0,0.04); padding: 3px 9px 3px 7px; border-radius: 20px; transition: background 0.15s;" style-hover="background: rgba(44,95,214,0.14);">
+          <div style="display: inline-flex; align-items: center; gap: 6px; margin-top: 9px; background: rgba(0,0,0,0.04); padding: 3px 9px 3px 7px; border-radius: 20px;">
             <span style="width: 8px; height: 8px; border-radius: 50%; background: {{ card.accent }};"></span>
             <span style="font-size: 10px; font-weight: 600; color: #4a5568;">{{ card.badge }}</span>
-            <span style="font-size: 11px; color: #2c5fd6; font-weight: 700;">→</span>
-          </div>
-        </sc-if>
-        <sc-if value="{{ card.showStages }}" hint-placeholder-val="{{ false }}">
-          <div style="margin-top: 9px;" title="{{ card.stageTip }}">
-            <div style="display: flex; gap: 2px;">
-              <sc-for list="{{ card.stages }}" as="seg" hint-placeholder-count="8">
-                <div style="flex: 1; height: 5px; border-radius: 1.5px; background: {{ seg.bg }}; {{ seg.ring }}"></div>
-              </sc-for>
-            </div>
-            <div style="margin-top: 5px; display: flex; align-items: center; gap: 6px;">
-              <span style="font-size: 9px; letter-spacing: 0.05em; text-transform: uppercase; font-weight: 700; color: #6b7686; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ card.stageLabel }}</span>
-              <sc-if value="{{ card.showSwim }}" hint-placeholder-val="{{ false }}">
-                <span style="flex-shrink: 0; font-size: 8px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: #fff; background: {{ card.swimColor }}; padding: 1px 6px; border-radius: 10px;">{{ card.swimLabel }}</span>
-              </sc-if>
-            </div>
           </div>
         </sc-if>
         <sc-if value="{{ card.showCount }}" hint-placeholder-val="{{ false }}">
@@ -1237,9 +1216,6 @@
             <div>
               <div style="font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 700; color: {{ detail.accent }};">{{ detail.deptName }} · {{ detail.kicker }}</div>
               <div style="font-family: 'Newsreader', serif; font-weight: 500; font-size: 25px; line-height: 1.14; color: #16202e; margin-top: 7px; max-width: 430px;">{{ detail.title }}</div>
-              <sc-if value="{{ detail.showInitiative }}" hint-placeholder-val="{{ false }}">
-                <div style="margin-top: 7px; font-size: 11px; letter-spacing: 0.04em; font-weight: 600; color: #6b7686;">Initiative · {{ detail.initiative }}</div>
-              </sc-if>
             </div>
             <button sc-camel-on-click="{{ closeDetail }}" style="flex-shrink: 0; cursor: pointer; font-family: inherit; border: none; background: rgba(0,0,0,0.06); color: #4a5568; width: 32px; height: 32px; border-radius: 50%; font-size: 17px; line-height: 1; transition: background 0.15s;" style-hover="background: rgba(0,0,0,0.12);">×</button>
           </div>
@@ -1248,29 +1224,8 @@
               <span style="font-size: 11px; font-weight: 700; color: #fff; letter-spacing: 0.02em;">AI-fit · {{ detail.fit }}</span>
             </div>
           </sc-if>
-          <sc-if value="{{ detail.showStatus }}" hint-placeholder-val="{{ false }}">
-            <div style="display: inline-flex; align-items: center; gap: 7px; margin-top: 13px; margin-left: 8px; background: {{ detail.statusColor }}; padding: 5px 13px; border-radius: 20px;">
-              <span style="font-size: 11px; font-weight: 700; color: #fff; letter-spacing: 0.02em;">{{ detail.status }}</span>
-            </div>
-          </sc-if>
         </div>
         <div style="padding: 4px 30px 30px;">
-          <sc-if value="{{ detail.showStages }}" hint-placeholder-val="{{ false }}">
-            <div style="margin: 14px 0 6px; padding: 12px 14px; background: rgba(0,0,0,0.035); border-radius: 12px;" title="{{ detail.stageTip }}">
-              <div style="display: flex; align-items: center; gap: 9px; margin-bottom: 8px;">
-                <span style="font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 700; color: #8a6b3b;">Kanban</span>
-                <span style="font-size: 12.5px; font-weight: 700; color: #33404f;">{{ detail.stageLabel }}</span>
-                <sc-if value="{{ detail.showSwim }}" hint-placeholder-val="{{ false }}">
-                  <span style="font-size: 9px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: #fff; background: {{ detail.swimColor }}; padding: 2px 9px; border-radius: 11px;">{{ detail.swimLabel }}</span>
-                </sc-if>
-              </div>
-              <div style="display: flex; gap: 3px;">
-                <sc-for list="{{ detail.stages }}" as="seg" hint-placeholder-count="8">
-                  <div style="flex: 1; height: 7px; border-radius: 2px; background: {{ seg.bg }}; {{ seg.ring }}"></div>
-                </sc-for>
-              </div>
-            </div>
-          </sc-if>
           <sc-if value="{{ detail.summary }}" hint-placeholder-val="">
             <p style="font-size: 14.5px; line-height: 1.62; color: #33404f; margin: 8px 0 0;">{{ detail.summary }}</p>
           </sc-if>
@@ -1297,34 +1252,6 @@
                   </sc-if>
                 </div>
               </sc-for>
-            </div>
-          </sc-if>
-
-          <sc-if value="{{ detail.showStories }}" hint-placeholder-val="{{ false }}">
-            <div style="margin-top: 22px; border-top: 1px solid rgba(0,0,0,0.09); padding-top: 16px;">
-              <div style="font-size: 10.5px; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 700; color: #8a6b3b; margin-bottom: 4px;">Stories · {{ detail.storyCount }} across {{ detail.divCount }} divisions</div>
-              <div style="font-size: 11px; color: #8a94a2; margin-bottom: 8px;">Each story is one instantiation of this initiative inside its division.</div>
-              <div style="display: flex; flex-direction: column;">
-                <sc-for list="{{ detail.stories }}" as="s" hint-placeholder-count="6">
-                  <div>
-                    <sc-if value="{{ s.isDiv }}" hint-placeholder-val="{{ false }}">
-                      <div style="display: flex; align-items: center; gap: 7px; margin: 13px 0 4px;">
-                        <span style="width: 9px; height: 9px; border-radius: 50%; background: {{ s.divColor }};"></span>
-                        <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.04em; color: #33404f;">{{ s.divName }}</span>
-                        <span style="font-size: 10px; color: #8a94a2;">· {{ s.divCount }}</span>
-                      </div>
-                    </sc-if>
-                    <sc-if value="{{ s.isStory }}" hint-placeholder-val="{{ false }}">
-                      <div sc-camel-on-click="{{ s.open }}" style="display: flex; align-items: center; gap: 8px; padding: 5px 6px 5px 16px; border-radius: 7px; cursor: pointer;" style-hover="background: rgba(0,0,0,0.04);">
-                        <span style="flex: 1; font-size: 13px; line-height: 1.4; color: #3b4756;">{{ s.title }}</span>
-                        <sc-if value="{{ s.showStatus }}" hint-placeholder-val="{{ false }}">
-                          <span style="flex-shrink: 0; font-size: 8.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #fff; background: {{ s.statusColor }}; padding: 2px 8px; border-radius: 20px;">{{ s.statusLabel }}</span>
-                        </sc-if>
-                      </div>
-                    </sc-if>
-                  </div>
-                </sc-for>
-              </div>
             </div>
           </sc-if>
 
@@ -1695,23 +1622,6 @@ class Component extends DCLogic {
   effNum(v) { return { "Low": 1, "Medium": 2, "High": 3, "Very High": 4 }[v] || 2; }
   effortColor(v) { return { "Low": "#4a8f6d", "Medium": "#5aa9a0", "High": "#e3a24b", "Very High": "#c0453f" }[v] || "#5aa9a0"; }
   valueColor(v) { return { "Low": "#7d8ca3", "Medium": "#5aa9a0", "High": "#e3a24b", "Very High": "#e0674c" }[v] || "#5aa9a0"; }
-  // Funding-gate lifecycle status. Ordinal ladder Funded > Endorsed > Prioritised > Parked.
-  normStatus(s) {
-    if (!s) return "";
-    const t = String(s).trim().toLowerCase(); if (!t) return "";
-    if (t.indexOf("fund") === 0) return "Funded";
-    if (t.indexOf("endors") === 0) return "Endorsed";
-    if (t.indexOf("prioriti") === 0) return "Prioritised";
-    if (t.indexOf("park") === 0) return "Parked";
-    return "";
-  }
-  statusRank(s) {
-    const r = { "Funded": 0, "Endorsed": 1, "Prioritised": 2, "Parked": 3 }[this.normStatus(s)];
-    return r == null ? 2 : r;   // blank / unknown sort alongside Prioritised
-  }
-  statusColor(s) {
-    return { "Funded": "#217a52", "Endorsed": "#2f6fb0", "Prioritised": "#c98a2b", "Parked": "#8a94a6" }[this.normStatus(s)] || "#8a94a6";
-  }
   initials(name) {
     const clean = name.replace(/[^A-Za-z \u2018\u2019']/g, "").trim();
     const parts = clean.split(/\s+/).filter(Boolean);
@@ -2298,35 +2208,6 @@ class Component extends DCLogic {
     });
   }
 
-  // Kanban progress marker for one opportunity: a segmented stepper (one
-  // segment per board column, filled through the current Stage) tinted by the
-  // issue's Swimlane. Returns null when there's no kanban config or the Stage
-  // isn't on the board (so the card simply shows no marker).
-  stageMarker(opp) {
-    const k = this.data && this.data.kanban;
-    const stages = k && Array.isArray(k.stages) ? k.stages : [];
-    if (!stages.length) return null;
-    // Match case-insensitively (and trimmed): Jira board column names are
-    // Title Case (e.g. "Build") while settings.kanban.stages may be typed in
-    // any case (the board UI upper-cases headers via CSS, which misleads).
-    const target = String(opp.stage || "").trim().toLowerCase();
-    const idx = stages.findIndex((s) => String(s).trim().toLowerCase() === target);
-    if (idx < 0) return null;
-    const lanes = (k && k.swimlanes) || {};
-    const swim = opp.swimlane || "";
-    const swimColor = lanes[swim] || "#8a94a2";
-    const segs = stages.map((s, j) => ({
-      bg: j <= idx ? swimColor : "#d8d0c0",
-      ring: j === idx ? "box-shadow: 0 0 0 1.5px rgba(20,30,45,0.55);" : "",
-    }));
-    const showSwim = !!swim && swim !== ((k && k.defaultLane) || "Everything Else");
-    return { showStages: true, stages: segs,
-      stageLabel: opp.stage + " · " + (idx + 1) + "/" + stages.length,
-      showSwim: showSwim, swimLabel: swim, swimColor: swimColor,
-      stageTip: "Stage: " + opp.stage + " (" + (idx + 1) + " of " + stages.length + ")"
-        + (swim ? " · " + swim : "") };
-  }
-
   buildCardList(dep) {
     const list = [];
     list.push({ kind: "people", kicker: "Background & people", title: "The group & who's engaged", accent: dep.color, showCount: true, count: dep.people.length + " people engaged" });
@@ -2334,26 +2215,12 @@ class Component extends DCLogic {
     // so a division's cards fan out in WSJF priority order with a score badge.
     const byOpp = new Map();
     this.deriveScores().list.forEach((r) => { if (r.opp) byOpp.set(r.opp, r); });
-    // Cards fan out by funding-gate status first (Funded > Endorsed > Prioritised
-    // > Parked), then by WSJF-desc within each status band.
-    const opps = dep.opportunities.slice().sort((a, b) => {
-      const ra = this.statusRank(a.status), rb = this.statusRank(b.status);
-      if (ra !== rb) return ra - rb;
-      const wa = byOpp.get(a) ? byOpp.get(a).wsjf : 0, wb = byOpp.get(b) ? byOpp.get(b).wsjf : 0;
-      return wb - wa;
-    });
+    const opps = dep.opportunities.slice().sort((a, b) => (byOpp.get(b) ? byOpp.get(b).wsjf : 0) - (byOpp.get(a) ? byOpp.get(a).wsjf : 0));
     opps.forEach((o) => {
       const w = byOpp.get(o);
-      const st = this.normStatus(o.status);
-      const sm = this.stageMarker(o);
       list.push({ kind: "opp", kicker: o.fit + " AI-fit", title: o.title, accent: this.fitColor(o.fit),
-        showStatus: !!st, statusLabel: st, statusColor: this.statusColor(o.status),
-        kickerPad: st ? "62px" : "0px",
-        dim: st === "Parked" ? "opacity:0.6;filter:saturate(0.5);" : "",
-        showBadge: !!w, badge: w ? ("WSJF " + w.wsjf.toFixed(1) + " \u00b7 #" + w.rank) : "", storyId: w ? w.id : "",
+        showBadge: !!w, badge: w ? ("WSJF " + w.wsjf.toFixed(1) + " \u00b7 #" + w.rank) : "",
         showTldr: !!o.summary, tldr: o.summary || "",
-        showStages: !!sm, stages: sm ? sm.stages : [], stageLabel: sm ? sm.stageLabel : "",
-        showSwim: !!(sm && sm.showSwim), swimLabel: sm ? sm.swimLabel : "", swimColor: sm ? sm.swimColor : "", stageTip: sm ? sm.stageTip : "",
         showPeople: !!(o.people && o.people.length), people: (o.people || []).join(" \u00b7 "), showDetails: true, opp: o });
     });
     list.push({ kind: "gaps", kicker: "Watch-outs", title: "Gaps & what's missing", accent: "#7d8ca3", showCount: true, count: dep.gaps.length + " open items" });
@@ -2491,8 +2358,6 @@ class Component extends DCLogic {
         showTldr: !!c.showTldr, tldr: c.tldr || "", clamp: compact ? 2 : 3,
         showPeople: !!c.showPeople && !compact, people: c.people || "", showDetails: !!c.showDetails,
         showCount: !!c.showCount, count: c.count || "", w: it.w, h: it.h,
-        showStages: !!c.showStages, stages: c.stages || [], stageLabel: c.stageLabel || "", showSwim: !!c.showSwim, swimLabel: c.swimLabel || "", swimColor: c.swimColor || "", stageTip: c.stageTip || "",
-        storyId: c.storyId || "", openPriority: (e) => this.storyToPriority(e, dep, c.storyId),
         left: Math.round(it.x), top: Math.round(it.y), delay: (it.i * 0.028).toFixed(3), open: () => this.openDetail(dep, c) };
     });
     this.fanPer = best.per;
@@ -2539,14 +2404,8 @@ class Component extends DCLogic {
       const related = dep.people.filter((p) => (c.opp.people || []).indexOf(p.name) !== -1);
       const relFull = (c.opp.people || []).map((nm) => related.find((r) => r.name === nm) || { name: nm, role: "", relevance: "" });
       const blocks = this.mdBlocks(c.opp.description || "");
-      const sm = this.stageMarker(c.opp);
       detail = { deptName: dep.name, kicker: "AI Opportunity", title: c.opp.title, accent: this.fitColor(c.opp.fit),
-        summary: c.opp.summary, showFit: true, fit: c.opp.fit,
-        showStatus: !!this.normStatus(c.opp.status), status: this.normStatus(c.opp.status), statusColor: this.statusColor(c.opp.status),
-        showInitiative: !!(c.opp.initiative || "").trim(), initiative: c.opp.initiative || "",
-        showStages: !!sm, stages: sm ? sm.stages : [], stageLabel: sm ? sm.stageLabel : "",
-        showSwim: !!(sm && sm.showSwim), swimLabel: sm ? sm.swimLabel : "", swimColor: sm ? sm.swimColor : "", stageTip: sm ? sm.stageTip : "",
-        showPeople: relFull.length > 0, peopleLabel: "Key people", people: this.peopleWithAvatars(dep, relFull), showItems: false, showMeta: false,
+        summary: c.opp.summary, showFit: true, fit: c.opp.fit, showPeople: relFull.length > 0, peopleLabel: "Key people", people: this.peopleWithAvatars(dep, relFull), showItems: false, showMeta: false,
         showJira: !!c.opp.jiraUrl, jiraUrl: c.opp.jiraUrl || "", jiraKey: c.opp.jiraKey || "Jira item",
         showBlocks: blocks.length > 0, blocks: blocks };
     } else if (c.kind === "gaps") {
@@ -2562,36 +2421,10 @@ class Component extends DCLogic {
     let units;
     if (it.units[0] === "all") units = [{ name: "All divisions", color: "#e0674c" }];
     else units = it.units.map((u) => { const d = this.depById(u); return { name: d ? d.name : u, color: d ? d.color : "#9fb3c9" }; });
-    // Drill-down: this initiative's story-instances, grouped by the division they
-    // live in and status-then-WSJF sorted within each division. An initiative is
-    // an independent axis — the same initiative appears across many divisions,
-    // and each story is one instantiation of it inside its own division.
-    const byOpp = new Map();
-    this.deriveScores().list.forEach((r) => { if (r.opp) byOpp.set(r.opp, r); });
-    const wsjfOf = (o) => (byOpp.get(o) ? byOpp.get(o).wsjf : 0);
-    const stories = []; let storyCount = 0, divCount = 0;
-    (this.data.departments || []).forEach((dep) => {
-      const matched = (dep.opportunities || []).filter((o) => (o.initiative || "").trim() === it.name);
-      if (!matched.length) return;
-      matched.sort((a, b) => {
-        const ra = this.statusRank(a.status), rb = this.statusRank(b.status);
-        if (ra !== rb) return ra - rb;
-        return wsjfOf(b) - wsjfOf(a);
-      });
-      divCount++;
-      stories.push({ isDiv: true, divName: dep.name, divColor: dep.color, divCount: matched.length });
-      matched.forEach((o) => {
-        const st = this.normStatus(o.status);
-        stories.push({ isStory: true, title: o.title || "Untitled", showStatus: !!st, statusLabel: st, statusColor: this.statusColor(o.status),
-          open: () => this.openDetail(dep, { kind: "opp", opp: o }) });
-        storyCount++;
-      });
-    });
     const detail = {
-      deptName: cat.short, kicker: "Initiative " + (it.id < 10 ? "0" + it.id : it.id),
+      deptName: cat.short, kicker: "Sprint 1 · Initiative " + (it.id < 10 ? "0" + it.id : it.id),
       title: it.name, accent: cat.color, summary: "",
       showFit: false, showPeople: false, showItems: false, showMeta: true,
-      showStories: stories.length > 0, stories, storyCount, divCount,
       effort: it.effort, value: it.value, effortColor: this.effortColor(it.effort), valueColor: this.valueColor(it.value),
       benefits: it.benefits.map((b) => ({ text: b })), units, unitCount: it.units[0] === "all" ? "all 13 divisions" : units.length,
     };
@@ -2601,16 +2434,6 @@ class Component extends DCLogic {
   closeDetail() { this.setState({ detail: null }); }
   stop(e) { if (e && e.stopPropagation) e.stopPropagation(); }
   deselect() { this.selNode = null; this.cardLayout = []; this.setState({ selected: false, cards: [], oppPage: 0, detail: null }); }
-  // Clicking a card's WSJF badge jumps to the Priority tab scoped to the story:
-  // filter to its division and open that story's detail drawer (wsjfSel). Stops
-  // propagation so it doesn't also open the map detail modal. Keeps this.mode in
-  // sync with state.mode (so the Divisions tab stays clickable afterwards).
-  storyToPriority(e, dep, storyId) {
-    this.stop(e);
-    this.mode = "priority";
-    this.setState({ mode: "priority", priorityDivision: dep ? dep.name : null,
-      wsjfSel: storyId || null, selected: false, cards: [], pager: null, detail: null });
-  }
 
   quadrant(it) {
     const e = this.effNum(it.effort), v = this.valNum(it.value);
@@ -2869,10 +2692,9 @@ class Component extends DCLogic {
     return this.migrate(d);
   }
   migrate(d) {
-    if (!d.header) d.header = { company: "Insignia Financial", title: "AI Strategy Value Realisation", intro: "In this view, click any division to fan out its cards \u2014 problem areas, AI-fit, the people engaged, gaps and next steps." };
-    if (d.hub && !d.hub.url) d.hub.url = "https://ifl.atlassian.net/jira/software/c/projects/AITR/boards/6393";
+    if (!d.header) d.header = { company: "Insignia Financial", title: "AI Strategy Value Realisation", intro: "Thirteen enterprise workshops \u00b7 25 Sprint 1 initiatives. Switch lenses above. In this view, click any division to fan out its cards \u2014 problem areas, AI-fit, the people engaged, gaps and next steps." };
+    if (d.hub && !d.hub.url) d.hub.url = "https://ifl.atlassian.net/jira/software/c/projects/AIENG/boards/4552";
     if (!d.fitRating || !Array.isArray(d.fitRating.levels)) d.fitRating = { title: "AI-fit rating", levels: [ { label: "High", color: "#e0674c" }, { label: "Medium-High", color: "#e3a24b" }, { label: "Medium", color: "#5aa9a0" }, { label: "Medium-Low", color: "#7d8ca3" } ] };
-    if (!d.kanban || typeof d.kanban !== "object") d.kanban = { stages: [], swimlanes: {}, defaultLane: "Everything Else" };
     return d;
   }
   buildFitRows() {
@@ -3021,9 +2843,9 @@ class Component extends DCLogic {
       const lines = []; let n = 0;
       d.departments.forEach((dep) => dep.opportunities.forEach((o) => {
         n++;
-        lines.push([n, dep.name, o.initiative || "", o.title, o.fit, o.status || "", (o.people || []).join("; "), (dep.systems || []).join("; "), (dep.themes || []).join("; "), o.summary, o.description || "", o.jiraKey || "", o.jiraUrl || "", o.stage || "", o.swimlane || ""]);
+        lines.push([n, dep.name, o.title, o.fit, (o.people || []).join("; "), (dep.systems || []).join("; "), (dep.themes || []).join("; "), o.summary, o.description || "", o.jiraKey || "", o.jiraUrl || ""]);
       }));
-      return this.downloadCsv("insignia-division-stories.csv", ["#", "Division", "Initiative", "Opportunity", "AI-fit", "Status", "Key people", "Systems", "Themes", "Summary", "Description", "Jira Key", "Jira URL", "Stage", "Swimlane"], lines);
+      return this.downloadCsv("insignia-division-stories.csv", ["#", "Division", "Opportunity", "AI-fit", "Key people", "Systems", "Themes", "Summary", "Description", "Jira Key", "Jira URL"], lines);
     }
     const lines = d.initiatives.map((it) => {
       const cat = d.initiativeCategories[it.cat]; const q = this.quadrant(it); const un = this.unitNames(it.units);
@@ -3079,7 +2901,6 @@ class Component extends DCLogic {
       rawLen: desc.length,
       thin: /no deep-dive questions captured/i.test(desc) || desc.length < 900,
       fit: opp.fit || "", url: opp.jiraUrl || "", jiraKey: opp.jiraKey || "",
-      initiative: opp.initiative || "", status: opp.status || "",
       dep, opp,
     };
   }
@@ -3699,9 +3520,7 @@ class Component extends DCLogic {
         if (/^TLDR;/.test(tldr)) tldr = tldr.replace(/^TLDR;\s*/, "");
         dep.opportunities.push({ sourceId: this.getf(r, "Source ID", "#"), title: this.getf(r, "Opportunity", "Summary", "Title") || "Untitled",
           fit: this.normFit(this.getf(r, "AI Fit", "AI-fit", "Fit")), summary: tldr, description: body, people,
-          initiative: this.getf(r, "Initiative"), status: this.getf(r, "Status"),
           systems: this.splitList(this.getf(r, "Systems")), themes: this.splitList(this.getf(r, "Themes")),
-          stage: this.getf(r, "Stage"), swimlane: this.getf(r, "Swimlane"),
           jiraKey: this.getf(r, "Jira Key"), jiraUrl: this.getf(r, "Jira URL") });
       });
       this.setState({ dataTab: "story" });
@@ -3712,7 +3531,7 @@ class Component extends DCLogic {
     const s = this.state;
     const btn = (on) => on ? { bg: "#e0674c", color: "#fff" } : { bg: "transparent", color: "#aebfd2" };
     const dv = btn(s.mode === "divisions"), iv = btn(s.mode === "initiatives"), pv = btn(s.mode === "priority"), dtv = btn(s.mode === "data");
-    const caption = { divisions: "13 divisions \u00b7 workshop findings", initiatives: "Initiatives \u00b7 who they span", priority: "WSJF prioritisation \u00b7 what-if weighting", data: "The numbers behind the map \u00b7 sortable detail" }[s.mode];
+    const caption = { divisions: "13 divisions \u00b7 workshop findings", initiatives: "25 initiatives \u00b7 who they span", priority: "WSJF prioritisation \u00b7 what-if weighting", data: "The numbers behind the map \u00b7 sortable detail" }[s.mode];
     const divChrome = (s.mode === "divisions" && !s.selected);
     const isData = s.mode === "data";
     const sub = (on) => on ? { bg: "rgba(224,103,76,0.92)", color: "#fff" } : { bg: "transparent", color: "#9db0c6" };
@@ -3721,7 +3540,7 @@ class Component extends DCLogic {
     const sort = { num: arr("num"), name: arr("name"), cat: arr("cat"), effort: arr("effort"), value: arr("value"), quadrant: arr("quadrant"), div: arr("div") };
     return {
       ...this.priorityProps(),
-      viewInPriority: () => { this.mode = "priority"; this.setState({ mode: "priority", priorityDivision: this.state.selectedName, selected: false, cards: [], pager: null }); },
+      viewInPriority: () => this.setState({ mode: "priority", priorityDivision: this.state.selectedName, selected: false, cards: [] }),
       showHeatToggle: s.mode === "divisions" && !s.selected,
       toggleHeat: () => this.setState({ heatOverlay: !this.state.heatOverlay }),
       heatBtnStyle: { cursor: "pointer", fontFamily: "inherit", fontSize: "11px", fontWeight: 600, letterSpacing: "0.02em",
@@ -3734,7 +3553,7 @@ class Component extends DCLogic {
       toggleOpacity: s.selected ? 0 : 1, togglePointer: s.selected ? "none" : "auto",
       divBtnBg: dv.bg, divBtnColor: dv.color, initBtnBg: iv.bg, initBtnColor: iv.color, priBtnBg: pv.bg, priBtnColor: pv.color,
       cards: s.cards,
-      showPager: !!(s.pager && s.pager.show) && s.mode === "divisions" && s.selected, pagerLabel: (s.pager && s.pager.label) || "",
+      showPager: !!(s.pager && s.pager.show), pagerLabel: (s.pager && s.pager.label) || "",
       pagerX: (s.pager && s.pager.x) || 0, pagerY: (s.pager && s.pager.y) || 0,
       prevPage: () => this.stepPage(-1), nextPage: () => this.stepPage(1),
       selected: s.selected, selectedName: s.selectedName, selectedColor: s.selectedColor,

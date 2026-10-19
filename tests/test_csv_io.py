@@ -1,14 +1,11 @@
 import csv
-import pathlib
-import re
 import jira_common as jc
 
 
 def test_columns_constant_exact_order():
     assert jc.COLUMNS == [
-        "#", "Division", "Initiative", "Opportunity", "AI-fit", "Status",
-        "Key people", "Systems", "Themes", "Summary", "Description",
-        "Jira Key", "Jira URL", "Stage", "Swimlane",
+        "#", "Division", "Opportunity", "AI-fit", "Key people", "Systems",
+        "Themes", "Summary", "Description", "Jira Key", "Jira URL",
     ]
 
 
@@ -28,9 +25,8 @@ def test_write_csv_roundtrips_bom_and_quoting(write_csv_file, sample_row, tmp_pa
     assert raw.startswith(b"\xef\xbb\xbf")          # BOM preserved
     text = raw.decode("utf-8-sig")
     assert text.splitlines()[0] == (                # every field quoted
-        '"#","Division","Initiative","Opportunity","AI-fit","Status",'
-        '"Key people","Systems","Themes","Summary","Description",'
-        '"Jira Key","Jira URL","Stage","Swimlane"'
+        '"#","Division","Opportunity","AI-fit","Key people","Systems",'
+        '"Themes","Summary","Description","Jira Key","Jira URL"'
     )
     assert jc.read_csv(out) == rows                 # data round-trips
 
@@ -44,23 +40,3 @@ def test_load_dotenv_does_not_override_os_env(tmp_path, monkeypatch):
     import os
     assert os.environ["JIRA_PROJECT_KEY"] == "FROMOS"   # OS wins
     assert os.environ["JIRA_EMAIL"] == "file@x.com"     # file fills the gap
-
-
-# ---- the app's own Export CSV must round-trip through import --------------
-
-APP_SRC = pathlib.Path(__file__).resolve().parents[1] / "src" / "strategy-map.src.html"
-
-
-def _story_export_header():
-    """The header array the app passes to downloadCsv for the stories tab."""
-    src = APP_SRC.read_text(encoding="utf-8")
-    m = re.search(r'downloadCsv\("insignia-division-stories\.csv",\s*\[(.*?)\]',
-                  src, re.S)
-    assert m, "stories Export CSV call not found in " + str(APP_SRC)
-    return re.findall(r'"([^"]*)"', m.group(1))
-
-
-def test_app_story_export_header_matches_columns():
-    """Export -> re-import must not silently drop columns (Stage/Swimlane are
-    the kanban progress; without them a round trip wipes every stepper)."""
-    assert _story_export_header() == jc.COLUMNS

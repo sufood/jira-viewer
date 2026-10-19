@@ -72,53 +72,6 @@ def test_pull_updates_columns_from_issue(tmp_path):
     assert row["Jira Key"] == "ABC-1"          # link columns untouched
 
 
-def test_pull_aborts_when_overwrite_declined(monkeypatch, tmp_path):
-    """require_confirm + existing (non-empty) values changing + a 'no' answer
-    must leave the CSV completely untouched."""
-    src = {c: "" for c in jc.COLUMNS}
-    src.update({"#": "1", "Opportunity": "OLD", "Description": "old body",
-                "Jira Key": "ABC-1", "Jira URL": "https://x/browse/ABC-1"})
-    csv_path = tmp_path / "d.csv"
-    jc.write_csv(csv_path, [src])
-
-    class FakeJira:
-        def get_issue(self, key):
-            return {"fields": {"summary": "NEW TITLE"}}
-
-    monkeypatch.setattr(jira_sync, "confirm", lambda q: False)
-    result = jira_sync.run_pull(FakeJira(), csv_path, dry_run=False,
-                                verbose=False, require_confirm=True)
-    assert result.get("aborted") is True
-    assert jc.read_csv(csv_path)[0]["Opportunity"] == "OLD"   # untouched
-
-
-def test_pull_no_prompt_when_only_filling_blanks(monkeypatch, tmp_path):
-    """Filling blank cells is not an overwrite of existing data, so the
-    confirmation must NOT fire even with require_confirm."""
-    src = {c: "" for c in jc.COLUMNS}
-    # Opportunity already matches the issue summary, so the only change is the
-    # currently-BLANK Division being filled — not an overwrite.
-    src.update({"#": "1", "Opportunity": "Same", "Division": "",
-                "Jira Key": "ABC-1", "Jira URL": "https://x/browse/ABC-1"})
-    csv_path = tmp_path / "d.csv"
-    jc.write_csv(csv_path, [src])
-
-    doc = jc.markdown_to_adf("body")
-    doc["content"].extend(jc.build_context_block({"Division": "NEWDIV"}))
-
-    class FakeJira:
-        def get_issue(self, key):
-            return {"fields": {"summary": "Same", "description": doc}}
-
-    def boom(q):
-        raise AssertionError("must not prompt when only blanks are filled")
-    monkeypatch.setattr(jira_sync, "confirm", boom)
-    result = jira_sync.run_pull(FakeJira(), csv_path, dry_run=False,
-                                verbose=False, require_confirm=True)
-    assert result["updated"] == 1
-    assert jc.read_csv(csv_path)[0]["Division"] == "NEWDIV"   # written through
-
-
 def test_pull_skips_rows_without_url(tmp_path):
     src = {c: "" for c in jc.COLUMNS}
     src.update({"#": "1", "Opportunity": "keep"})

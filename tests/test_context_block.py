@@ -1,6 +1,6 @@
 import jira_common as jc
 
-CONTEXT_KEYS = ["Division", "Initiative", "AI-fit", "Status", "Key people", "Systems", "Themes", "Summary"]
+CONTEXT_KEYS = ["Division", "AI-fit", "Key people", "Systems", "Themes", "Summary"]
 
 
 def test_context_block_roundtrips_exact_values(sample_row):
